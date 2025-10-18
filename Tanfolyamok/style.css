@@ -250,3 +250,93 @@ h1 {
 	margin-top: 32px;
 	color: #333;
 }
+/* ===== Regisztrációs fülek (Felhasználó / Tanfolyam adó) ===== */
+.tabs {
+	display: flex;
+	justify-content: center;
+	gap: 12px;
+	margin-bottom: 24px;
+}
+
+.tab {
+	padding: 10px 22px;
+	border: 2px solid #b185f5;
+	background: #f7f7ff;
+	color: #5a189a;
+	border-radius: 10px;
+	font-weight: 600;
+	font-size: 1em;
+	cursor: pointer;
+	transition: all 0.25s ease;
+	box-shadow: 0 2px 6px rgba(90,24,154,0.06);
+}
+
+.tab:hover {
+	background: #e9d8ff;
+}
+
+.tab.active {
+	background: #7b2ff2;
+	color: #fff;
+	border-color: #7b2ff2;
+	box-shadow: 0 3px 10px rgba(90,24,154,0.15);
+}
+
+/* Csak az aktív form jelenjen meg */
+.auth-form {
+	display: none;
+}
+
+.auth-form.active {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	max-width: 340px;
+	margin: 0 auto;
+	padding-top: 18px;
+}
+
+/* textarea a tanfolyam leírásához */
+.auth-form textarea {
+	padding: 10px;
+	border: 1px solid #b185f5;
+	border-radius: 7px;
+	font-size: 1em;
+	background: #f7f7ff;
+	transition: border 0.2s;
+	min-height: 80px;
+	resize: vertical;
+}
+.auth-form textarea:focus {
+	border: 1.5px solid #7b2ff2;
+	outline: none;
+}
+
+
+/* ===== Bejelentkezési form azonosítóval ===== */
+#login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 340px;
+  margin: 0 auto;
+  padding-top: 18px;
+}
+
+/* ===== Hibák vagy visszajelzések megjelenítése ===== */
+.login-message {
+  font-weight: bold;
+  text-align: center;
+  margin-top: 16px;
+  font-size: 1.1em;
+}
+
+.login-success {
+  color: green;
+}
+
+.login-error {
+  color: red;
+}
+
+

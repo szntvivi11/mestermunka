@@ -59,20 +59,54 @@
         </div>
     </div>
     <main>
-        <div class="aloldal-container">
-            <h1>Regisztráció</h1>
-            <form class="auth-form">
-                <label for="reg-username">Felhasználónév:</label>
-                <input id="reg-username" type="text" required>
-                <label for="reg-email">Email:</label>
-                <input id="reg-email" type="email" required>
-                <label for="reg-password">Jelszó:</label>
-                <input id="reg-password" type="password" required>
-                <button type="submit">Regisztráció</button>
-            </form>
-            <p style="text-align:center; margin-top:18px;">Van már fiókod? <a href="bejelentkezes.html">Lépj be!</a></p>
-        </div>
-    </main>
+  <div class="aloldal-container">
+    <h1>Regisztráció</h1>
+
+    <!-- Fülek -->
+    <div class="tabs">
+  <button id="user-tab" class="tab active">Felhasználó</button>
+  <button id="teacher-tab" class="tab">Tanfolyam adó</button>
+</div>
+
+
+    <!-- Felhasználói regisztráció -->
+    <form id="user-form" class="auth-form active">
+      <label for="reg-username">Felhasználónév:</label>
+      <input id="reg-username" type="text" required>
+
+      <label for="reg-email">Email:</label>
+      <input id="reg-email" type="email" required>
+
+      <label for="reg-password">Jelszó:</label>
+      <input id="reg-password" type="password" required>
+
+      <button type="submit">Regisztráció</button>
+    </form>
+
+    <!-- Tanfolyam adó regisztráció -->
+    <form id="teacher-form" class="auth-form">
+      <label for="teacher-name">Név:</label>
+      <input id="teacher-name" type="text" required>
+
+      <label for="teacher-email">Email:</label>
+      <input id="teacher-email" type="email" required>
+
+      <label for="teacher-password">Jelszó:</label>
+      <input id="teacher-password" type="password" required>
+
+      <label for="teacher-course">Tanfolyam neve:</label>
+      <input id="teacher-course" type="text" required placeholder="Pl. Webfejlesztés alapjai">
+
+      <label for="teacher-desc">Tanfolyam leírása:</label>
+      <textarea id="teacher-desc" rows="4" placeholder="Írj pár mondatot a tanfolyamról..." required></textarea>
+
+      <button type="submit">Regisztráció</button>
+    </form>
+
+    <p style="text-align:center; margin-top:18px;">Van már fiókod? <a href="bejelentkezes.html">Lépj be!</a></p>
+  </div>
+</main>
+
 </body>
 <script src="regisztracio.js"></script>
 </html>

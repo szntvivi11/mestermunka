@@ -16,66 +16,105 @@ window.oldal = function(){
     };
 };
 
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.querySelector(".auth-form");
+// === FÜLVÁLTÁS KEZELÉSE ===
+const userTab = document.getElementById("user-tab");
+const teacherTab = document.getElementById("teacher-tab");
+const userForm = document.getElementById("user-form");
+const teacherForm = document.getElementById("teacher-form");
 
-  // Üzenet doboz létrehozása
-  const uzenet = document.createElement("div");
-  uzenet.style.marginTop = "15px";
-  uzenet.style.padding = "10px";
-  uzenet.style.borderRadius = "8px";
-  uzenet.style.textAlign = "center";
-  uzenet.style.display = "none";
-  form.appendChild(uzenet);
-
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    // Mezők beolvasása
-    const username = document.getElementById("reg-username").value.trim();
-    const email = document.getElementById("reg-email").value.trim();
-    const password = document.getElementById("reg-password").value.trim();
-
-    // Alap: elrejtjük az üzenetet
-    uzenet.style.display = "none";
-
-    // Ellenőrzések
-    if (!username || !email || !password) {
-      showMessage("❌ Kérjük, tölts ki minden mezőt!", "error");
-      return;
-    }
-
-    if (!email.includes("@") || !email.includes(".")) {
-      showMessage("❌ Hibás email cím! (hiányzik az '@' vagy a '.' karakter)", "error");
-      return;
-    }
-
-    // Ha minden rendben van
-    showMessage("✅ Adatok elmentve. Üdvözöljük az oldalon!", "success");
-    form.reset();
-
-    // 3 másodperc múlva átirányít a bejelentkezés oldalra
-    setTimeout(() => {
-      window.location.href = "bejelentkezes.html";
-    }, 3000);
-  });
-
-  // Segédfüggvény az üzenet megjelenítéséhez
-  function showMessage(text, type) {
-    uzenet.textContent = text;
-    uzenet.style.display = "block";
-    uzenet.style.transition = "0.3s ease";
-
-    if (type === "success") {
-      uzenet.style.backgroundColor = "#d4edda";
-      uzenet.style.color = "#155724";
-      uzenet.style.border = "1px solid #c3e6cb";
-    } else {
-      uzenet.style.backgroundColor = "#f8d7da";
-      uzenet.style.color = "#721c24";
-      uzenet.style.border = "1px solid #f5c6cb";
-    }
-  }
+// Fülváltás esemény
+userTab.addEventListener("click", () => {
+  userTab.classList.add("active");
+  teacherTab.classList.remove("active");
+  userForm.classList.add("active");
+  teacherForm.classList.remove("active");
 });
+
+teacherTab.addEventListener("click", () => {
+  teacherTab.classList.add("active");
+  userTab.classList.remove("active");
+  teacherForm.classList.add("active");
+  userForm.classList.remove("active");
+});
+
+
+// === FELHASZNÁLÓI REGISZTRÁCIÓ ===
+// === FELHASZNÁLÓI REGISZTRÁCIÓ ===
+userForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const username = document.getElementById("reg-username").value.trim();
+  const email = document.getElementById("reg-email").value.trim();
+  const password = document.getElementById("reg-password").value.trim();
+
+  // Előző üzenet törlése
+  const existing = document.querySelector('.login-message');
+  if (existing) existing.remove();
+
+  // Ellenőrzések
+  if (!username || !email || !password) {
+    showMessage("❌ Kérlek, tölts ki minden mezőt!", "error");
+    return;
+  }
+
+  if (!email.includes("@")) {
+    showMessage("⚠️ Hibás e-mail cím! (hiányzik a @ karakter)", "error");
+    return;
+  }
+
+  showMessage(`✅ Sikeres regisztráció, ${username}!`, "success");
+
+  userForm.reset();
+
+  // 2 másodperc múlva átirányítás a bejelentkezésre
+  setTimeout(() => {
+    window.location.href = "bejelentkezes.html";
+  }, 2000);
+});
+
+// === Üzenet megjelenítése ===
+function showMessage(text, type) {
+  const container = document.querySelector(".user-form-container") || document.querySelector(".aloldal-container");
+  const message = document.createElement("div");
+  message.className = `login-message ${type === "error" ? "login-error" : "login-success"}`;
+  message.textContent = text;
+  container.appendChild(message);
+}
+// === TANFOLYAMADÓ REGISZTRÁCIÓ ===
+teacherForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const name = document.getElementById("teacher-name").value.trim();
+  const email = document.getElementById("teacher-email").value.trim();
+  const password = document.getElementById("teacher-password").value.trim();
+  const course = document.getElementById("teacher-course").value.trim();
+  const desc = document.getElementById("teacher-desc").value.trim();
+
+  // Előző üzenet törlése
+  const existing = document.querySelector('.login-message');
+  if (existing) existing.remove();
+
+  // Ellenőrzések
+  if (!name || !email || !password || !course || !desc) {
+    showMessage("❌ Kérlek, tölts ki minden mezőt!", "error");
+    return;
+  }
+
+  if (!email.includes("@")) {
+    showMessage("⚠️ Hibás e-mail cím! (hiányzik a @ karakter)", "error");
+    return;
+  }
+
+  showMessage(`✅ Sikeres regisztráció, ${name}!`, "success");
+
+  teacherForm.reset();
+
+  // 2 másodperc múlva átirányítás a bejelentkezésre
+  setTimeout(() => {
+    window.location.href = "bejelentkezes.html";
+  }, 2000);
+});
+
+
 
 
