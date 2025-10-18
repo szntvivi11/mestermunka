@@ -12,18 +12,7 @@ window.onload = function() {
                 <button>Bejelentkezés</button>
             </form>
         `,
-        regisztracio: `
-            <h1>Regisztráció</h1>
-            <form>
-                <label>Felhasználónév:</label><br>
-                <input type="text"><br>
-                <label>Email:</label><br>
-                <input type="email"><br>
-                <label>Jelszó:</label><br>
-                <input type="password"><br><br>
-                <button>Regisztráció</button>
-            </form>
-        `,
+        
         kapcsolat: `
             <h1>Kapcsolat</h1>
             <form>
