@@ -156,6 +156,28 @@ h1 {
 	min-height: 300px;
 }
 
+/* Piros-fekete absztrakt vonal minden oldalon */
+:root {
+	--abs-red: #f22f2f;
+	--abs-black: #000000;
+}
+
+/* Ha az oldal tartalmaz SVG-t az #absztrakt-vonal elemben, a path-ok kitöltését a dokumentumban definiált gradienttel (
+   id="absztrakt-stripes") adhatjuk meg. Ha nincs definiálva, a fallback overlay mutat csíkozást. */
+#absztrakt-vonal svg path {
+	fill: url(#absztrakt-stripes) !important;
+}
+
+/* Fallback overlay: ismétlődő csíkozás (ha szükséges) */
+#absztrakt-vonal .absztrakt-fallback {
+	/* elrejtv e a fallback overlayt: csak maga az SVG hullám legyen látható */
+	display: none !important;
+}
+
+/* Stacking biztosítása */
+#absztrakt-vonal svg { z-index: 1; }
+
+
 /* Főoldal üdvözlő szekció új stílus, egységes id-kkal */
 #udvozlo {
 	display: flex;
@@ -276,7 +298,7 @@ h1 {
 }
 
 .tab.active {
-	background: #7b2ff2;
+	background: #f22f2f;
 	color: #fff;
 	border-color: #7b2ff2;
 	box-shadow: 0 3px 10px rgba(90,24,154,0.15);
@@ -337,6 +359,166 @@ h1 {
 
 .login-error {
   color: red;
+}
+
+/* ========== Téma változók és felülírások (hozzáfűzve) ========== */
+:root {
+    --bg: #f7f7f7;
+    --surface: #ffffff;
+    --muted: #f7f7ff;
+    --text: #333333;
+    --primary: #7b2ff2;
+    --primary-600: #5a189a;
+    --accent-shadow: rgba(90,24,154,0.08);
+    --nav-bg: rgba(90,24,154,0.22);
+    --nav-text: #ffffff;
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+    --bg: #0f1115;
+    --surface: #131418;
+    --muted: #15161a;
+    --text: #e6e6e6;
+    --primary: #9a7bff;
+    --primary-600: #7b5ad1;
+    --accent-shadow: rgba(0,0,0,0.45);
+    --nav-bg: rgba(0,0,0,0.28);
+    --nav-text: #ffffff;
+}
+
+/* Változók alkalmazása az alap elemekre */
+html, body {
+    background: var(--bg) !important;
+    color: var(--text) !important;
+}
+
+/* Kártya felülírások (néhány kártya inline stílusokat használ) */
+.tanfolyamkartya {
+    background: var(--surface) !important;
+    color: inherit !important;
+    box-shadow: 0 2px 8px var(--accent-shadow) !important;
+}
+
+/* Card image sizing: ensure images fill the top area of the card without distortion */
+.tanfolyamkartya .card-image {
+	width: 100%;
+	height: 140px; /* fixed visual area inside the card */
+	overflow: hidden;
+	border-radius: 8px;
+	display: block;
+	margin-bottom: 12px;
+}
+.tanfolyamkartya .card-image img,
+.tanfolyamkartya img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+@media (max-width: 520px) {
+	.tanfolyamkartya .card-image { height: 110px; }
+}
+	/* Poker-style card look for course cards (no green) */
+	.tanfolyamkartya {
+		background: linear-gradient(180deg, #ffffff 0%, #fbfbfb 100%) !important; /* papírszerű */
+		color: var(--text) !important;
+		border-radius: 12px !important;
+		box-shadow: 0 8px 24px rgba(0,0,0,0.28) !important; /* mélyebb, egységes árnyék */
+		border: 1px solid rgba(255,255,255,0.06) !important; /* finom, világos keret */
+		transition: transform 0.18s ease, box-shadow 0.18s ease;
+		perspective: 800px;
+	}
+
+	.tanfolyamkartya:hover {
+		transform: translateY(-6px) scale(1.01);
+		box-shadow: 0 18px 48px rgba(0,0,0,0.36) !important;
+	}
+
+	/* Optional small badge / suit accent (not green) */
+	.tanfolyamkartya .card-badge {
+		position: absolute;
+		top: 12px;
+		right: 12px;
+		background: rgba(255,255,255,0.06);
+		color: var(--text);
+		padding: 6px 8px;
+		border-radius: 6px;
+		font-weight: 700;
+		font-size: 0.85em;
+	}
+
+	/* Make images look inset like printed on the card */
+	.tanfolyamkartya img {
+		width: 100%;
+		max-width: 200px;
+		border-radius: 8px;
+		box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 2px 6px rgba(0,0,0,0.12);
+	}
+
+	/* Title styling similar to card label */
+	.tanfolyamkartya h2 {
+		margin-top: 8px;
+		color: var(--primary-600);
+		letter-spacing: 0.2px;
+		font-weight: 700;
+	}
+
+/* Biztosítjuk, hogy a kártyák képei és szövege alkalmazkodjanak */
+.tanfolyamkartya img { 
+    background: transparent;
+}
+.tanfolyamkartya h2 {
+    color: var(--text);
+}
+
+/* Navigáció / adaptív */
+#navigacio a {
+    color: var(--nav-text) !important;
+    background: var(--nav-bg) !important;
+    box-shadow: 0 4px 16px var(--accent-shadow) !important;
+    border-color: rgba(255,255,255,0.06) !important;
+}
+#navigacio a:hover {
+    background: var(--surface) !important;
+    color: var(--primary-600) !important;
+    border-color: var(--primary) !important;
+}
+
+/* Aloldal konténer */
+.aloldal-container {
+    background: var(--surface) !important;
+}
+.aloldal-container p {
+    color: var(--text) !important;
+}
+
+/* Kis segédstílus a téma váltó gombhoz */
+#theme-toggle {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.12);
+    color: inherit;
+    padding: 8px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+}
+#theme-toggle:hover { opacity: 0.95; }
+
+/* Ha nincs kézi beállítás, figyelembe vesszük a rendszer sötét mód preferenciáját */
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme]) {
+        --bg: #0f1115;
+        --surface: #131418;
+        --muted: #15161a;
+        --text: #e6e6e6;
+        --primary: #9a7bff;
+        --primary-600: #7b5ad1;
+        --accent-shadow: rgba(0,0,0,0.45);
+        --nav-bg: rgba(0,0,0,0.28);
+        --nav-text: #ffffff;
+    }
 }
 
 
