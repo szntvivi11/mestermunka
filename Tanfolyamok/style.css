@@ -1,524 +1,375 @@
-/* Főoldali gyorslink gombok stílusa */
-.udvozlo-gomb {
-	display: inline-block;
-	background: #7b2ff2;
-	color: #fff;
-	padding: 12px 32px;
-	border-radius: 8px;
-	font-size: 1.1em;
-	text-decoration: none;
-	font-weight: bold;
-	box-shadow: 0 2px 8px rgba(90,24,154,0.08);
-	transition: background 0.2s;
-	margin: 0 4px;
-}
-.udvozlo-gomb:hover {
-	background: #5a189a;
-}
-.auth-form textarea {
-	padding: 10px;
-	border: 1px solid #b185f5;
-	border-radius: 7px;
-	font-size: 1em;
-	background: #f7f7ff;
-	transition: border 0.2s;
-	min-height: 80px;
-	resize: vertical;
-}
-.auth-form textarea:focus {
-	border: 1.5px solid #7b2ff2;
-	outline: none;
-}
-/* Bejelentkezés/Regisztráció form stílus */
-.auth-form {
-	display: flex;
-	flex-direction: column;
-	gap: 14px;
-	max-width: 340px;
-	margin: 0 auto;
-	padding: 18px 0 0 0;
-}
-.auth-form label {
-	font-weight: 500;
-	color: #5a189a;
-	margin-bottom: 2px;
-}
-.auth-form input {
-	padding: 10px;
-	border: 1px solid #b185f5;
-	border-radius: 7px;
-	font-size: 1em;
-	margin-bottom: 6px;
-	background: #f7f7ff;
-	transition: border 0.2s;
-}
-.auth-form input:focus {
-	border: 1.5px solid #7b2ff2;
-	outline: none;
-}
-.auth-form button {
-	background: #7b2ff2;
-	color: #fff;
-	border: none;
-	border-radius: 8px;
-	padding: 12px 0;
-	font-size: 1.1em;
-	font-weight: bold;
-	margin-top: 8px;
-	cursor: pointer;
-	box-shadow: 0 2px 8px rgba(90,24,154,0.08);
-	transition: background 0.2s;
-}
-.auth-form button:hover {
-	background: #5a189a;
-}
-h1 {
-	text-align: center;
-	margin-top: 32px;
-	color: #333;
-}
-
-/* Aloldalak egységes stílusa */
-.aloldal-container {
-	max-width: 600px;
-	margin: 32px auto;
-	background: #fff;
-	border-radius: 16px;
-	box-shadow: 0 2px 16px rgba(90,24,154,0.08);
-	padding: 32px 18px;
-}
-.aloldal-container h1 {
-	color: #7b2ff2;
-	font-size: 2em;
-	margin-bottom: 18px;
-	text-align: center;
-}
-.aloldal-container img {
-	width: 100%;
-	max-width: 350px;
-	display: block;
-	margin: 0 auto 18px auto;
-	border-radius: 12px;
-	box-shadow: 0 2px 8px rgba(90,24,154,0.10);
-}
-.aloldal-container p {
-	font-size: 1.1em;
-	color: #333;
-	margin-bottom: 18px;
-	text-align: center;
-}
-.aloldal-container ul {
-	list-style: none;
-	padding: 0;
-	margin: 0 0 18px 0;
-}
-.aloldal-container li {
-	margin-bottom: 8px;
-	color: #5a189a;
-	font-weight: 500;
-	text-align: center;
-}
-.aloldal-container a {
-	display: inline-block;
-	margin: 0 auto;
-	background: #7b2ff2;
-	color: #fff;
-	padding: 10px 28px;
-	border-radius: 8px;
-	text-decoration: none;
-	font-weight: bold;
-	transition: background 0.2s;
-	box-shadow: 0 2px 8px rgba(90,24,154,0.08);
-}
-.aloldal-container a:hover {
-	background: #5a189a;
-}
-@media (max-width: 700px) {
-	.aloldal-container {
-		padding: 18px 4vw;
-	}
-}
-/*
-	Tisztított CSS: csak a ténylegesen használt, létező oldalakhoz tartozó szabályok maradtak.
-	(Aloldalak saját stílusát minden aloldal külön tartalmazza.)
-*/
-/* Absztrakt hullámos vonal elválasztó a főoldalon */
-#absztrakt-vonal {
-	width: 100%;
-	margin: 0;
-	overflow: hidden;
-	line-height: 0;
-	background: none;
-	padding: 0;
-	position: relative;
-	z-index: 1;
-	top: 0;
-	min-height: 300px;
-}
-
-/* Piros-fekete absztrakt vonal minden oldalon */
+/* ==========================================
+   KÉK–FEHÉR TEMA ALAP VÁLTOZÓK
+   ========================================== */
 :root {
-	--abs-red: #f22f2f;
-	--abs-black: #000000;
+    --bg: #0f111a;               /* háttér szín, sötétkék */
+    --surface: #1a1f2b;          /* dobozok, kártyák háttere */
+    --muted: #252a3b;            /* halvány háttér pl. inputokhoz */
+    --text: #ffffff;             /* összes szöveg fehér */
+    --primary: #3399ff;          /* fő kék szín */
+    --primary-600: #0066cc;      /* sötétebb kék, hoverhez/aktivhoz */
+    --accent-shadow: rgba(51, 153, 255, 0.15); /* kék árnyékok */
+    --nav-bg: rgba(51, 153, 255, 0.3); /* nav háttér átlátszó kék */
+    --nav-text: #ffffff;         /* nav szöveg fehér */
 }
 
-/* Ha az oldal tartalmaz SVG-t az #absztrakt-vonal elemben, a path-ok kitöltését a dokumentumban definiált gradienttel (
-   id="absztrakt-stripes") adhatjuk meg. Ha nincs definiálva, a fallback overlay mutat csíkozást. */
-#absztrakt-vonal svg path {
-	fill: url(#absztrakt-stripes) !important;
-}
-
-/* Fallback overlay: ismétlődő csíkozás (ha szükséges) */
-#absztrakt-vonal .absztrakt-fallback {
-	/* elrejtv e a fallback overlayt: csak maga az SVG hullám legyen látható */
-	display: none !important;
-}
-
-/* Stacking biztosítása */
-#absztrakt-vonal svg { z-index: 1; }
-
-
-/* Főoldal üdvözlő szekció új stílus, egységes id-kkal */
-#udvozlo {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	min-height: 60vh;
-	background: linear-gradient(120deg, #f7e8ff 0%, #e0f7fa 100%);
-	border-radius: 18px;
-	margin: 32px auto 0 auto;
-	max-width: 600px;
-	box-shadow: 0 4px 24px rgba(0,0,0,0.07);
-	padding: 32px 16px;
-}
-#udvozloh1 {
-	font-size: 2.2em;
-	color: #5a189a;
-	margin-bottom: 16px;
-	text-align: center;
-}
-#udvozlop {
-	font-size: 1.15em;
-	color: #333;
-	margin-bottom: 28px;
-	text-align: center;
-}
-#udvozloimg {
-	border-radius: 12px;
-	margin-bottom: 18px;
-	box-shadow: 0 2px 8px rgba(90,24,154,0.08);
-	width: 100%;
-	max-width: 600px;
-}
-#tanfolyamok-gomb {
-	display: inline-block;
-	background: #5a189a;
-	color: #fff;
-	padding: 12px 32px;
-	border-radius: 8px;
-	font-size: 1.1em;
-	text-decoration: none;
-	font-weight: bold;
-	box-shadow: 0 2px 8px rgba(90,24,154,0.08);
-	transition: background 0.2s;
-	margin-top: 12px;
-}
-#tanfolyamok-gomb:hover {
-	background: #7b2ff2;
-}
-
-/* Navbar stílus */
-#navigacio {
-	display: flex;
-	justify-content: center;
-	gap: 36px;
-	background: transparent;
-	z-index: 2;
-	padding: 0;
-	margin: 0;
-}
-#navigacio a {
-	color: #fff;
-	text-shadow: 0 2px 8px rgba(90,24,154,0.18), 0 1px 0 #333;
-	text-decoration: none;
-	font-weight: bold;
-	font-size: 1.5em;
-	letter-spacing: 0.5px;
-	padding: 14px 28px;
-	border-radius: 12px;
-	transition: background 0.2s, color 0.2s;
-	background: rgba(90,24,154,0.22);
-	margin: 0 0;
-	box-shadow: 0 4px 16px rgba(90,24,154,0.10);
-	border: 2px solid rgba(255,255,255,0.12);
-}
-#navigacio a:hover {
-	background: #fff;
-	color: #5a189a;
-	border-color: #7b2ff2;
-	text-shadow: none;
-}
-
-body {
-	background: #f7f7f7;
-	font-family: Arial, sans-serif;
-	margin: 0;
-	padding: 0;
-}
-
-h1 {
-	text-align: center;
-	margin-top: 32px;
-	color: #333;
-}
-/* ===== Regisztrációs fülek (Felhasználó / Tanfolyam adó) ===== */
-.tabs {
-	display: flex;
-	justify-content: center;
-	gap: 12px;
-	margin-bottom: 24px;
-}
-
-.tab {
-	padding: 10px 22px;
-	border: 2px solid #b185f5;
-	background: #f7f7ff;
-	color: #5a189a;
-	border-radius: 10px;
-	font-weight: 600;
-	font-size: 1em;
-	cursor: pointer;
-	transition: all 0.25s ease;
-	box-shadow: 0 2px 6px rgba(90,24,154,0.06);
-}
-
-.tab:hover {
-	background: #e9d8ff;
-}
-
-.tab.active {
-	background: #f22f2f;
-	color: #fff;
-	border-color: #7b2ff2;
-	box-shadow: 0 3px 10px rgba(90,24,154,0.15);
-}
-
-/* Csak az aktív form jelenjen meg */
-.auth-form {
-	display: none;
-}
-
-.auth-form.active {
-	display: flex;
-	flex-direction: column;
-	gap: 14px;
-	max-width: 340px;
-	margin: 0 auto;
-	padding-top: 18px;
-}
-
-/* textarea a tanfolyam leírásához */
-.auth-form textarea {
-	padding: 10px;
-	border: 1px solid #b185f5;
-	border-radius: 7px;
-	font-size: 1em;
-	background: #f7f7ff;
-	transition: border 0.2s;
-	min-height: 80px;
-	resize: vertical;
-}
-.auth-form textarea:focus {
-	border: 1.5px solid #7b2ff2;
-	outline: none;
-}
-
-
-/* ===== Bejelentkezési form azonosítóval ===== */
-#login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  max-width: 340px;
-  margin: 0 auto;
-  padding-top: 18px;
-}
-
-/* ===== Hibák vagy visszajelzések megjelenítése ===== */
-.login-message {
-  font-weight: bold;
-  text-align: center;
-  margin-top: 16px;
-  font-size: 1.1em;
-}
-
-.login-success {
-  color: green;
-}
-
-.login-error {
-  color: red;
-}
-
-/* ========== Téma változók és felülírások (hozzáfűzve) ========== */
-:root {
-    --bg: #f7f7f7;
-    --surface: #ffffff;
-    --muted: #f7f7ff;
-    --text: #333333;
-    --primary: #7b2ff2;
-    --primary-600: #5a189a;
-    --accent-shadow: rgba(90,24,154,0.08);
-    --nav-bg: rgba(90,24,154,0.22);
-    --nav-text: #ffffff;
-}
-
-/* Dark theme */
+/* ha dark modba megy, picit erősebb kontraszt */
 [data-theme="dark"] {
-    --bg: #0f1115;
-    --surface: #131418;
-    --muted: #15161a;
-    --text: #e6e6e6;
-    --primary: #9a7bff;
-    --primary-600: #7b5ad1;
-    --accent-shadow: rgba(0,0,0,0.45);
-    --nav-bg: rgba(0,0,0,0.28);
-    --nav-text: #ffffff;
+    --bg: #0a0e1a;               /* még sötétebb háttér */
+    --surface: #11172a;          /* sötét kártya */
+    --muted: #1d2536;            /* halvány háttér */
+    --text: #ffffff;             /* összes szöveg fehér */
+    --primary: #66b3ff;          /* világosabb kék */
+    --primary-600: #005bb5;      /* mélyebb kék */
+    --accent-shadow: rgba(102, 179, 255, 0.2); /* kék árnyék */
+    --nav-bg: rgba(102, 179, 255, 0.15); /* átlátszó nav */
+    --nav-text: #ffffff;         /* nav szöveg fehér marad */
+}
+/* ==========================================
+   ABSZTRAKT HULLÁMOS VONAL - KÉK SZÜRKE STÍLUS
+   ========================================== */
+#absztrakt-vonal {
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+  line-height: 0;
+  background: var(--bg); /* alap háttér a hullám mögött */
+  padding: 0;
+  position: relative;
+  z-index: 1;
+  top: 0;
+  min-height: 300px;
 }
 
-/* Változók alkalmazása az alap elemekre */
+#absztrakt-vonal svg path {
+  fill: #3399ff !important; /* kék hullám */
+}
+
+/* kis árnyék effekt a hullám alá */
+.hullam-container {
+  filter: drop-shadow(0 6px 10px rgba(59, 38, 151, 0.452));
+}
+/* ==========================================
+   ALAP STÍLUSOK
+   ========================================== */
 html, body {
-    background: var(--bg) !important;
-    color: var(--text) !important;
+    background: var(--bg);
+    color: var(--text);          
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    margin: 0;                   
+    padding: 0;                  
 }
 
-/* Kártya felülírások (néhány kártya inline stílusokat használ) */
-.tanfolyamkartya {
-    background: var(--surface) !important;
-    color: inherit !important;
-    box-shadow: 0 2px 8px var(--accent-shadow) !important;
+h1 {
+	font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    text-align: center;          
+    margin-top: 32px;            
+    color: var(--primary);       
 }
 
-/* Card image sizing: ensure images fill the top area of the card without distortion */
-.tanfolyamkartya .card-image {
-	width: 100%;
-	height: 140px; /* fixed visual area inside the card */
-	overflow: hidden;
-	border-radius: 8px;
-	display: block;
-	margin-bottom: 12px;
-}
-.tanfolyamkartya .card-image img,
-.tanfolyamkartya img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	display: block;
+/* ==========================================
+   NAVIGÁCIÓ RÉSZ
+   ========================================== */
+#navigacio {
+    display: flex;               
+    justify-content: center;     
+    gap: 36px;                   
+    background: transparent;     
+    padding: 0;
+    margin: 0;
+    position: relative;
+    z-index: 10;                 
 }
 
-@media (max-width: 520px) {
-	.tanfolyamkartya .card-image { height: 110px; }
-}
-	/* Poker-style card look for course cards (no green) */
-	.tanfolyamkartya {
-		background: linear-gradient(180deg, #ffffff 0%, #fbfbfb 100%) !important; /* papírszerű */
-		color: var(--text) !important;
-		border-radius: 12px !important;
-		box-shadow: 0 8px 24px rgba(0,0,0,0.28) !important; /* mélyebb, egységes árnyék */
-		border: 1px solid rgba(255,255,255,0.06) !important; /* finom, világos keret */
-		transition: transform 0.18s ease, box-shadow 0.18s ease;
-		perspective: 800px;
-	}
-
-	.tanfolyamkartya:hover {
-		transform: translateY(-6px) scale(1.01);
-		box-shadow: 0 18px 48px rgba(0,0,0,0.36) !important;
-	}
-
-	/* Optional small badge / suit accent (not green) */
-	.tanfolyamkartya .card-badge {
-		position: absolute;
-		top: 12px;
-		right: 12px;
-		background: rgba(255,255,255,0.06);
-		color: var(--text);
-		padding: 6px 8px;
-		border-radius: 6px;
-		font-weight: 700;
-		font-size: 0.85em;
-	}
-
-	/* Make images look inset like printed on the card */
-	.tanfolyamkartya img {
-		width: 100%;
-		max-width: 200px;
-		border-radius: 8px;
-		box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 2px 6px rgba(0,0,0,0.12);
-	}
-
-	/* Title styling similar to card label */
-	.tanfolyamkartya h2 {
-		margin-top: 8px;
-		color: var(--primary-600);
-		letter-spacing: 0.2px;
-		font-weight: 700;
-	}
-
-/* Biztosítjuk, hogy a kártyák képei és szövege alkalmazkodjanak */
-.tanfolyamkartya img { 
-    background: transparent;
-}
-.tanfolyamkartya h2 {
-    color: var(--text);
-}
-
-/* Navigáció / adaptív */
 #navigacio a {
-    color: var(--nav-text) !important;
-    background: var(--nav-bg) !important;
-    box-shadow: 0 4px 16px var(--accent-shadow) !important;
-    border-color: rgba(255,255,255,0.06) !important;
+    color: var(--nav-text);      
+    background: var(--nav-bg);   
+    text-decoration: none;       
+    font-weight: bold;           
+    font-size: 1.2em;            
+    padding: 12px 24px;          
+    border-radius: 12px;         
+    box-shadow: 0 4px 16px var(--accent-shadow);
+    border: 2px solid rgba(255,255,255,0.08); 
+    transition: background 0.2s, color 0.2s, border 0.2s;
 }
+
 #navigacio a:hover {
-    background: var(--surface) !important;
-    color: var(--primary-600) !important;
-    border-color: var(--primary) !important;
+    background: var(--primary);  
+    color: #ffffff;              
+    border-color: var(--primary-600); 
 }
 
-/* Aloldal konténer */
-.aloldal-container {
-    background: var(--surface) !important;
-}
-.aloldal-container p {
-    color: var(--text) !important;
+/* ==========================================
+   ÜDVÖZLŐ RÉSZ (főoldal)
+   ========================================== */
+#udvozlo {
+    display: flex;               
+    flex-direction: column;      
+    align-items: center;         
+    justify-content: center;     
+    min-height: 60vh;            
+    background: var(--bg); /* alap háttér */
+    border-radius: 18px;         
+    margin: 32px auto;           
+    max-width: 600px;            
+    box-shadow: 0 4px 24px rgba(51,153,255,0.25); 
+    padding: 32px 16px;          
 }
 
-/* Kis segédstílus a téma váltó gombhoz */
-#theme-toggle {
-    background: transparent;
-    border: 1px solid rgba(255,255,255,0.12);
-    color: inherit;
-    padding: 8px 12px;
-    border-radius: 10px;
-    cursor: pointer;
+#udvozloh1 {
+    font-size: 2.2em;            
+    color: var(--primary);       
+    margin-bottom: 16px;         
+}
+
+#udvozlop {
+    font-size: 1.15em;           
+    color: var(--text);              
+    margin-bottom: 28px;         
+    text-align: center;          
+}
+
+#udvozloimg {
+    border-radius: 12px;         
+    margin-bottom: 18px;         
+    box-shadow: 0 2px 8px rgba(51,153,255,0.2); 
+    width: 100%;
+    max-width: 600px;
+}
+
+/* ==========================================
+   GOMBOK
+   ========================================== */
+button,
+.auth-form button,
+#tanfolyamok-gomb {
+  width: 165px; 
+  height: 62px; 
+  cursor: pointer; 
+  color: #ffffff; 
+  font-size: 17px; 
+  border-radius: 1rem; 
+  border: 2px solid #3399ff; 
+  position: relative; 
+  background: linear-gradient(180deg, #0f111a 0%, #1a2a4b 100%); 
+  overflow: hidden; 
+  transition: all 0.2s ease; 
+}
+
+button::after,
+.auth-form button::after,
+#tanfolyamok-gomb::after {
+  content: '';
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(circle farthest-corner at 50% 50%, rgba(51,153,255,0.3) 20%, rgba(0,0,0,0) 100%);
+  filter: blur(12px); 
+  z-index: -1; 
+  position: absolute;
+  left: 0;
+  top: 0;
+  transition: all 0.2s ease; 
+}
+
+button:hover,
+.auth-form button:hover,
+#tanfolyamok-gomb:hover {
+  background: linear-gradient(180deg, #1a2a4b 0%, #3399ff 100%);
+  color: #ffffff; 
+  transform: translateY(-2px); 
+  box-shadow: 0 0 15px rgba(51,153,255,0.5); 
+}
+
+button:active,
+.auth-form button:active,
+#tanfolyamok-gomb:active {
+  transform: scale(0.95) rotate(2deg); 
+  background: linear-gradient(180deg, #0f111a 0%, #0066cc 100%); 
+  box-shadow: 0 0 20px rgba(51,153,255,0.6); 
+  transition: 0.1s;
+}
+
+/* ==========================================
+   ŰRLAPOK
+   ========================================== */
+.auth-form {
+    display: flex;               
+    flex-direction: column;      
+    gap: 14px;                   
+    max-width: 340px;            
+    margin: 0 auto;
+    padding-top: 18px;
+}
+
+.auth-form label {
+    font-weight: 500;
+    color: #ffffff;       
+}
+
+.auth-form input,
+.auth-form textarea {
+    padding: 10px;
+    border: 1px solid var(--primary);
+    border-radius: 7px;
+    font-size: 1em;
+    background: var(--muted);    
+    color: #ffffff;          
+    transition: border 0.2s, background 0.2s; 
+}
+
+.auth-form input:focus,
+.auth-form textarea:focus {
+    border-color: var(--primary-600); 
+    outline: none;
+}
+
+/* ==========================================
+   TANFOLYAM KÁRTYÁK
+   ========================================== */
+.tanfolyamkartya {
+    background: var(--surface);  
+    color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(51,153,255,0.25); 
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    text-align: center;
+    padding: 16px;
+}
+
+.tanfolyamkartya:hover {
+    transform: translateY(-6px) scale(1.02); 
+    box-shadow: 0 18px 48px rgba(51,153,255,0.35); 
+}
+
+.tanfolyamkartya img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(51,153,255,0.25);
+}
+
+.tanfolyamkartya h2 {
+	font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+	font-size: 1.5em;	
+    color: #ffffff;       
     font-weight: 700;
+    margin-top: 10px;
 }
-#theme-toggle:hover { opacity: 0.95; }
 
-/* Ha nincs kézi beállítás, figyelembe vesszük a rendszer sötét mód preferenciáját */
-@media (prefers-color-scheme: dark) {
-	:root:not([data-theme]) {
-        --bg: #0f1115;
-        --surface: #131418;
-        --muted: #15161a;
-        --text: #e6e6e6;
-        --primary: #9a7bff;
-        --primary-600: #7b5ad1;
-        --accent-shadow: rgba(0,0,0,0.45);
-        --nav-bg: rgba(0,0,0,0.28);
-        --nav-text: #ffffff;
+/* ==========================================
+   ALAP OLDALAK (pl. kapcsolat)
+   ========================================== */
+.aloldal-container {
+    max-width: 600px;
+    margin: 32px auto;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 2px 16px rgba(51,153,255,0.25);
+    padding: 32px 18px;
+    text-align: center;
+}
+
+.aloldal-container h1 {
+    color: var(--primary);
+}
+
+.aloldal-container p {
+    font-size: 1.1em;
+    color: #ffffff;
+}
+
+/* ==========================================
+   MOBIL NÉZET (ha szűk a képernyő)
+   ========================================== */
+@media (max-width: 700px) {
+    #navigacio {
+        flex-wrap: wrap;         
+        gap: 12px;
+    }
+    .aloldal-container {
+        padding: 18px 4vw;       
     }
 }
 
+/* ==========================================
+   VÉGSŐ JAVASLATOK
+   ========================================== */			
+a {
+	text-decoration: none;       
+	color: var(--primary);       
+	transition: color 0.2s;      
+}
+/* ==========================================
+   VONAL ELOTTI NAV GOMBOK
+   ========================================== */
+#navigacio a {
+    color: var(--nav-text);
+    background: rgba(15, 17, 26, 0.7); /* sötét, de átlátszó */
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.3em; /* picit nagyobb */
+    padding: 14px 28px; /* nagyobb gomb */
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(51,153,255,0.3);
+    border: 2px solid rgba(255,255,255,0.1);
+    transition: background 0.2s, color 0.2s, border 0.2s;
+}
+#navigacio a:hover {
+    background: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary-600);
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(51,153,255,0.6);
+}#navigacio a {
+    color: var(--nav-text);
+    background: rgba(15, 17, 26, 0.7); /* sötét, de átlátszó */
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.3em; /* picit nagyobb */
+    padding: 14px 28px; /* nagyobb gomb */
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(51,153,255,0.3);
+    border: 2px solid rgba(255,255,255,0.1);
+    transition: background 0.2s, color 0.2s, border 0.2s;
+}
+#navigacio a:hover {
+    background: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary-600);
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(51,153,255,0.6);
+}
+/* ==========================================
+   VÉGSŐ JAVASLATOK
+   ========================================== */
+   #footer {
+    background: rgba(15, 17, 26, 0.85); /* sötét, átlátszó */
+    color: #ffffff;
+    padding: 24px 16px;
+    text-align: center;
+    border-top: 2px solid var(--primary-600);
+    box-shadow: 0 -4px 12px rgba(51,153,255,0.25);
+    margin-top: 32px;
+}
 
+.footer-container p {
+    margin: 0 0 12px 0;
+    font-size: 0.95em;
+    color: #ffffff;
+}
+
+.footer-nav a {
+    color: var(--primary);
+    margin: 0 10px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.footer-nav a:hover {
+    color: var(--primary-600);
+    text-decoration: underline;
+}
