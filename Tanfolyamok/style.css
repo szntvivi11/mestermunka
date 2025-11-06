@@ -223,7 +223,13 @@ button:active,
     border-color: var(--primary-600); 
     outline: none;
 }
-
+.auth-form {
+    display: none;
+  }
+  
+  .auth-form.active {
+    display: flex;
+  }
 /* ==========================================
    TANFOLYAM KÁRTYÁK
    ========================================== */
@@ -373,3 +379,8 @@ a {
     color: var(--primary-600);
     text-decoration: underline;
 }
+
+/*///////////////////////////////////////////////////*/
+
+
+
