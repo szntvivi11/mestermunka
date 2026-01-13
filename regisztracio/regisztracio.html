@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="hu" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Regisztráció</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    /* Üzenetek */
+    .login-message {
+      padding: 12px 20px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      font-weight: bold;
+    }
+    .login-success { background-color: #4caf50; color: white; }
+    .login-error { background-color: #f44336; color: white; }
+
+    /* Tanfolyamadó mezők elrejtése alapból */
+    .teacher-fields { display: none; }
+  </style>
+</head>
+<body>
+<header id="absztrakt-vonal">
+  <nav id="navigacio" style="position: relative; z-index: 2; display:flex; justify-content:center; gap:24px; padding-top:120px; font-size:18px;">
+    <a href="/">Főoldal</a>
+    <a href="/tanfolyamok">Tanfolyamok</a>
+    <a href="/bejelentkezes">Bejelentkezés</a>
+    <a href="/regisztracio">Regisztráció</a>
+    <a href="/kapcsolat">Kapcsolat</a>
+  </nav>
+</header>
+
+<main style="position: relative; z-index: 3;">
+  <div class="aloldal-container">
+    <h1>Regisztráció</h1>
+
+    <!-- Választás: Felhasználó / Tanfolyamadó -->
+    <label>
+      <input type="radio" name="role" value="user" checked> Sima felhasználó
+    </label>
+    <label>
+      <input type="radio" name="role" value="teacher"> Tanfolyamadó
+    </label>
+
+    <form class="auth-form" id="register-form">
+      <label for="reg-username">Felhasználónév</label>
+      <input id="reg-username" type="text" required>
+
+      <label for="reg-email">Email</label>
+      <input id="reg-email" type="email" required>
+
+      <label for="reg-password">Jelszó</label>
+      <input id="reg-password" type="password" required>
+
+      <!-- Tanfolyamadó mezők -->
+      <div class="teacher-fields">
+        <label for="teacher-course">Kurzus / végzettség</label>
+        <input id="teacher-course" type="text">
+
+      </div>
+
+      <button type="submit">Regisztráció</button>
+    </form>
+
+    <div id="message" class="message"></div>
+
+    <p style="margin-top:20px;">
+      Van már fiókod?
+      <a href="/bejelentkezes">Jelentkezz be</a>
+    </p>
+  </div>
+</main>
+
+<footer id="footer">
+  <div class="footer-container">
+    <p>&copy; 2025 MyWebsite. Minden jog fenntartva.</p>
+    <nav class="footer-nav">
+      <a href="/">Főoldal</a>
+      <a href="/tanfolyamok">Tanfolyamok</a>
+      <a href="/kapcsolat">Kapcsolat</a>
+      <a href="/bejelentkezes">Bejelentkezés</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  // ==== Választás: user / teacher ====
+  const roleRadios = document.querySelectorAll('input[name="role"]');
+  const teacherFields = document.querySelector('.teacher-fields');
+
+  roleRadios.forEach(radio => {
+    radio.addEventListener('change', () => {
+      teacherFields.style.display = radio.value === 'teacher' ? 'block' : 'none';
+    });
+  });
+
+  // ==== SHOW MESSAGE ====
+  function showMessage(msg, type = "success") {
+    const container = document.querySelector(".aloldal-container");
+    const existing = document.querySelector(".login-message");
+    if (existing) existing.remove();
+
+    const message = document.createElement("div");
+    message.className = `login-message ${type === "error" ? "login-error" : "login-success"}`;
+    message.textContent = msg;
+    container.prepend(message);
+  }
+
+  // ==== REGISZTRÁCIÓ ====
+  const form = document.getElementById('register-form');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const role = document.querySelector('input[name="role"]:checked').value;
+    const nev = document.getElementById("reg-username").value.trim();
+    const email = document.getElementById("reg-email").value.trim();
+    const jelszo = document.getElementById("reg-password").value.trim();
+    const vegzettseg = document.getElementById("teacher-course").value.trim();
+
+    if (!nev || !email || !jelszo) {
+      showMessage("❌ Kérlek, tölts ki minden kötelező mezőt!", "error");
+      return;
+    }
+
+    if (role === 'teacher' && !vegzettseg) {
+      showMessage("❌ Kérlek, add meg a végzettséged!", "error");
+      return;
+    }
+
+    try {
+      const res = await fetch(role === 'user' ? '/api/register-user' : '/api/register-teacher', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          nev, 
+          felhasznalonev: nev,
+          email, 
+          jelszo, 
+          vegzettseg, 
+        })
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        showMessage("✅ Sikeres regisztráció!", "success");
+        form.reset();
+        teacherFields.style.display = 'none';
+        setTimeout(() => window.location.href = "/bejelentkezes", 1500);
+      } else {
+        showMessage(data.message || "❌ Hiba a regisztráció során", "error");
+      }
+    } catch (err) {
+      console.error(err);
+      showMessage("❌ Szerverhiba", "error");
+    }
+  });
+</script>
+</body>
+</html>

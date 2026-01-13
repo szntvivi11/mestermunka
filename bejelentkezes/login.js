@@ -1,0 +1,54 @@
+// Clean login handler for DB-based login
+const loginForm = document.getElementById('login-form');
+
+loginForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById('login-username').value.trim();
+  const jelszo = document.getElementById('login-password').value.trim();
+
+  const container = document.querySelector('.aloldal-container');
+  const existing = document.querySelector('.login-message');
+  if (existing) existing.remove();
+
+  if (!email || !jelszo) {
+    const msg = document.createElement('div');
+    msg.className = 'login-message login-error';
+    msg.textContent = '❌ Kérlek, tölts ki minden mezőt!';
+    container.appendChild(msg);
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, jelszo })
+    });
+
+    const data = await res.json();
+    const msg = document.createElement('div');
+    msg.className = `login-message ${data.success ? 'login-success' : 'login-error'}`;
+    msg.textContent = data.message || (data.success ? '✅ Sikeres bejelentkezés' : '❌ Hiba');
+
+    container.appendChild(msg);
+
+    if (data.success) {
+      // Sikeres login → átirányítás a főoldalra, vagy szerepkör szerint
+      setTimeout(() => {
+        if (data.role === 'teacher') {
+          window.location.href = '/tanfolyamok'; // pl. oktató landing
+        } else {
+          window.location.href = '/'; // felhasználó landing
+        }
+      }, 800);
+    }
+
+  } catch (err) {
+    const msg = document.createElement('div');
+    msg.className = 'login-message login-error';
+    msg.textContent = '❌ Hálózati hiba';
+    container.appendChild(msg);
+    console.error('Login fetch error', err);
+  }
+});
