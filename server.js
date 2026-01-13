@@ -192,6 +192,9 @@ app.use((req, res) => {
   res.status(404).send("Az oldal nem található");
 });
 
+const ok = await bcrypt.compare(jelszo, user.jelszo);
+console.log("LOGIN:", jelszo, user.jelszo, ok);
+
 // ===== SERVER START =====
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () =>
