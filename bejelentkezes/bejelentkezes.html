@@ -41,6 +41,7 @@
         <a href="/bejelentkezes">Bejelentkezés</a>
         <a href="/regisztracio">Regisztráció</a>
         <a href="/kapcsolat">Kapcsolat</a>
+        <a href="/profil">Profil</a>
     </nav>
 
 </header>
@@ -87,5 +88,11 @@
 </footer>
 
 <script src="/bejelentkezes/login.js"></script>
+<script>
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user) {
+        document.querySelector('a[href="/profil"]').style.display = 'none';
+    }
+</script>
 </body>
 </html>

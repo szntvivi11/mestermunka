@@ -34,7 +34,10 @@ loginForm.addEventListener('submit', async (e) => {
     container.appendChild(msg);
 
     if (data.success) {
-      // Sikeres login → átirányítás a főoldalra, vagy szerepkör szerint
+      // Store user data in localStorage
+      localStorage.setItem('user', JSON.stringify(data.user));
+
+      // Redirect based on role
       setTimeout(() => {
         if (data.role === 'teacher') {
           window.location.href = '/tanfolyamok'; // pl. oktató landing

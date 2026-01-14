@@ -28,6 +28,7 @@
     <a href="/bejelentkezes">Bejelentkezés</a>
     <a href="/regisztracio">Regisztráció</a>
     <a href="/kapcsolat">Kapcsolat</a>
+    <a href="/profil">Profil</a>
   </nav>
 </header>
 
@@ -155,6 +156,12 @@
       showMessage("❌ Szerverhiba", "error");
     }
   });
+
+  // ==== Hide 'Profil' link if user is not logged in ====
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (!user) {
+    document.querySelector('a[href="/profil"]').style.display = 'none';
+  }
 </script>
 </body>
 </html>

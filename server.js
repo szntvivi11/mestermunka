@@ -3,6 +3,7 @@ const mysql = require("mysql2");
 const path = require("path");
 const bcrypt = require("bcrypt");
 const cors = require("cors");
+const multer = require("multer");
 
 const app = express();
 app.use(express.json());
@@ -45,6 +46,11 @@ app.get("/tanfolyamok/:slug", (req, res) => {
   res.sendFile(filePath, err => {
     if (err) res.status(404).send("Tanfolyam nem található");
   });
+});
+
+// Add a route to serve the profile page
+app.get("/profil", (req, res) => {
+  res.sendFile(path.join(__dirname, "profil.html"));
 });
 
 // ===== ADATBÁZIS =====
@@ -183,6 +189,32 @@ app.post("/api/login", async (req, res) => {
 
   } catch (err) {
     console.error(err);
+    res.status(500).json({ success: false, message: "Szerver hiba" });
+  }
+});
+
+// Add an endpoint to handle profile picture uploads
+const upload = multer({ dest: "uploads/" });
+
+app.post("/api/upload-profile-picture", upload.single("profilePicture"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ success: false, message: "No file uploaded" });
+  }
+
+  res.json({
+    success: true,
+    message: "File uploaded successfully",
+    filePath: `/uploads/${req.file.filename}`
+  });
+});
+
+// ===== TANFOLYAMOK API =====
+app.get("/api/kepzesek", async (req, res) => {
+  try {
+    const [courses] = await db.promise().query("SELECT * FROM kepzesek");
+    res.json(courses);
+  } catch (err) {
+    console.error("❌ Hiba a tanfolyamok lekérdezésekor:", err);
     res.status(500).json({ success: false, message: "Szerver hiba" });
   }
 });

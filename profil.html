@@ -9,12 +9,51 @@
 <body>
     <header>
         <h1>Profil</h1>
+        <a href="/" style="position: absolute; top: 10px; right: 10px; padding: 10px 20px; background-color: #007BFF; color: white; text-decoration: none; border-radius: 5px;">Vissza a főoldalra</a>
+        <img id="profileImage" src="" alt="Profilkép" style="display:none; width:150px; height:150px; border-radius:50%; margin-bottom:20px;">
     </header>
     <main>
         <p>Üdvözlünk a profil oldaladon! Itt megtekintheted és szerkesztheted a személyes adataidat.</p>
+        <p><strong>Felhasználónév:</strong> <span id="username"></span></p>
+        <p><strong>Email:</strong> <span id="email"></span></p>
+
+        <form id="uploadForm" enctype="multipart/form-data">
+            <label for="profilePicture">Profilkép feltöltése:</label>
+            <input type="file" id="profilePicture" name="profilePicture" accept="image/*">
+            <button type="submit">Feltöltés</button>
+        </form>
+
         <button id="logout">Kijelentkezés</button>
     </main>
     <script>
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            document.getElementById('username').textContent = user.nev;
+            document.getElementById('email').textContent = user.email;
+
+            if (user.profilePicture) {
+                const profileImage = document.getElementById('profileImage');
+                profileImage.src = user.profilePicture;
+                profileImage.style.display = 'block';
+            }
+        } else {
+            alert('Nincs bejelentkezve! Kérjük, jelentkezzen be.');
+            window.location.href = '/bejelentkezes';
+        }
+
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+
+            const response = await fetch('/api/upload-profile-picture', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            alert(result.message);
+        });
+
         document.getElementById('logout').addEventListener('click', () => {
             localStorage.removeItem('user');
             window.location.href = '/';

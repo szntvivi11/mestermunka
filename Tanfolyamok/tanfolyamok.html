@@ -1,132 +1,133 @@
 <!DOCTYPE html>
 <html lang="hu" data-theme="dark">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Tanfolyamok</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tanfolyamok</title>
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-	<div id="absztrakt-vonal">
-		<div style="position: relative; width: 100%; height: 240px;">
-			<svg viewBox="0 0 1440 400" width="100%" height="220" preserveAspectRatio="none" style="display:block; position:absolute; top:0; left:0; z-index:1;">
-				<defs>
-					<linearGradient id="fade-bottom" x1="0" y1="0" x2="0" y2="1">
-						<stop offset="80%" stop-color="#fff" stop-opacity="0" />
-						<stop offset="100%" stop-color="#fff" stop-opacity="0.7" />
-					</linearGradient>
-					
-					<linearGradient id="absztrakt-stripes" x1="0" y1="0" x2="1" y2="0">
-						<stop offset="0%" stop-color="#f22f2f" />
-						<stop offset="60%" stop-color="#8b0000" />
-						<stop offset="100%" stop-color="#000000" />
-					</linearGradient>
-					<linearGradient id="wave1" x1="0" y1="0" x2="1" y2="1">
-						<stop offset="0%" stop-color="#7b2ff2" />
-						<stop offset="100%" stop-color="#b185f5" />
-					</linearGradient>
-					<linearGradient id="wave2" x1="0" y1="0" x2="1" y2="1">
-						<stop offset="0%" stop-color="#b185f5" />
-						<stop offset="100%" stop-color="#e0c3fc" />
-					</linearGradient>
-				</defs>
-				<path d="M0,180 C240,120 480,240 720,180 C960,120 1200,240 1440,180 L1440,320 C1200,380 960,100 720,320 C480,540 240,100 0,320 Z" fill="url(#wave1)" fill-opacity="0.85"></path>
-				<path d="M0,210 C360,90 1080,330 1440,210 L1440,350 C1200,400 960,180 720,350 C480,520 240,180 0,350 Z" fill="url(#wave2)" fill-opacity="0.65"></path>
-			</svg>
-			<div style="position:relative; width:100%; height:0; z-index:2;">
+    <div id="absztrakt-vonal">
+        <div style="position: relative; width: 100%; height: 240px;">
+            <svg viewBox="0 0 1440 400" width="100%" height="220" preserveAspectRatio="none" style="display:block; position:absolute; top:0; left:0; z-index:1;">
+                <defs>
+                    <linearGradient id="fade-bottom" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="80%" stop-color="#fff" stop-opacity="0" />
+                        <stop offset="100%" stop-color="#fff" stop-opacity="0.7" />
+                    </linearGradient>
+                   
+                    <linearGradient id="absztrakt-stripes" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stop-color="#f22f2f" />
+                        <stop offset="60%" stop-color="#8b0000" />
+                        <stop offset="100%" stop-color="#000000" />
+                    </linearGradient>
+                    <linearGradient id="wave1" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stop-color="#7b2ff2" />
+                        <stop offset="100%" stop-color="#b185f5" />
+                    </linearGradient>
+                    <linearGradient id="wave2" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stop-color="#b185f5" />
+                        <stop offset="100%" stop-color="#e0c3fc" />
+                    </linearGradient>
+                </defs>
+                <path d="M0,180 C240,120 480,240 720,180 C960,120 1200,240 1440,180 L1440,320 C1200,380 960,100 720,320 C480,540 240,100 0,320 Z" fill="url(#wave1)" fill-opacity="0.85"></path>
+                <path d="M0,210 C360,90 1080,330 1440,210 L1440,350 C1200,400 960,180 720,350 C480,520 240,180 0,350 Z" fill="url(#wave2)" fill-opacity="0.65"></path>
+            </svg>
+            <div style="position:relative; width:100%; height:0; z-index:2;">
     <nav id="navigacio" style="position:absolute; top:120px; left:0; width:100%; display:flex; justify-content:center; gap:24px; font-size:20px; font-weight:600;">
            <a id="nav-fo" href="/" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5); text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Főoldal</a>
            <a id="nav-tanfolyamok" href="/tanfolyamok" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5); text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Tanfolyamok</a>
            <a id="nav-bejelentkezes" href="/bejelentkezes" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5); text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Bejelentkezés</a>
            <a id="nav-regisztracio" href="/regisztracio" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5); text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Regisztráció</a>
            <a id="nav-kapcsolat" href="/kapcsolat" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5); text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Kapcsolat</a>
+           <a id="nav-profil" href="/profil" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5); text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Profil</a>
     </nav>
 </div>
-
-
-
-
-
-			<!-- tükrözött, elmosott reflektív SVG eltávolítva: csak a fő hullámok maradnak -->
-		</div>
-	</div>
-	<main id="tanfolyamokmain">
+ 
+ 
+ 
+ 
+ 
+            <!-- tükrözött, elmosott reflektív SVG eltávolítva: csak a fő hullámok maradnak -->
+        </div>
+    </div>
+    <main id="tanfolyamokmain">
     <h1 id="tanfolyamokh1" style="color:#fff; text-align:center; margin-top:32px;">Tanfolyamok</h1>
     <div id="tanfolyamokcards" style="display:flex; flex-wrap:wrap; gap:24px; justify-content:center;">
-        <a class="tanfolyamkartya" id="fodraszkartya" href="../Tanfolyamok/oldalak/fodrasz.html" 
+        <a class="tanfolyamkartya" id="fodraszkartya" href="../Tanfolyamok/oldalak/fodrasz.html"
            style="text-decoration:none; color:#fff; background:rgba(0,0,0,0.6); border:2px solid #33f; border-radius:12px; box-shadow:0 2px 8px rgba(51,153,255,0.25); width:260px; padding:18px; display:flex; flex-direction:column; align-items:center;">
             <img id="fodraszkep" src="kepek/fodrasz.jpg" alt="Fodrász" style="width:100%; max-width:200px; border-radius:8px; margin-bottom:12px;">
             <h2 id="fodraszcim">Fodrász</h2>
         </a>
-
-        <a class="tanfolyamkartya" id="kormozeskartya" href="../Tanfolyamok/oldalak/kormozes.html" 
+ 
+        <a class="tanfolyamkartya" id="kormozeskartya" href="../Tanfolyamok/oldalak/kormozes.html"
            style="text-decoration:none; color:#fff; background:rgba(0,0,0,0.6); border:2px solid #33f; border-radius:12px; box-shadow:0 2px 8px rgba(51,153,255,0.25); width:260px; padding:18px; display:flex; flex-direction:column; align-items:center;">
             <img id="kormozeskep" src="kepek/körms.jpg" alt="Körmözés" style="width:100%; max-width:200px; border-radius:8px; margin-bottom:12px;">
             <h2 id="kormozescim">Körmözés</h2>
         </a>
-
-        <a class="tanfolyamkartya" id="pillazaskartya" href="../Tanfolyamok/oldalak/pillazas.html" 
+ 
+        <a class="tanfolyamkartya" id="pillazaskartya" href="../Tanfolyamok/oldalak/pillazas.html"
            style="text-decoration:none; color:#fff; background:rgba(0,0,0,0.6); border:2px solid #33f; border-radius:12px; box-shadow:0 2px 8px rgba(51,153,255,0.25); width:260px; padding:18px; display:flex; flex-direction:column; align-items:center;">
             <img id="pillazaskep" src="kepek/műszempiilas.jpg" alt="Pillázás" style="width:100%; max-width:200px; border-radius:8px; margin-bottom:12px;">
             <h2 id="pillazascim">Pillázás</h2>
         </a>
-
-        <a class="tanfolyamkartya" id="masszazskartya" href="../Tanfolyamok/oldalak/masszazs.html" 
+ 
+        <a class="tanfolyamkartya" id="masszazskartya" href="../Tanfolyamok/oldalak/masszazs.html"
            style="text-decoration:none; color:#fff; background:rgba(0,0,0,0.6); border:2px solid #33f; border-radius:12px; box-shadow:0 2px 8px rgba(51,153,255,0.25); width:260px; padding:18px; display:flex; flex-direction:column; align-items:center;">
             <img id="masszazskep" src="kepek/masszazs.jpg" alt="Masszázs" style="width:100%; max-width:200px; border-radius:8px; margin-bottom:12px;">
             <h2 id="masszazscim">Masszázs</h2>
         </a>
-
-        <a class="tanfolyamkartya" id="vezeteskartya" href="../Tanfolyamok/oldalak/vezetes.html" 
+ 
+        <a class="tanfolyamkartya" id="vezeteskartya" href="../Tanfolyamok/oldalak/vezetes.html"
            style="text-decoration:none; color:#fff; background:rgba(0,0,0,0.6); border:2px solid #33f; border-radius:12px; box-shadow:0 2px 8px rgba(51,153,255,0.25); width:260px; padding:18px; display:flex; flex-direction:column; align-items:center;">
             <img id="vezeteskep" src="kepek/vezetes.jpg" alt="Vezetés" style="width:100%; max-width:200px; border-radius:8px; margin-bottom:12px;">
             <h2 id="vezetescim">Vezetés</h2>
         </a>
-
-        <a class="tanfolyamkartya" id="autoszerelokartya" href="../Tanfolyamok/oldalak/autoszerelo.html" 
+ 
+        <a class="tanfolyamkartya" id="autoszerelokartya" href="../Tanfolyamok/oldalak/autoszerelo.html"
            style="text-decoration:none; color:#fff; background:rgba(0,0,0,0.6); border:2px solid #33f; border-radius:12px; box-shadow:0 2px 8px rgba(51,153,255,0.25); width:260px; padding:18px; display:flex; flex-direction:column; align-items:center;">
             <img id="autoszerelokep" src="kepek/autoszzerelo.jpg" alt="Autószerelő" style="width:100%; max-width:200px; border-radius:8px; margin-bottom:12px;">
             <h2 id="autoszerelocim">Autószerelő</h2>
         </a>
-
-        <a class="tanfolyamkartya" id="programozaskartya" href="../Tanfolyamok/oldalak/programozas.html" 
+ 
+        <a class="tanfolyamkartya" id="programozaskartya" href="../Tanfolyamok/oldalak/programozas.html"
            style="text-decoration:none; color:#fff; background:rgba(0,0,0,0.6); border:2px solid #33f; border-radius:12px; box-shadow:0 2px 8px rgba(51,153,255,0.25); width:260px; padding:18px; display:flex; flex-direction:column; align-items:center;">
             <img id="programozaskep" src="kepek/rogramozo.jpg" alt="Programozás" style="width:100%; max-width:200px; border-radius:8px; margin-bottom:12px;">
             <h2 id="programozascim">Programozás</h2>
         </a>
-
-        <a class="tanfolyamkartya" id="asztaloskartya" href="../Tanfolyamok/oldalak/asztalos.html" 
+ 
+        <a class="tanfolyamkartya" id="asztaloskartya" href="../Tanfolyamok/oldalak/asztalos.html"
            style="text-decoration:none; color:#fff; background:rgba(0,0,0,0.6); border:2px solid #33f; border-radius:12px; box-shadow:0 2px 8px rgba(51,153,255,0.25); width:260px; padding:18px; display:flex; flex-direction:column; align-items:center;">
             <img id="asztaloskep" src="kepek/asztalos.jpg" alt="Asztalos" style="width:100%; max-width:200px; border-radius:8px; margin-bottom:12px;">
             <h2 id="asztaloscim">Asztalos</h2>
         </a>
-
-        <a class="tanfolyamkartya" id="villanyszerelokartya" href="../Tanfolyamok/oldalak/villanyszerelo.html" 
+ 
+        <a class="tanfolyamkartya" id="villanyszerelokartya" href="../Tanfolyamok/oldalak/villanyszerelo.html"
            style="text-decoration:none; color:#fff; background:rgba(0,0,0,0.6); border:2px solid #33f; border-radius:12px; box-shadow:0 2px 8px rgba(51,153,255,0.25); width:260px; padding:18px; display:flex; flex-direction:column; align-items:center;">
             <img id="villanyszerelokep" src="kepek/villanyszzerelo.jpg" alt="Villanyszerelő" style="width:100%; max-width:200px; border-radius:8px; margin-bottom:12px;">
             <h2 id="villanyszerelocim">Villanyszerelő</h2>
         </a>
-
-        <a class="tanfolyamkartya" id="cukraszkartya" href="../Tanfolyamok/oldalak/cukrasz.html" 
+ 
+        <a class="tanfolyamkartya" id="cukraszkartya" href="../Tanfolyamok/oldalak/cukrasz.html"
            style="text-decoration:none; color:#fff; background:linear-gradient(); border:2px solid #33f; border-radius:12px; box-shadow:0 2px 8px rgba(51,153,255,0.25); width:260px; padding:18px; display:flex; flex-direction:column; align-items:center;">
             <img id="cukraszkep" src="kepek/cukrasz.jpg" alt="Cukrász" style="width:100%; max-width:200px; border-radius:8px; margin-bottom:12px;">
             <h2 id="cukraszcim">Cukrász</h2>
         </a>
-
-        <a class="tanfolyamkartya" id="hegesztokartya" href="../Tanfolyamok/oldalak/hegeszto.html" 
+ 
+        <a class="tanfolyamkartya" id="hegesztokartya" href="../Tanfolyamok/oldalak/hegeszto.html"
            style="text-decoration:none; color:#fff; background:rgba(0,0,0,0.6); border:2px solid #33f; border-radius:12px; box-shadow:0 2px 8px rgba(51,153,255,0.25); width:260px; padding:18px; display:flex; flex-direction:column; align-items:center;">
             <img id="hegesztokep" src="kepek/heggeszto.jpg" alt="Hegesztő" style="width:100%; max-width:200px; border-radius:8px; margin-bottom:12px;">
             <h2 id="hegesztocim">Hegesztő</h2>
         </a>
-
-        <a class="tanfolyamkartya" id="szakacskartya" href="../Tanfolyamok/oldalak/szakacs.html" 
+ 
+        <a class="tanfolyamkartya" id="szakacskartya" href="../Tanfolyamok/oldalak/szakacs.html"
            style="text-decoration:none; color:#fff; background:rgba(0,0,0,0.6); border:2px solid #33f; border-radius:12px; box-shadow:0 2px 8px rgba(51,153,255,0.25); width:260px; padding:18px; display:flex; flex-direction:column; align-items:center;">
             <img id="szakacskep" src="kepek/szakaccs.jpg" alt="Szakács" style="width:100%; max-width:200px; border-radius:8px; margin-bottom:12px;">
             <h2 id="szakacscim">Szakács</h2>
         </a>
     </div>
 </main>
-	<footer id="footer">
+    <footer id="footer">
     <div class="footer-container">
         <p>&copy; 2025 MyWebsite. Minden jog fenntartva.</p>
         <nav class="footer-nav">
@@ -137,7 +138,41 @@
         </nav>
     </div>
 </footer>
-
-	<script src="script.js"></script>
+ 
+    <script src="script.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        const container = document.getElementById('tanfolyamokcards');
+        try {
+            const response = await fetch('/api/kepzesek');
+            const courses = await response.json();
+ 
+            container.innerHTML = '';
+            courses.forEach(course => {
+                const card = document.createElement('a');
+                card.className = 'tanfolyamkartya';
+                card.href = `../Tanfolyamok/oldalak/${course.nev.toLowerCase().replace(/ /g, '-')}.html`;
+                card.style = `
+                    text-decoration:none; color:#fff; background:rgba(0,0,0,0.6);
+                    border:2px solid #33f; border-radius:12px;
+                    box-shadow:0 2px 8px rgba(51,153,255,0.25);
+                    width:260px; padding:18px; display:flex;
+                    flex-direction:column; align-items:center;`;
+ 
+                card.innerHTML = `
+                    <img src="kepek/${course.kep}" alt="${course.nev}"
+                         style="width:100%; max-width:200px; border-radius:8px; margin-bottom:12px;">
+                    <h2>${course.nev}</h2>
+                `;
+ 
+                container.appendChild(card);
+            });
+        } catch (error) {
+            console.error('Hiba a tanfolyamok betöltésekor:', error);
+            container.innerHTML = '<p>Nem sikerült betölteni a tanfolyamokat.</p>';
+        }
+    });
+</script>
 </body>
 </html>
+ 
