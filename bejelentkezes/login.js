@@ -37,6 +37,12 @@ loginForm.addEventListener('submit', async (e) => {
       // Store user data in localStorage
       localStorage.setItem('user', JSON.stringify(data.user));
 
+      // Hide 'Bejelentkezés' and 'Regisztráció' from the navbar
+      const loginNav = document.querySelector('#nav-bejelentkezes');
+      const registerNav = document.querySelector('#nav-regisztracio');
+      if (loginNav) loginNav.style.display = 'none';
+      if (registerNav) registerNav.style.display = 'none';
+
       // Redirect based on role
       setTimeout(() => {
         if (data.role === 'teacher') {

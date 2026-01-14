@@ -23,12 +23,12 @@
 <body>
 <header id="absztrakt-vonal">
   <nav id="navigacio" style="position: relative; z-index: 2; display:flex; justify-content:center; gap:24px; padding-top:120px; font-size:18px;">
-    <a href="/">Főoldal</a>
-    <a href="/tanfolyamok">Tanfolyamok</a>
-    <a href="/bejelentkezes">Bejelentkezés</a>
-    <a href="/regisztracio">Regisztráció</a>
-    <a href="/kapcsolat">Kapcsolat</a>
-    <a href="/profil">Profil</a>
+    <a href="/" id="nav-fooldal">Főoldal</a>
+    <a href="/tanfolyamok" id="nav-tanfolyamok">Tanfolyamok</a>
+    <a href="/bejelentkezes" id="nav-bejelentkezes">Bejelentkezés</a>
+    <a href="/regisztracio" id="nav-regisztracio">Regisztráció</a>
+    <a href="/kapcsolat" id="nav-kapcsolat">Kapcsolat</a>
+    <a href="/profil" id="nav-profil">Profil</a>
   </nav>
 </header>
 
@@ -161,6 +161,14 @@
   const user = JSON.parse(localStorage.getItem('user'));
   if (!user) {
     document.querySelector('a[href="/profil"]').style.display = 'none';
+  }
+
+  // Check if the user is logged in and hide the login/register links
+  if (user) {
+    const loginNav = document.getElementById('nav-bejelentkezes');
+    const registerNav = document.getElementById('nav-regisztracio');
+    if (loginNav) loginNav.style.display = 'none';
+    if (registerNav) registerNav.style.display = 'none';
   }
 </script>
 </body>

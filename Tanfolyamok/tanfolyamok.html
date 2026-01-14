@@ -173,6 +173,15 @@
         }
     });
 </script>
+<script>
+            // Check if the user is logged in and hide the login/register links
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user) {
+                const loginNav = document.getElementById('nav-bejelentkezes');
+                const registerNav = document.getElementById('nav-regisztracio');
+                if (loginNav) loginNav.style.display = 'none';
+                if (registerNav) registerNav.style.display = 'none';
+            }
+        </script>
 </body>
 </html>
- 

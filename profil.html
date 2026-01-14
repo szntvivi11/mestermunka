@@ -26,7 +26,8 @@
         <button id="logout">Kijelentkezés</button>
     </main>
     <script>
-        const user = JSON.parse(localStorage.getItem('user'));
+        // Avoid redeclaring the 'user' variable
+        let user = JSON.parse(localStorage.getItem('user')) || null;
         if (user) {
             document.getElementById('username').textContent = user.nev;
             document.getElementById('email').textContent = user.email;
@@ -58,6 +59,15 @@
             localStorage.removeItem('user');
             window.location.href = '/';
         });
+    </script>
+    <script>
+        // Check if the user is logged in and hide the login/register links
+        if (user) {
+            const loginNav = document.getElementById('nav-bejelentkezes');
+            const registerNav = document.getElementById('nav-regisztracio');
+            if (loginNav) loginNav.style.display = 'none';
+            if (registerNav) registerNav.style.display = 'none';
+        }
     </script>
 </body>
 </html>
