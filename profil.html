@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header>
+        <h1>Profil</h1>
+    </header>
+    <main>
+        <p>Üdvözlünk a profil oldaladon! Itt megtekintheted és szerkesztheted a személyes adataidat.</p>
+        <button id="logout">Kijelentkezés</button>
+    </main>
+    <script>
+        document.getElementById('logout').addEventListener('click', () => {
+            localStorage.removeItem('user');
+            window.location.href = '/';
+        });
+    </script>
+</body>
+</html>

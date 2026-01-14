@@ -4,14 +4,14 @@ const loginForm = document.getElementById('login-form');
 loginForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const email = document.getElementById('login-username').value.trim();
+  const emailOrUsername = document.getElementById('login-username').value.trim();
   const jelszo = document.getElementById('login-password').value.trim();
 
   const container = document.querySelector('.aloldal-container');
   const existing = document.querySelector('.login-message');
   if (existing) existing.remove();
 
-  if (!email || !jelszo) {
+  if (!emailOrUsername || !jelszo) {
     const msg = document.createElement('div');
     msg.className = 'login-message login-error';
     msg.textContent = '❌ Kérlek, tölts ki minden mezőt!';
@@ -23,7 +23,7 @@ loginForm.addEventListener('submit', async (e) => {
     const res = await fetch('/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, jelszo })
+      body: JSON.stringify({ emailOrUsername, jelszo })
     });
 
     const data = await res.json();
@@ -34,12 +34,20 @@ loginForm.addEventListener('submit', async (e) => {
     container.appendChild(msg);
 
     if (data.success) {
-      // Sikeres login → átirányítás a főoldalra, vagy szerepkör szerint
+      // Store user data in localStorage
+      localStorage.setItem('user', JSON.stringify({
+        id: data.user.id,
+        name: data.user.nev,
+        email: data.user.email,
+        role: data.role
+      }));
+
+      // Redirect based on role
       setTimeout(() => {
         if (data.role === 'teacher') {
-          window.location.href = '/tanfolyamok'; // pl. oktató landing
+          window.location.href = '/tanfolyamok';
         } else {
-          window.location.href = '/'; // felhasználó landing
+          window.location.href = '/';
         }
       }, 800);
     }

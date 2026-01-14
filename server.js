@@ -101,7 +101,6 @@ app.post("/api/register-user", async (req, res) => {
 });
 
 // ---- TEACHER (user_ado) ----
-// ---- TEACHER (user_ado) ----
 app.post("/api/register-teacher", async (req, res) => {
   const { felhasznalonev, email, jelszo, vegzettseg } = req.body;
 
@@ -138,16 +137,16 @@ app.post("/api/register-teacher", async (req, res) => {
 // ================== BEJELENTKEZÉS =====================
 // =====================================================
 app.post("/api/login", async (req, res) => {
-  const { email, jelszo } = req.body;
+  const { emailOrUsername, jelszo } = req.body;
 
-  if (!email || !jelszo)
+  if (!emailOrUsername || !jelszo)
     return res.status(400).json({ success: false, message: "Hiányzó adatok" });
 
   try {
     // USER
     const [users] = await db.promise().query(
-      "SELECT uv_id, nev, email, jelszo FROM user_vevo WHERE email = ?",
-      [email]
+      "SELECT uv_id, nev, email, jelszo FROM user_vevo WHERE email = ? OR nev = ?",
+      [emailOrUsername, emailOrUsername]
     );
 
     if (users.length) {
@@ -164,8 +163,8 @@ app.post("/api/login", async (req, res) => {
 
     // TEACHER
     const [teachers] = await db.promise().query(
-      "SELECT ua_id, felhasznalonev, gmail, jelszo FROM user_ado WHERE gmail = ?",
-      [email]
+      "SELECT ua_id, felhasznalonev, gmail, jelszo FROM user_ado WHERE gmail = ? OR felhasznalonev = ?",
+      [emailOrUsername, emailOrUsername]
     );
 
     if (!teachers.length)
@@ -192,8 +191,6 @@ app.use((req, res) => {
   res.status(404).send("Az oldal nem található");
 });
 
-const ok = await bcrypt.compare(jelszo, user.jelszo);
-console.log("LOGIN:", jelszo, user.jelszo, ok);
 
 // ===== SERVER START =====
 const PORT = process.env.PORT || 3000;
