@@ -73,40 +73,5 @@
 </footer>
 
     <!-- No site-wide script found in root; keep footer script reference minimal or add scripts as needed -->
-    <script>
-            // Check user role and update navigation dynamically
-            document.addEventListener('DOMContentLoaded', () => {
-                const nav = document.getElementById('navigacio');
-                const navLogin = document.getElementById('nav-bejelentkezes');
-                const navRegister = document.getElementById('nav-regisztracio');
-
-                const user = JSON.parse(localStorage.getItem('user'));
-                console.log('User data:', user); // Debug log to check user data
-
-                if (user) {
-                    // Remove login and registration links
-                    navLogin?.remove();
-                    navRegister?.remove();
-
-                    // Add profile link
-                    const profileLink = document.createElement('a');
-                    profileLink.id = 'nav-profil';
-                    profileLink.href = '/profil';
-                    profileLink.textContent = 'Profil';
-                    profileLink.style = navLogin.style.cssText;
-                    nav.appendChild(profileLink);
-
-                    // Add course upload link for teachers
-                    if (user.role === 'teacher') {
-                        const uploadLink = document.createElement('a');
-                        uploadLink.id = 'nav-tanfolyamfeltoltes';
-                        uploadLink.href = '/tanfolyamfeltoltes';
-                        uploadLink.textContent = 'Tanfolyamfeltöltés';
-                        uploadLink.style = navLogin.style.cssText;
-                        nav.appendChild(uploadLink);
-                    }
-                }
-            });
-        </script>
 </body>
 </html>

@@ -101,6 +101,7 @@ app.post("/api/register-user", async (req, res) => {
 });
 
 // ---- TEACHER (user_ado) ----
+// ---- TEACHER (user_ado) ----
 app.post("/api/register-teacher", async (req, res) => {
   const { felhasznalonev, email, jelszo, vegzettseg } = req.body;
 
@@ -137,16 +138,16 @@ app.post("/api/register-teacher", async (req, res) => {
 // ================== BEJELENTKEZÉS =====================
 // =====================================================
 app.post("/api/login", async (req, res) => {
-  const { emailOrUsername, jelszo } = req.body;
+  const { email, jelszo } = req.body;
 
-  if (!emailOrUsername || !jelszo)
+  if (!email || !jelszo)
     return res.status(400).json({ success: false, message: "Hiányzó adatok" });
 
   try {
     // USER
     const [users] = await db.promise().query(
-      "SELECT uv_id, nev, email, jelszo FROM user_vevo WHERE email = ? OR nev = ?",
-      [emailOrUsername, emailOrUsername]
+      "SELECT uv_id, nev, email, jelszo FROM user_vevo WHERE email = ?",
+      [email]
     );
 
     if (users.length) {
@@ -163,8 +164,8 @@ app.post("/api/login", async (req, res) => {
 
     // TEACHER
     const [teachers] = await db.promise().query(
-      "SELECT ua_id, felhasznalonev, gmail, jelszo FROM user_ado WHERE gmail = ? OR felhasznalonev = ?",
-      [emailOrUsername, emailOrUsername]
+      "SELECT ua_id, felhasznalonev, gmail, jelszo FROM user_ado WHERE gmail = ?",
+      [email]
     );
 
     if (!teachers.length)
