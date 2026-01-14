@@ -34,6 +34,12 @@ loginForm.addEventListener('submit', async (e) => {
     container.appendChild(msg);
 
     if (data.success) {
+      // Include the selected role in the user data
+      const selectedRole = document.querySelector('input[name="role"]:checked');
+      if (selectedRole) {
+          data.user.role = selectedRole.value;
+      }
+
       // Store user data in localStorage
       localStorage.setItem('user', JSON.stringify(data.user));
 
@@ -41,7 +47,7 @@ loginForm.addEventListener('submit', async (e) => {
       const loginNav = document.querySelector('#nav-bejelentkezes');
       const registerNav = document.querySelector('#nav-regisztracio');
       if (loginNav) loginNav.style.display = 'none';
-      if (registerNav) registerNav.style.display = 'none';
+      if (registerNav) loginNav.style.display = 'none';
 
       // Redirect based on role
       setTimeout(() => {

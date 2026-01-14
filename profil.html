@@ -17,6 +17,7 @@
         <p><strong>Felhasználónév:</strong> <span id="username"></span></p>
         <p><strong>Email:</strong> <span id="email"></span></p>
 
+
         <form id="uploadForm" enctype="multipart/form-data">
             <label for="profilePicture">Profilkép feltöltése:</label>
             <input type="file" id="profilePicture" name="profilePicture" accept="image/*">
@@ -36,6 +37,47 @@
                 const profileImage = document.getElementById('profileImage');
                 profileImage.src = user.profilePicture;
                 profileImage.style.display = 'block';
+            }
+
+            // Display user role (student or teacher) based on login selection
+            if (user.role) {
+                const roleElement = document.createElement('p');
+                
+                document.querySelector('main').appendChild(roleElement);
+            }
+
+            // Ensure the role is displayed correctly next to email and username
+            if (user && user.role) {
+                const roleElement = document.createElement('p');
+                roleElement.innerHTML = `<strong>Szerep:</strong> ${user.role}`;
+                document.getElementById('email').parentElement.appendChild(roleElement);
+            } else {
+                console.error('User role is missing or undefined.');
+            }
+
+            // Dynamically update the header based on the user's role
+            if (user && user.role) {
+                const headerTitle = document.querySelector('header h1');
+                if (headerTitle) {
+                    const role = user.role.toLowerCase();
+                    let roleText;
+                    switch (role) {
+                        case 'student':
+                            roleText = 'Diákprofil';
+                            break;
+                        case 'teacher':
+                            roleText = 'Tanári profil';
+                            break;
+                        case 'admin':
+                            roleText = 'Adminprofil';
+                            break;
+                        default:
+                            roleText = 'Profil';
+                    }
+                    headerTitle.textContent = roleText;
+                }
+            } else {
+                console.error('User role is missing or undefined.');
             }
         } else {
             alert('Nincs bejelentkezve! Kérjük, jelentkezzen be.');
