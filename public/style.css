@@ -103,25 +103,8 @@ h1 {
 /* ==========================================
    ÜDVÖZLŐ RÉSZ (főoldal)
    ========================================== */
-#udvozlo {
-    display: flex;               
-    flex-direction: column;      
-    align-items: center;         
-    justify-content: center;     
-    min-height: 60vh;            
-    background: var(--bg); /* alap háttér */
-    border-radius: 18px;         
-    margin: 32px auto;           
-    max-width: 600px;            
-    box-shadow: 0 4px 24px rgba(51,153,255,0.25); 
-    padding: 32px 16px;          
-}
 
-#udvozloh1 {
-    font-size: 2.2em;            
-    color: var(--primary);       
-    margin-bottom: 16px;         
-}
+
 
 #udvozlop {
     font-size: 1.15em;           
