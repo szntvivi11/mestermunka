@@ -230,6 +230,129 @@ button:active,
   .auth-form.active {
     display: flex;
   }*/
+
+  /* ==========================================
+   PROFIL TELJES OLDAL
+   ========================================== */
+
+.profil-container {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.profil-kartya {
+    background: var(--surface);
+    padding: 28px;
+    border-radius: 18px;
+    box-shadow: 0 10px 36px rgba(51,153,255,0.25);
+    text-align: center;
+}
+
+.profil-kep {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 0 22px rgba(51,153,255,0.5);
+    margin-bottom: 16px;
+    display: none;
+}
+
+.profil-szerep {
+    color: var(--primary);
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.profil-bio {
+    font-style: italic;
+    opacity: 0.9;
+}
+
+hr {
+    border: none;
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+    margin: 20px 0;
+}
+
+.profil-vissza {
+    align-self: center;
+    margin-top: 10px;
+    padding: 18px 28px;
+    border-radius: 1rem;
+    border: 2px solid var(--primary);
+    color: white;
+    font-weight: bold;
+    background: linear-gradient(180deg, #0f111a 0%, #1a2a4b 100%);
+}
+
+.profil-vissza:hover {
+    background: linear-gradient(180deg, #1a2a4b 0%, #3399ff 100%);
+    box-shadow: 0 0 15px rgba(51,153,255,0.5);
+}
+
+.veszely-gomb {
+    margin-top: 16px;
+    border-color: #ff4d4d;
+    background: linear-gradient(180deg, #2a0f0f 0%, #4b1a1a 100%);
+}
+
+.veszely-gomb:hover {
+    background: linear-gradient(180deg, #4b1a1a 0%, #ff4d4d 100%);
+}
+/* ==========================================
+   PROFIL FEJLÉC KÁRTYA (KÉP + NÉV)
+   ========================================== */
+
+   .profil-fejlec-kartya {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: var(--surface);
+    padding: 20px 24px;
+    border-radius: 18px;
+    box-shadow: 0 8px 28px rgba(51,153,255,0.3);
+    margin-bottom: 24px;
+}
+
+.profil-avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+}
+
+.profil-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    display: none;
+}
+
+.profil-fejlec-adatok h2 {
+    margin: 0;
+    font-size: 1.6em;
+    color: var(--text);
+}
+
+.profil-szerep {
+    margin: 6px 0 0;
+    color: var(--primary);
+    font-weight: bold;
+}
+
+
+
 /* ==========================================
    TANFOLYAM KÁRTYÁK
    ========================================== */

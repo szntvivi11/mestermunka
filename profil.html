@@ -2,114 +2,129 @@
 <html lang="hu">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profil</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <header>
-        <h1>Profil</h1>
-        <a href="/" style="position: absolute; top: 10px; right: 10px; padding: 10px 20px; background-color: #007BFF; color: white; text-decoration: none; border-radius: 5px;">Vissza a főoldalra</a>
-        <img id="profileImage" src="" alt="Profilkép" style="display:none; width:150px; height:150px; border-radius:50%; margin-bottom:20px;">
-    </header>
-    <main>
-        <p>Üdvözlünk a profil oldaladon! Itt megtekintheted és szerkesztheted a személyes adataidat.</p>
-        <p><strong>Felhasználónév:</strong> <span id="username"></span></p>
-        <p><strong>Email:</strong> <span id="email"></span></p>
 
+<header>
+    <h1 id="profil-cim">Profil</h1>
+</header>
 
-        <form id="uploadForm" enctype="multipart/form-data">
-            <label for="profilePicture">Profilkép feltöltése:</label>
-            <input type="file" id="profilePicture" name="profilePicture" accept="image/*">
+<main class="profil-container">
+
+    <!-- PROFIL KÁRTYA -->
+    <section class="profil-fejlec-kartya">
+
+        <div class="profil-avatar">
+            <img id="profileImage" alt="Profilkép">
+        </div>
+    
+        <div class="profil-fejlec-adatok">
+            <h2 id="nev-megjelenit"></h2>
+            <p class="profil-szerep" id="szerep-megjelenit"></p>
+        </div>
+    
+    </section>
+
+    <!-- SZERKESZTÉS -->
+    <section class="profil-kartya">
+        <h2>Profil szerkesztése</h2>
+
+        <form id="editForm" class="auth-form">
+            <label>Felhasználónév</label>
+            <input type="text" id="nev-input">
+
+            <label>Email</label>
+            <input type="email" id="email-input">
+
+            <label>Bemutatkozás</label>
+            <textarea id="bio-input" rows="3"></textarea>
+
+            <button type="submit">Mentés</button>
+        </form>
+    </section>
+
+    <!-- PROFILKÉP -->
+    <section class="profil-kartya">
+        <h2>Profilkép</h2>
+
+        <form id="uploadForm" class="auth-form" enctype="multipart/form-data">
+            <input type="file" name="profilePicture" accept="image/*">
             <button type="submit">Feltöltés</button>
         </form>
+    </section>
 
-        <button id="logout">Kijelentkezés</button>
-    </main>
-    <script>
-        // Avoid redeclaring the 'user' variable
-        let user = JSON.parse(localStorage.getItem('user')) || null;
-        if (user) {
-            document.getElementById('username').textContent = user.nev;
-            document.getElementById('email').textContent = user.email;
+    <!-- BIZTONSÁG -->
+    <section class="profil-kartya">
+        <h2>Biztonság</h2>
 
-            if (user.profilePicture) {
-                const profileImage = document.getElementById('profileImage');
-                profileImage.src = user.profilePicture;
-                profileImage.style.display = 'block';
-            }
+        <form class="auth-form">
+            <label>Új jelszó</label>
+            <input type="password" placeholder="********">
+            <button type="button">Jelszó módosítása</button>
+        </form>
 
-            // Display user role (student or teacher) based on login selection
-            if (user.role) {
-                const roleElement = document.createElement('p');
-                
-                document.querySelector('main').appendChild(roleElement);
-            }
+        <button id="logout" class="veszely-gomb">Kijelentkezés</button>
+    </section>
 
-            // Ensure the role is displayed correctly next to email and username
-            if (user && user.role) {
-                const roleElement = document.createElement('p');
-                roleElement.innerHTML = `<strong>Szerep:</strong> ${user.role}`;
-                document.getElementById('email').parentElement.appendChild(roleElement);
-            } else {
-                console.error('User role is missing or undefined.');
-            }
+    <a href="/" class="profil-vissza">⬅ Vissza a főoldalra</a>
 
-            // Dynamically update the header based on the user's role
-            if (user && user.role) {
-                const headerTitle = document.querySelector('header h1');
-                if (headerTitle) {
-                    const role = user.role.toLowerCase();
-                    let roleText;
-                    switch (role) {
-                        case 'student':
-                            roleText = 'Diákprofil';
-                            break;
-                        case 'teacher':
-                            roleText = 'Tanári profil';
-                            break;
-                        case 'admin':
-                            roleText = 'Adminprofil';
-                            break;
-                        default:
-                            roleText = 'Profil';
-                    }
-                    headerTitle.textContent = roleText;
-                }
-            } else {
-                console.error('User role is missing or undefined.');
-            }
-        } else {
-            alert('Nincs bejelentkezve! Kérjük, jelentkezzen be.');
-            window.location.href = '/bejelentkezes';
-        }
+</main>
 
-        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(e.target);
+<script>
+let user = JSON.parse(localStorage.getItem("user"));
 
-            const response = await fetch('/api/upload-profile-picture', {
-                method: 'POST',
-                body: formData
-            });
+if (!user) {
+    alert("Nincs bejelentkezve!");
+    location.href = "/bejelentkezes";
+}
 
-            const result = await response.json();
-            alert(result.message);
-        });
+// NÉV + SZEREP
+document.getElementById("nev-megjelenit").textContent = user.nev;
 
-        document.getElementById('logout').addEventListener('click', () => {
-            localStorage.removeItem('user');
-            window.location.href = '/';
-        });
-    </script>
-    <script>
-        // Check if the user is logged in and hide the login/register links
-        if (user) {
-            const loginNav = document.getElementById('nav-bejelentkezes');
-            const registerNav = document.getElementById('nav-regisztracio');
-            if (loginNav) loginNav.style.display = 'none';
-            if (registerNav) registerNav.style.display = 'none';
-        }
-    </script>
+const roleMap = {
+    student: "🎓 Diák",
+    teacher: "📘 Tanár",
+    admin: "👑 Admin"
+};
+
+document.getElementById("szerep-megjelenit").textContent =
+    roleMap[user.role] || "Felhasználó";
+
+// PROFILKÉP MEGJELENÍTÉS
+const img = document.getElementById("profileImage");
+
+if (user.profilePicture && user.profilePicture.trim() !== "") {
+    img.src = user.profilePicture;
+    img.style.display = "block";
+} else {
+    img.style.display = "none";
+}
+
+// ŰRLAP ELŐTÖLTÉS
+document.getElementById("nev-input").value = user.nev;
+document.getElementById("email-input").value = user.email;
+document.getElementById("bio-input").value = user.bio || "";
+
+// MENTÉS
+document.getElementById("editForm").addEventListener("submit", e => {
+    e.preventDefault();
+    user.nev = nev-input.value;
+    user.email = email-input.value;
+    user.bio = bio-input.value;
+
+    localStorage.setItem("user", JSON.stringify(user));
+    location.reload();
+});
+
+// KIJELENTKEZÉS
+document.getElementById("logout").onclick = () => {
+    localStorage.removeItem("user");
+    location.href = "/";
+};
+</script>
+
 </body>
 </html>
