@@ -37,12 +37,19 @@
 			</svg>
 			<div style="position:relative; width:100%; height:0; z-index:2;">
     <nav id="navigacio" style="position:absolute; top:120px; left:0; width:100%; display:flex; justify-content:center; gap:24px; font-size:20px; font-weight:600;">
-        <a id="nav-fo" href="/" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5); text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Főoldal</a>
-        <a id="nav-tanfolyamok" href="/tanfolyamok" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5); text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Tanfolyamok</a>
-        <a id="nav-bejelentkezes" href="/bejelentkezes" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5); text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Bejelentkezés</a>
-        <a id="nav-regisztracio" href="/regisztracio" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5); text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Regisztráció</a>
-        <a id="nav-kapcsolat" href="/kapcsolat" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5); text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Kapcsolat</a>
-        <a id="nav-profil" href="/profil" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5); text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Profil</a>
+        <a id="nav-fo" href="/" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5);
+         text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Főoldal</a>
+        <a id="nav-tanfolyamok" href="/tanfolyamok" style="color:#fff; padding:14px 24px; border-radius:10px;
+         background:rgba(40,40,90,0.5); text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Tanfolyamok</a>
+        <a id="nav-bejelentkezes" href="/bejelentkezes" style="color:#fff; padding:14px 24px; border-radius:10px; 
+        background:rgba(40,40,90,0.5); text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Bejelentkezés</a>
+        <a id="nav-regisztracio" href="/regisztracio" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5);
+         text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Regisztráció</a>
+        <a id="nav-kapcsolat" href="/kapcsolat" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5);
+         text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Kapcsolat</a>
+        <a id="nav-profil" href="/profil" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5);
+         text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Profil</a>
+
     </nav>
 </div>
 
@@ -53,11 +60,45 @@
 
     <!-- Fő tartalom -->
     <main>
-        <section id="udvozlo">
-            <h1>Üdvözlünk a Tanfolyamok oldalán!</h1>
-            <p>Válassz a különböző tanfolyamaink közül, és fejleszd tudásod!</p>
-           
-        </section>
+        <!--<div id="udvozlo">
+            <h1>Tanfolyamok</h1>
+            <p>Fedezd fel tanfolyamainkat és fejleszd tudásod!</p>
+           <h1>Üdvözlünk a Tanfolyamok oldalán!</h1>
+            <p>Válassz a különböző tanfolyamaink közül, és fejleszd tudásod!</p>--> 
+           <div class="slideshow-container">
+ 
+                <div class="slide fade">
+                <a href="!"><img src="./Tanfolyamok/kepek/gellakk.jpg" alt="" width="250" height="350"></a>
+                <div class="caption">Érdekességek a régi vasúti rendszerekről</div>
+                </div>
+ 
+                <div class="slide fade">
+                <a href="!"><img src="./Tanfolyamok/kepek/cukrasz.jpg" alt="" width="250" height="350"></a>
+                <div class="caption">Érdekességek az új vasúti rendszerekről</div>
+                </div>
+ 
+                <div class="slide fade">
+                <a href="!"><img src="./Tanfolyamok/kepek/barber.jpg" alt="" width="250" height="350"></a>
+                <div class="caption">Teszteld tudásod!</div>
+                </div>
+ 
+                <div class="slide fade">
+                <a href="!"><img src="./Tanfolyamok/kepek/laminalas.jpg" alt="" width="250" height="350"></a>
+                <div class="caption">Filmek és Sorozatok</div>
+                </div>
+ 
+                    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+                    <a class="next" onclick="plusSlides(1)">&#10095;</a>
+ 
+            </div>
+            <br>
+                <div style="text-dalign:center">
+                <span class="dot" onclick="currentSlide(1)"></span>
+                <span class="dot" onclick="currentSlide(2)"></span>
+                 <span class="dot" onclick="currentSlide(3)"></span>
+                <span class="dot" onclick="currentSlide(4)"></span>
+            </div>
+         <!--</section>-->
     </main>
 
     <!-- Lábjegyzet -->
@@ -86,6 +127,36 @@
             if (loginNav) loginNav.style.display = 'none';
             if (registerNav) registerNav.style.display = 'none';
         }
+        let slideIndex = 1;
+showSlides(slideIndex);
+ 
+function plusSlides(n) {
+  showSlides(slideIndex += n);
+}
+ 
+function currentSlide(n) {
+  showSlides(slideIndex = n);
+}
+ 
+function showSlides(n) {
+  let i;
+  let slides = document.getElementsByClassName("slide");
+  let dots = document.getElementsByClassName("dot");
+  if (n > slides.length) {slideIndex = 1}    
+  if (n < 1) {slideIndex = slides.length}
+  for (i = 0; i < slides.length; i++) {
+    slides[i].style.display = "none";  
+  }
+  for (i = 0; i < dots.length; i++) {
+    dots[i].className = dots[i].className.replace(" active", "");
+  }
+  slides[slideIndex-1].style.display = "block";  
+  dots[slideIndex-1].className += " active";
+}
+ 
+setInterval(() => {
+  plusSlides(1);
+}, 5000);
     </script>
 </body>
 </html>

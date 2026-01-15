@@ -523,4 +523,83 @@ a {
     background-color: #f44336;
     color: white;
   }
-  
+
+  /* ==========================================
+   INDEX KÁRTYÁK
+   ========================================== */
+   
+   .slideshow-container {
+    position: relative;
+    max-width: 800px;
+    margin: 40px auto;
+    border-radius: 15px;
+    overflow: hidden;
+   
+  }
+   
+  .slide {
+    display: none;
+  }
+   
+  .slide img {
+    width: 100%;
+    border-radius: 15px;
+  }
+   
+  .caption {
+    color: #fff;
+    font-size: 20px;
+    padding: 12px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.5);
+  }
+   
+  .prev, .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    padding: 16px;
+    color: white;
+    font-weight: bold;
+    font-size: 24px;
+    transition: 0.3s;
+    user-select: none;
+  }
+   
+  .next {
+    right: 0;
+  }
+   
+  .prev:hover, .next:hover {
+    background-color: rgba(0,0,0,0.8);
+  }
+   
+  .dot {
+    cursor: pointer;
+    height: 15px;
+    width: 15px;
+    margin: 0 5px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.4s;
+  }
+   
+  .active, .dot:hover {
+    background-color: beige;
+  }
+   
+  .fade {
+    animation-name: fade;
+    animation-duration: 1.5s;
+  }
+   
+   
+  /*Animáció változás*/
+  @keyframes fade {
+    from { opacity: .4; }
+    to { opacity: 1; }
+  }
