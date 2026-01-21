@@ -82,7 +82,6 @@ app.post("/api/register-user", async (req, res) => {
     return res.status(400).json({ success: false, message: "Hiányzó adatok" });
 
   try {
-    // Ellenőrizzük, hogy létezik-e már az email a user_vevo táblában
     const [exists] = await db.promise().query(
       "SELECT uv_id FROM user_vevo WHERE email = ?",
       [email]
@@ -91,10 +90,8 @@ app.post("/api/register-user", async (req, res) => {
     if (exists.length)
       return res.status(400).json({ success: false, message: "Email már létezik" });
 
-    // Jelszó hash-elése
     const hash = await bcrypt.hash(jelszo, 10);
 
-    // Felhasználó beszúrása a user_vevo táblába
     await db.promise().query(
       `INSERT INTO user_vevo
        (nev, email, felhasznalonev, jelszo, regisztracio_datum)
@@ -110,6 +107,7 @@ app.post("/api/register-user", async (req, res) => {
 });
 
 // ---- TEACHER (user_ado) ----
+// ---- TEACHER (user_ado) ----
 app.post("/api/register-teacher", async (req, res) => {
   const { felhasznalonev, email, jelszo, vegzettseg } = req.body;
 
@@ -117,7 +115,6 @@ app.post("/api/register-teacher", async (req, res) => {
     return res.status(400).json({ success: false, message: "Hiányzó adatok" });
 
   try {
-    // Ellenőrizzük, hogy létezik-e már az email a user_ado táblában
     const [exists] = await db.promise().query(
       "SELECT ua_id FROM user_ado WHERE gmail = ?",
       [email]
@@ -126,15 +123,13 @@ app.post("/api/register-teacher", async (req, res) => {
     if (exists.length)
       return res.status(400).json({ success: false, message: "Email már létezik" });
 
-    // Jelszó hash-elése
     const hash = await bcrypt.hash(jelszo, 10);
 
-    // Tanár beszúrása a user_ado táblába
     await db.promise().query(
       `INSERT INTO user_ado
        (felhasznalonev, gmail, jelszo, vegzettseg)
        VALUES (?, ?, ?, ?)`,
-      [felhasznalonev, email, hash, vegzettseg]
+      [felhasznalonev, email, hash, vegzettseg || null]
     );
 
     res.json({ success: true });
@@ -223,31 +218,6 @@ app.get("/api/kepzesek", async (req, res) => {
     res.status(500).json({ success: false, message: "Szerver hiba" });
   }
 });
-
-// ===== JELENTKEZÉS MENTÉSE =====
-app.post("/api/jelentkezes", async (req, res) => {
-  const { userId, kepzesId } = req.body;
-
-  if (!userId || !kepzesId)
-    return res.status(400).json({ success: false, message: "Hiányzó adatok" });
-
-  try {
-    await db.promise().query(
-      "INSERT INTO jelentkezesek (user_id, kepzes_id) VALUES (?, ?)",
-      [userId, kepzesId]
-    );
-    res.json({ success: true, message: "Sikeres jelentkezés" });
-  } catch (err) {
-    console.error(err);
-
-    // ha már jelentkezett
-    if (err.code === "ER_DUP_ENTRY")
-      return res.status(409).json({ success: false, message: "Már jelentkeztél erre a képzésre" });
-
-    res.status(500).json({ success: false, message: "Szerverhiba" });
-  }
-});
-
 
 // ===== 404 =====
 app.use((req, res) => {

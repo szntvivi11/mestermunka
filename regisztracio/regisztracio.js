@@ -11,7 +11,7 @@ function showMessage(msg, type = "success") {
   }
   
   // ==== USER REGISZTRÁCIÓ ====
-  const userForm = document.getElementById("user-form");
+  const userForm = document.getElementById("student-form");
   userForm?.addEventListener("submit", async (e) => {
     e.preventDefault();
   
@@ -25,7 +25,7 @@ function showMessage(msg, type = "success") {
     }
   
     try {
-      const res = await fetch("/api/register-user", {
+      const res = await fetch("/api/register-student", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nev, email, jelszo })

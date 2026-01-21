@@ -6,15 +6,17 @@ loginForm.addEventListener('submit', async (e) => {
 
   const email = document.getElementById('login-username').value.trim();
   const jelszo = document.getElementById('login-password').value.trim();
+  const selectedRole = document.querySelector('input[name="role"]:checked')?.value;
 
   const container = document.querySelector('.aloldal-container');
   const existing = document.querySelector('.login-message');
   if (existing) existing.remove();
 
-  if (!email || !jelszo) {
+  // Basic validation
+  if (!email || !jelszo || !selectedRole) {
     const msg = document.createElement('div');
     msg.className = 'login-message login-error';
-    msg.textContent = '❌ Kérlek, tölts ki minden mezőt!';
+    msg.textContent = '❌ Kérlek, tölts ki minden mezőt és válassz szerepet!';
     container.appendChild(msg);
     return;
   }
@@ -23,31 +25,26 @@ loginForm.addEventListener('submit', async (e) => {
     const res = await fetch('/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, jelszo })
+      body: JSON.stringify({ email, jelszo, role: selectedRole })
     });
 
     const data = await res.json();
+
     const msg = document.createElement('div');
     msg.className = `login-message ${data.success ? 'login-success' : 'login-error'}`;
     msg.textContent = data.message || (data.success ? '✅ Sikeres bejelentkezés' : '❌ Hiba');
-
     container.appendChild(msg);
 
     if (data.success) {
-      // Include the selected role in the user data
-      const selectedRole = document.querySelector('input[name="role"]:checked');
-      if (selectedRole) {
-          data.user.role = selectedRole.value;
-      }
-
-      // Store user data in localStorage
+      // Store user data in localStorage including role
+      data.user.role = data.role || selectedRole;
       localStorage.setItem('user', JSON.stringify(data.user));
 
       // Hide 'Bejelentkezés' and 'Regisztráció' from the navbar
       const loginNav = document.querySelector('#nav-bejelentkezes');
       const registerNav = document.querySelector('#nav-regisztracio');
       if (loginNav) loginNav.style.display = 'none';
-      if (registerNav) loginNav.style.display = 'none';
+      if (registerNav) registerNav.style.display = 'none';
 
       // Redirect based on role
       setTimeout(() => {
