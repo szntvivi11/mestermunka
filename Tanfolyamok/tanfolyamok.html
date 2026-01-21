@@ -7,113 +7,157 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <header id="absztrakt-vonal">
-    <div id="absztrakt-vonal">
-        <div style="position: relative; width: 100%; height: 240px;">
-            <svg viewBox="0 0 1440 400" width="100%" height="220" preserveAspectRatio="none" style="display:block; position:absolute; top:0; left:0; z-index:1;">
-                <defs>
-                    <linearGradient id="fade-bottom" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="80%" stop-color="#fff" stop-opacity="0" />
-                        <stop offset="100%" stop-color="#fff" stop-opacity="0.7" />
-                    </linearGradient>
-                   
-                    <linearGradient id="absztrakt-stripes" x1="0" y1="0" x2="1" y2="0">
-                        <stop offset="0%" stop-color="#f22f2f" />
-                        <stop offset="60%" stop-color="#8b0000" />
-                        <stop offset="100%" stop-color="#000000" />
-                    </linearGradient>
-                    <linearGradient id="wave1" x1="0" y1="0" x2="1" y2="1">
-                        <stop offset="0%" stop-color="#7b2ff2" />
-                        <stop offset="100%" stop-color="#b185f5" />
-                    </linearGradient>
-                    <linearGradient id="wave2" x1="0" y1="0" x2="1" y2="1">
-                        <stop offset="0%" stop-color="#b185f5" />
-                        <stop offset="100%" stop-color="#e0c3fc" />
-                    </linearGradient>
-                </defs>
-                <path d="M0,180 C240,120 480,240 720,180 C960,120 1200,240 1440,180 L1440,320 C1200,380 960,100 720,320 C480,540 240,100 0,320 Z" fill="url(#wave1)" fill-opacity="0.85"></path>
-                <path d="M0,210 C360,90 1080,330 1440,210 L1440,350 C1200,400 960,180 720,350 C480,520 240,180 0,350 Z" fill="url(#wave2)" fill-opacity="0.65"></path>
-            </svg>
-            <nav id="navigacio" style="position:absolute; top:120px; left:0; width:100%; display:flex; justify-content:center; gap:24px; font-size:20px; font-weight:600;">
-                <a id="nav-fo" href="/" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5); text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Főoldal</a>
-                <a id="nav-tanfolyamok" href="/tanfolyamok" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5); text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Tanfolyamok</a>
-                <a id="nav-bejelentkezes" href="/bejelentkezes" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5); text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Bejelentkezés</a>
-                <a id="nav-regisztracio" href="/regisztracio" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5); text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Regisztráció</a>
-                <a id="nav-kapcsolat" href="/kapcsolat" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5); text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Kapcsolat</a>
-                <a id="nav-profil" href="/profil" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5); text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Profil</a>
-            </nav>
+<header id="absztrakt-vonal">
+    <div style="position: relative; width: 100%; height: 240px;">
+        <svg viewBox="0 0 1440 400" width="100%" height="220" preserveAspectRatio="none" style="display:block; position:absolute; top:0; left:0; z-index:1;">
+            <defs>
+                <linearGradient id="wave1" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#7b2ff2" />
+                    <stop offset="100%" stop-color="#b185f5" />
+                </linearGradient>
+                <linearGradient id="wave2" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#b185f5" />
+                    <stop offset="100%" stop-color="#e0c3fc" />
+                </linearGradient>
+            </defs>
+            <path d="M0,180 C240,120 480,240 720,180 C960,120 1200,240 1440,180 L1440,320 C1200,380 960,100 720,320 C480,540 240,100 0,320 Z" fill="url(#wave1)" fill-opacity="0.85"></path>
+            <path d="M0,210 C360,90 1080,330 1440,210 L1440,350 C1200,400 960,180 720,350 C480,520 240,180 0,350 Z" fill="url(#wave2)" fill-opacity="0.65"></path>
+        </svg>
+        <nav id="navigacio" style="position:absolute; top:120px; left:0; width:100%; display:flex; justify-content:center; gap:24px; font-size:20px; font-weight:600;">
+            <a id="nav-fo" href="/" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5);
+             text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Főoldal</a>
+            <a id="nav-tanfolyamok" href="/tanfolyamok" style="color:#fff; padding:14px 24px; border-radius:10px;
+             background:rgba(40,40,90,0.5); text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Tanfolyamok</a>
+            <a id="nav-bejelentkezes" href="/bejelentkezes" style="color:#fff; padding:14px 24px; border-radius:10px; 
+            background:rgba(40,40,90,0.5); text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Bejelentkezés</a>
+            <a id="nav-regisztracio" href="/regisztracio" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5);
+             text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Regisztráció</a>
+            <a id="nav-kapcsolat" href="/kapcsolat" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5);
+             text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Kapcsolat</a>
+            <a id="nav-profil" href="/profil" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5);
+             text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Profil</a>
+    
+        </nav>
     </div>
 </header>
 
- 
- 
- 
- 
- 
-            <!-- tükrözött, elmosott reflektív SVG eltávolítva: csak a fő hullámok maradnak -->
+<main id="tanfolyamokmain">
+    <h1>Tanfolyamok</h1>
+    <div id="tanfolyamokcards" class="tanfolyamkartya-container"></div>
+
+    <!-- Modal -->
+    <div id="modal">
+        <div id="modal-content">
+            <button id="closeModal">&times;</button>
+            <img id="modalImage" src="" alt="Tanfolyam képe">
+            <h2 id="modalTitle"></h2>
+            <p id="modalDescription"></p>
+            <p><strong>Ár:</strong> <span id="modalPrice"></span></p>
+            <p><strong>Email:</strong> <span id="modalEmail"></span></p>
+            <p><strong>Korhatár:</strong> <span id="modalAge"></span></p>
+            <p><strong>Helyszín:</strong> <span id="modalLocation"></span></p>
+            <button id="applyButton">Jelentkezés</button>
         </div>
     </div>
-    <main id="tanfolyamokmain">
-    <h1 id="tanfolyamokh1" style="color:#fff; text-align:center; margin-top:32px;">Tanfolyamok</h1>
-    <div id="tanfolyamokcards" style="display:flex; flex-wrap:wrap; gap:24px; justify-content:center;">
-        <!--Ide tolti be az adatokat az adatbazisbol-->
-    </div>
 </main>
-    <footer id="footer">
+
+<footer id="footer">
     <div class="footer-container">
-        <p>&copy; 2025 MyWebsite. Minden jog fenntartva.</p>
-        <nav class="footer-nav">
-            <a href="index.html">Főoldal</a>
-            <a href="tanfolyamok.html">Tanfolyamok</a>
-            <a href="kapcsolat.html">Kapcsolat</a>
-            <a href="bejelentkezes.html">Bejelentkezés</a>
-        </nav>
+        <p>&copy; 2026 Tanfolyamok</p>
+        <div class="footer-nav">
+            <a href="/">Főoldal</a>
+            <a href="/kapcsolat">Kapcsolat</a>
+            <a href="/profil">Profil</a>
+        </div>
     </div>
 </footer>
- 
-    <script src="script.js"></script>
-    <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-        const container = document.getElementById('tanfolyamokcards');
-        try {
-            const response = await fetch('/api/kepzesek');
-            const courses = await response.json();
- 
-            container.innerHTML = '';
-            courses.forEach(course => {
-                const card = document.createElement('a');
-                card.className = 'tanfolyamkartya';
-                card.href = `../Tanfolyamok/oldalak/${course.nev.toLowerCase().replace(/ /g, '-')}.html`;
-                card.style = `
-                    text-decoration:none; color:#fff; background:rgba(0,0,0,0.6);
-                    border:2px solid #33f; border-radius:12px;
-                    box-shadow:0 2px 8px rgba(51,153,255,0.25);
-                    width:260px; padding:18px; display:flex;
-                    flex-direction:column; align-items:center;`;
- 
-                card.innerHTML = `
-                    <img src="kepek/${course.kep}" alt="${course.nev}"
-                         style="width:100%; max-width:200px; border-radius:8px; margin-bottom:12px;">
-                    <h2>${course.nev}</h2>
-                `;
- 
-                container.appendChild(card);
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    const container = document.getElementById('tanfolyamokcards');
+    const modal = document.getElementById('modal');
+    const closeModal = document.getElementById('closeModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDescription = document.getElementById('modalDescription');
+    const modalPrice = document.getElementById('modalPrice');
+    const modalEmail = document.getElementById('modalEmail');
+    const modalAge = document.getElementById('modalAge');
+    const modalLocation = document.getElementById('modalLocation');
+    const modalImage = document.getElementById('modalImage');
+    const applyButton = document.getElementById('applyButton');
+
+    // Betöltjük a tanfolyamokat
+    try {
+        const res = await fetch('/api/kepzesek');
+        if (!res.ok) throw new Error('Hiba a lekéréskor');
+        const courses = await res.json();
+
+        container.innerHTML = '';
+        courses.forEach(course => {
+            const card = document.createElement('div');
+            card.className = 'tanfolyamkartya';
+            card.innerHTML = `
+                <img src="/tanfolyamok/kepek/${course.kep}" alt="${course.nev}">
+                <h2>${course.nev}</h2>
+            `;
+
+            card.addEventListener('click', () => {
+                modalTitle.textContent = course.nev;
+                modalTitle.dataset.courseId = course.id;
+                modalDescription.textContent = course.leiras;
+                modalPrice.textContent = course.ár;
+                modalEmail.textContent = course.email;
+                modalAge.textContent = course.heves_kortol;
+                modalLocation.textContent = course.helyileg;
+                modalImage.src = `/tanfolyamok/kepek/${course.kep}`;
+                modalImage.alt = course.nev;
+                modal.style.display = 'flex';
             });
-        } catch (error) {
-            console.error('Hiba a tanfolyamok betöltésekor:', error);
-            container.innerHTML = '<p>Nem sikerült betölteni a tanfolyamokat.</p>';
+
+            container.appendChild(card);
+        });
+    } catch (err) {
+        console.error('Hiba a tanfolyamok betöltésekor:', err);
+        container.innerHTML = '<p>Nem sikerült betölteni a tanfolyamokat.</p>';
+    }
+
+    // Modal bezárása
+    closeModal.addEventListener('click', () => modal.style.display = 'none');
+    window.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
+
+    // Jelentkezés
+    applyButton.addEventListener('click', async () => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user) { alert('Jelentkezéshez be kell jelentkezni!'); return; }
+        const courseId = parseInt(modalTitle.dataset.courseId);
+        try {
+            const res = await fetch('/api/jelentkezes', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: user.id, kepzesId: courseId })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                alert('Sikeres jelentkezés!');
+                modal.style.display = 'none';
+            } else {
+                alert(data.message || 'Hiba történt');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Szerverhiba');
         }
     });
+
+    // Ha user be van jelentkezve, elrejtjük a login/regisztráció linkeket
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+        const loginNav = document.getElementById('nav-bejelentkezes');
+        const registerNav = document.getElementById('nav-regisztracio');
+        if (loginNav) loginNav.style.display = 'none';
+        if (registerNav) registerNav.style.display = 'none';
+    }
+});
 </script>
-<script>
-            // Check if the user is logged in and hide the login/register links
-            const user = JSON.parse(localStorage.getItem('user'));
-            if (user) {
-                const loginNav = document.getElementById('nav-bejelentkezes');
-                const registerNav = document.getElementById('nav-regisztracio');
-                if (loginNav) loginNav.style.display = 'none';
-                if (registerNav) registerNav.style.display = 'none';
-            }
-        </script>
 </body>
 </html>

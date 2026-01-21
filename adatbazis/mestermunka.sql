@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1:3307
--- Létrehozás ideje: 2026. Jan 14. 13:01
+-- Létrehozás ideje: 2026. Jan 21. 09:09
 -- Kiszolgáló verziója: 10.4.28-MariaDB
 -- PHP verzió: 8.2.4
 
@@ -36,16 +36,14 @@ CREATE TABLE `ajanlo` (
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `jelentkezes`
+-- Tábla szerkezet ehhez a táblához `jelentkezesek`
 --
 
-CREATE TABLE `jelentkezes` (
-  `f_nev` varchar(45) DEFAULT NULL,
-  `gmail` varchar(45) DEFAULT NULL,
-  `kor` varchar(45) DEFAULT NULL,
-  `kepzes_ID` int(11) DEFAULT NULL,
-  `uv_j_ID` int(11) DEFAULT NULL,
-  `j_ID` int(11) NOT NULL
+CREATE TABLE `jelentkezesek` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `kepzes_id` int(11) NOT NULL,
+  `jelentkezes_datum` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 -- --------------------------------------------------------
@@ -122,7 +120,8 @@ CREATE TABLE `user_ado` (
 --
 
 INSERT INTO `user_ado` (`ua_id`, `felhasznalonev`, `jelszo`, `gmail`, `vegzettseg`) VALUES
-(6, 'test', '$2b$10$hikKbk20b2uMYAJkzqVDduDR0jW6Yy.27Kb/j3rVG1v6pNvVQy0WO', 'test@gmail.com', 'egyetem');
+(6, 'test', '$2b$10$hikKbk20b2uMYAJkzqVDduDR0jW6Yy.27Kb/j3rVG1v6pNvVQy0WO', 'test@gmail.com', 'egyetem'),
+(7, 'bkv', '$2b$10$5egIgxceD.Aus5Zj0uCxvuzasLrI1b5xhAsdO6e23X.FyYqEn96OS', 'bkv@gmail.com', 'egyetem');
 
 -- --------------------------------------------------------
 
@@ -172,12 +171,12 @@ ALTER TABLE `ajanlo`
   ADD KEY `ajanlott_kepzes(kepzes id-ja))` (`ajanlott_kepzes(kepzes id-ja))`);
 
 --
--- A tábla indexei `jelentkezes`
+-- A tábla indexei `jelentkezesek`
 --
-ALTER TABLE `jelentkezes`
-  ADD PRIMARY KEY (`j_ID`),
-  ADD KEY `j_ID` (`kepzes_ID`,`uv_j_ID`),
-  ADD KEY `uv_j_ID` (`uv_j_ID`);
+ALTER TABLE `jelentkezesek`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `kepzes_id` (`kepzes_id`);
 
 --
 -- A tábla indexei `kepzesek`
@@ -218,10 +217,10 @@ ALTER TABLE `ajanlo`
   MODIFY `ajanlo_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT a táblához `jelentkezes`
+-- AUTO_INCREMENT a táblához `jelentkezesek`
 --
-ALTER TABLE `jelentkezes`
-  MODIFY `j_ID` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `jelentkezesek`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT a táblához `kepzesek`
@@ -233,7 +232,7 @@ ALTER TABLE `kepzesek`
 -- AUTO_INCREMENT a táblához `user_ado`
 --
 ALTER TABLE `user_ado`
-  MODIFY `ua_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `ua_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT a táblához `user_vevo`
@@ -258,18 +257,18 @@ ALTER TABLE `ajanlo`
   ADD CONSTRAINT `ajanlo_ibfk_2` FOREIGN KEY (`ajanlott_kepzes(kepzes id-ja))`) REFERENCES `kepzesek` (`id`);
 
 --
--- Megkötések a táblához `jelentkezes`
+-- Megkötések a táblához `jelentkezesek`
 --
-ALTER TABLE `jelentkezes`
-  ADD CONSTRAINT `jelentkezes_ibfk_1` FOREIGN KEY (`uv_j_ID`) REFERENCES `user_vevo` (`uv_id`);
+ALTER TABLE `jelentkezesek`
+  ADD CONSTRAINT `jelentkezesek_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user_vevo` (`uv_id`),
+  ADD CONSTRAINT `jelentkezesek_ibfk_2` FOREIGN KEY (`kepzes_id`) REFERENCES `kepzesek` (`id`);
 
 --
 -- Megkötések a táblához `kepzesek`
 --
 ALTER TABLE `kepzesek`
   ADD CONSTRAINT `kepzesek_ibfk_1` FOREIGN KEY (`ua_ID`) REFERENCES `user_ado` (`ua_id`),
-  ADD CONSTRAINT `kepzesek_ibfk_2` FOREIGN KEY (`uv_ID`) REFERENCES `user_vevo` (`uv_id`),
-  ADD CONSTRAINT `kepzesek_ibfk_3` FOREIGN KEY (`jelentkezes_ID`) REFERENCES `jelentkezes` (`j_ID`);
+  ADD CONSTRAINT `kepzesek_ibfk_2` FOREIGN KEY (`uv_ID`) REFERENCES `user_vevo` (`uv_id`);
 
 --
 -- Megkötések a táblához `vegzettseg`
