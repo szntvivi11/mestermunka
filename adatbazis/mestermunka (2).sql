@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1:3307
--- Létrehozás ideje: 2026. Jan 21. 09:09
+-- Létrehozás ideje: 2026. Jan 22. 12:04
 -- Kiszolgáló verziója: 10.4.28-MariaDB
 -- PHP verzió: 8.2.4
 
@@ -46,6 +46,13 @@ CREATE TABLE `jelentkezesek` (
   `jelentkezes_datum` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
+--
+-- A tábla adatainak kiíratása `jelentkezesek`
+--
+
+INSERT INTO `jelentkezesek` (`id`, `user_id`, `kepzes_id`, `jelentkezes_datum`) VALUES
+(6, 14, 29, '2026-01-22 11:03:09');
+
 -- --------------------------------------------------------
 
 --
@@ -63,7 +70,6 @@ CREATE TABLE `kepzesek` (
   `heves_kortol` int(3) DEFAULT NULL,
   `uv_ID` int(11) DEFAULT NULL,
   `ua_ID` int(11) DEFAULT NULL,
-  `jelentkezes_ID` int(11) DEFAULT NULL,
   `ár` int(9) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
@@ -71,35 +77,35 @@ CREATE TABLE `kepzesek` (
 -- A tábla adatainak kiíratása `kepzesek`
 --
 
-INSERT INTO `kepzesek` (`id`, `kep`, `nev`, `leiras`, `helyileg`, `email`, `o_nev`, `heves_kortol`, `uv_ID`, `ua_ID`, `jelentkezes_ID`, `ár`) VALUES
-(27, '../tanfolyamok/kepek/körms.jpg', 'Körmös Tanfolyam', 'Műköröm építés alap és haladó technikákkal.', 'Budapest', 'info@szepseg.hu', 'Kiss Anna', 16, NULL, NULL, NULL, 0),
-(28, '../Tanfolyamok/kepek/gellakk.jpg', 'Géllakk Tanfolyam', 'Tartós géllakk technikák kezdőknek.', 'Budapest', 'info@szepseg.hu', 'Nagy Eszter', 16, NULL, NULL, NULL, 0),
-(29, '../Tanfolyamok/kepek/muszepillaepites.jpg', 'Műszempilla Építő Tanfolyam', '1D–2D szempilla építés gyakorlattal.', 'Budapest', 'info@szepseg.hu', 'Szabó Lilla', 18, NULL, NULL, NULL, 0),
-(30, '../Tanfolyamok/kepek/lifting.jpg', 'Pillalifting Tanfolyam', 'Természetes pillalifting technikák.', 'Budapest', 'info@szepseg.hu', 'Tóth Petra', 18, NULL, NULL, NULL, 0),
-(31, '../Tanfolyamok/kepek/laminalas.jpg', 'Szemöldök Laminálás', 'Szemöldök formázás és laminálás.', 'Budapest', 'info@szepseg.hu', 'Kovács Dóra', 18, NULL, NULL, NULL, 0),
-(32, '../Tanfolyamok/kepek/alapsmink.jpg', 'Sminkes Alap Tanfolyam', 'Nappali és alkalmi sminkek készítése.', 'Budapest', 'info@szepseg.hu', 'Horváth Nóra', 16, NULL, NULL, NULL, 0),
-(33, '../Tanfolyamok/kepek/manikur.jpg', 'Manikűr Tanfolyam', 'Alap és dekorációs manikűr technikák.', 'Budapest', 'info@szepseg.hu', 'Kiss Petra', 16, NULL, NULL, NULL, 0),
-(34, '../Tanfolyamok/kepek/pedikur.jpg', 'Pedikűr Haladó Tanfolyam', 'Speciális pedikűr technikák és spa kezelések.', 'Budapest', 'info@szepseg.hu', 'Nagy Lilla', 18, NULL, NULL, NULL, 0),
-(35, '../Tanfolyamok/kepek/fodrasz.jpg', 'Fodrász Haladó Tanfolyam', 'Haladó vágás, festés és hajformázás.', 'Budapest', 'info@szepseg.hu', 'Kovács Anna', 18, NULL, NULL, NULL, 0),
-(36, '../Tanfolyamok/kepek/extrasmink.jpg', 'Smink Profi Tanfolyam', 'Professzionális smink technikák, modellekre.', 'Budapest', 'info@szepseg.hu', 'Horváth Nóra', 18, NULL, NULL, NULL, 0),
-(37, '../Tanfolyamok/kepek/skin.jpg', 'Arcpakolás és Bőrápolás', 'Személyre szabott arcpakolások és kezelések.', 'Budapest', 'info@szepseg.hu', 'Szabó Réka', 18, NULL, NULL, NULL, 0),
-(39, '../Tanfolyamok/kepek/műszempiilas.jpg', 'Szempilla Haladó Tanfolyam', 'Volume és hybrid szempilla építés.', 'Budapest', 'info@szepseg.hu', 'Szabó Lilla', 18, NULL, NULL, NULL, 0),
-(40, '../Tanfolyamok/kepek/haladoszemoldok.jpg', 'Szemöldök Laminálás Haladó', 'Haladó laminálás és formázás technikák.', 'Budapest', 'info@szepseg.hu', 'Kovács Dóra', 18, NULL, NULL, NULL, 0),
-(41, '../Tanfolyamok/kepek/gellakhalado.jpg', 'Géllakk Haladó Tanfolyam', 'Komplex minták és díszítések géllakkal.', 'Budapest', 'info@szepseg.hu', 'Nagy Eszter', 18, NULL, NULL, NULL, 0),
-(42, '../Tanfolyamok/kepek/barber.jpg', 'Barber / Férfi Fodrász Tanfolyam', 'Borotválás, férfi hajvágás és styling.', 'Budapest', 'info@szepseg.hu', 'Kovács Péter', 18, NULL, NULL, NULL, 0),
-(43, '../Tanfolyamok/kepek/busniess.jpg', 'Szalonindítás Alapok', 'Szépségipari vállalkozás indítása.', 'Online', 'info@szepseg.hu', 'Vincze Péter', 18, NULL, NULL, NULL, 0),
-(44, '../Tanfolyamok/kepek/asztalossjpg.jpg', 'Asztalos Mesterkurzus', 'Alap- és haladó asztalos technikák.', 'Offline', 'info@asztalos.hu', 'Kovács László', 24, NULL, NULL, NULL, 0),
-(45, '../Tanfolyamok/kepek/autoszzerelo.jpg', 'Autószerelő Alapok', 'Gépjárművek karbantartása és javítása.', 'Offline', 'info@autoszerelo.hu', 'Nagy István', 40, NULL, NULL, NULL, 0),
-(46, '../Tanfolyamok/kepek/cukrasz.jpg', 'Cukrász Tanfolyam', 'Torták, sütemények és desszertek készítése.', 'Online', 'info@cukrasz.hu', 'Tóth Anna', 30, NULL, NULL, NULL, 0),
-(47, '../Tanfolyamok/kepek/heggeszto.jpg', 'Hegesztő Alapok', 'Különböző hegesztési technikák gyakorlati okt', 'Offline', 'info@hegeszto.hu', 'Farkas Péter', 36, NULL, NULL, NULL, 0),
-(48, '../Tanfolyamok/kepek/masszazs.jpg', 'Masszőr Tanfolyam', 'Relaxációs és terápiás masszázs technikák.', 'Online', 'info@masszazs.hu', 'Horváth Judit', 20, NULL, NULL, NULL, 0),
-(49, '../Tanfolyamok/kepek/rogramozo.jpg', 'Programozó Alapok', 'Programozás alapjai és gyakorlati projektek.', 'Online', 'info@programozas.hu', 'Szabó Gábor', 50, NULL, NULL, NULL, 0),
-(50, '../Tanfolyamok/kepek/szakaccs.jpg', 'Szakács Tanfolyam', 'Ételkészítés és konyhai technikák.', 'Offline', 'info@szakacs.hu', 'Balogh Erika', 45, NULL, NULL, NULL, 0),
-(51, '../Tanfolyamok/kepek/vezetes.jpg', 'Vezetési Tanfolyam', 'Biztonságos és hatékony vezetési gyakorlat.', 'Offline', 'info@vezetes.hu', 'Molnár Péter', 25, NULL, NULL, NULL, 0),
-(52, '../Tanfolyamok/kepek/villanyszzerelo.jpg', 'Villanyszerelő Alapok', 'Elektromos rendszerek telepítése és karbantar', 'Offline', 'info@villany.hu', 'Kiss András', 40, NULL, NULL, NULL, 0),
-(53, '../Tanfolyamok/kepek/festo.jpg', 'Festő Tanfolyam', 'Beltéri és kültéri festési technikák.', 'Offline', 'info@festo.hu', 'Németh Ágnes', 28, NULL, NULL, NULL, 0),
-(54, '../Tanfolyamok/kepek/tetofedo.jpg', 'Tetőfedő Tanfolyam', 'Tetőfedés és javítás alapjai.', 'Offline', 'info@tetkos.hu', 'Pál Gábor', 35, NULL, NULL, NULL, 0),
-(55, '../Tanfolyamok/kepek/klima.jpg', 'Klímaszerelő Alapok', 'Légkondicionáló rendszerek telepítése és karb', 'Offline', 'info@klima.hu', 'Varga Attila', 32, NULL, NULL, NULL, 0);
+INSERT INTO `kepzesek` (`id`, `kep`, `nev`, `leiras`, `helyileg`, `email`, `o_nev`, `heves_kortol`, `uv_ID`, `ua_ID`, `ár`) VALUES
+(27, 'körms.jpg', 'Körmös Tanfolyam', 'Műköröm építés alap és haladó technikákkal.', 'Budapest', 'info@szepseg.hu', 'Kiss Anna', 16, NULL, NULL, 0),
+(28, 'gellakk.jpg', 'Géllakk Tanfolyam', 'Tartós géllakk technikák kezdőknek.', 'Budapest', 'info@szepseg.hu', 'Nagy Eszter', 16, NULL, NULL, 0),
+(29, 'muszepillaepites.jpg', 'Műszempilla Építő Tanfolyam', '1D–2D szempilla építés gyakorlattal.', 'Budapest', 'info@szepseg.hu', 'Szabó Lilla', 18, NULL, NULL, 0),
+(30, 'lifting.jpg', 'Pillalifting Tanfolyam', 'Természetes pillalifting technikák.', 'Budapest', 'info@szepseg.hu', 'Tóth Petra', 18, NULL, NULL, 0),
+(31, 'laminalas.jpg', 'Szemöldök Laminálás', 'Szemöldök formázás és laminálás.', 'Budapest', 'info@szepseg.hu', 'Kovács Dóra', 18, NULL, NULL, 0),
+(32, 'alapsmink.jpg', 'Sminkes Alap Tanfolyam', 'Nappali és alkalmi sminkek készítése.', 'Budapest', 'info@szepseg.hu', 'Horváth Nóra', 16, NULL, NULL, 0),
+(33, 'manikur.jpg', 'Manikűr Tanfolyam', 'Alap és dekorációs manikűr technikák.', 'Budapest', 'info@szepseg.hu', 'Kiss Petra', 16, NULL, NULL, 0),
+(34, 'pedikur.jpg', 'Pedikűr Haladó Tanfolyam', 'Speciális pedikűr technikák és spa kezelések.', 'Budapest', 'info@szepseg.hu', 'Nagy Lilla', 18, NULL, NULL, 0),
+(35, 'fodrasz.jpg', 'Fodrász Haladó Tanfolyam', 'Haladó vágás, festés és hajformázás.', 'Budapest', 'info@szepseg.hu', 'Kovács Anna', 18, NULL, NULL, 0),
+(36, 'extrasmink.jpg', 'Smink Profi Tanfolyam', 'Professzionális smink technikák, modellekre.', 'Budapest', 'info@szepseg.hu', 'Horváth Nóra', 18, NULL, NULL, 0),
+(37, 'skin.jpg', 'Arcpakolás és Bőrápolás', 'Személyre szabott arcpakolások és kezelések.', 'Budapest', 'info@szepseg.hu', 'Szabó Réka', 18, NULL, NULL, 0),
+(39, 'műszempiilas.jpg', 'Szempilla Haladó Tanfolyam', 'Volume és hybrid szempilla építés.', 'Budapest', 'info@szepseg.hu', 'Szabó Lilla', 18, NULL, NULL, 0),
+(40, 'haladoszemoldok.jpg', 'Szemöldök Laminálás Haladó', 'Haladó laminálás és formázás technikák.', 'Budapest', 'info@szepseg.hu', 'Kovács Dóra', 18, NULL, NULL, 0),
+(41, 'gellakhalado.jpg', 'Géllakk Haladó Tanfolyam', 'Komplex minták és díszítések géllakkal.', 'Budapest', 'info@szepseg.hu', 'Nagy Eszter', 18, NULL, NULL, 0),
+(42, 'barber.jpg', 'Barber / Férfi Fodrász Tanfolyam', 'Borotválás, férfi hajvágás és styling.', 'Budapest', 'info@szepseg.hu', 'Kovács Péter', 18, NULL, NULL, 0),
+(43, 'busniess.jpg', 'Szalonindítás Alapok', 'Szépségipari vállalkozás indítása.', 'Online', 'info@szepseg.hu', 'Vincze Péter', 18, NULL, NULL, 0),
+(44, 'asztalossjpg.jpg', 'Asztalos Mesterkurzus', 'Alap- és haladó asztalos technikák.', 'Offline', 'info@asztalos.hu', 'Kovács László', 24, NULL, NULL, 0),
+(45, 'autoszzerelo.jpg', 'Autószerelő Alapok', 'Gépjárművek karbantartása és javítása.', 'Offline', 'info@autoszerelo.hu', 'Nagy István', 40, NULL, NULL, 0),
+(46, 'cukrasz.jpg', 'Cukrász Tanfolyam', 'Torták, sütemények és desszertek készítése.', 'Online', 'info@cukrasz.hu', 'Tóth Anna', 30, NULL, NULL, 0),
+(47, 'heggeszto.jpg', 'Hegesztő Alapok', 'Különböző hegesztési technikák gyakorlati okt', 'Offline', 'info@hegeszto.hu', 'Farkas Péter', 36, NULL, NULL, 0),
+(48, 'masszazs.jpg', 'Masszőr Tanfolyam', 'Relaxációs és terápiás masszázs technikák.', 'Online', 'info@masszazs.hu', 'Horváth Judit', 20, NULL, NULL, 0),
+(49, 'rogramozo.jpg', 'Programozó Alapok', 'Programozás alapjai és gyakorlati projektek.', 'Online', 'info@programozas.hu', 'Szabó Gábor', 50, NULL, NULL, 0),
+(50, 'szakaccs.jpg', 'Szakács Tanfolyam', 'Ételkészítés és konyhai technikák.', 'Offline', 'info@szakacs.hu', 'Balogh Erika', 45, NULL, NULL, 0),
+(51, 'vezetes.jpg', 'Vezetési Tanfolyam', 'Biztonságos és hatékony vezetési gyakorlat.', 'Offline', 'info@vezetes.hu', 'Molnár Péter', 25, NULL, NULL, 0),
+(52, 'villanyszzerelo.jpg', 'Villanyszerelő Alapok', 'Elektromos rendszerek telepítése és karbantar', 'Offline', 'info@villany.hu', 'Kiss András', 40, NULL, NULL, 0),
+(53, 'festo.jpg', 'Festő Tanfolyam', 'Beltéri és kültéri festési technikák.', 'Offline', 'info@festo.hu', 'Németh Ágnes', 28, NULL, NULL, 0),
+(54, 'tetofedo.jpg', 'Tetőfedő Tanfolyam', 'Tetőfedés és javítás alapjai.', 'Offline', 'info@tetkos.hu', 'Pál Gábor', 35, NULL, NULL, 0),
+(55, 'klima.jpg', 'Klímaszerelő Alapok', 'Légkondicionáló rendszerek telepítése és karb', 'Offline', 'info@klima.hu', 'Varga Attila', 32, NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -121,7 +127,9 @@ CREATE TABLE `user_ado` (
 
 INSERT INTO `user_ado` (`ua_id`, `felhasznalonev`, `jelszo`, `gmail`, `vegzettseg`) VALUES
 (6, 'test', '$2b$10$hikKbk20b2uMYAJkzqVDduDR0jW6Yy.27Kb/j3rVG1v6pNvVQy0WO', 'test@gmail.com', 'egyetem'),
-(7, 'bkv', '$2b$10$5egIgxceD.Aus5Zj0uCxvuzasLrI1b5xhAsdO6e23X.FyYqEn96OS', 'bkv@gmail.com', 'egyetem');
+(7, 'bkv', '$2b$10$5egIgxceD.Aus5Zj0uCxvuzasLrI1b5xhAsdO6e23X.FyYqEn96OS', 'bkv@gmail.com', 'egyetem'),
+(8, 'kitti', '$2b$10$9RsvmLiQ0pcOmhTTPfrRUuh6ckWddoPq4hiWJ9BzCPZJg33dzw4IC', 'kitti@gmail.com', 'egyetem'),
+(9, 'tesszt', '$2b$10$GnqWEMrfmrvd2XYGuhXEweXMC7qGeFHgq8w19c.faCYB8eCVffv4u', 'teszt@gmai.com', 'egyetem');
 
 -- --------------------------------------------------------
 
@@ -144,7 +152,8 @@ CREATE TABLE `user_vevo` (
 
 INSERT INTO `user_vevo` (`uv_id`, `nev`, `email`, `felhasznalonev`, `jelszo`, `regisztracio_datum`) VALUES
 (12, 'aha', 'aha@gmai.com', 'aha', '$2b$10$3ZxRAvLgQYhww2d7JLjQP.AgoncSn7fGtoJ2YEaYe6ibaz61pAuLq', '2026-01-14 09:25:05'),
-(13, 'valaki', 'valaki@gmail.com', 'valaki', '$2b$10$nd3Vhm7eUgsP/g5mS/jxReUCfsqrzXmnFdluQ0l26bM8iDSjSYt06', '2026-01-14 09:30:29');
+(13, 'valaki', 'valaki@gmail.com', 'valaki', '$2b$10$nd3Vhm7eUgsP/g5mS/jxReUCfsqrzXmnFdluQ0l26bM8iDSjSYt06', '2026-01-14 09:30:29'),
+(14, 'anyuka', 'anyuka@gmail.com', 'anyuka', '$2b$10$qlPOB049twjkC1i0QnGVwe1VaeLhIhzPVuZt8n3vqyD3oSisbU1P6', '2026-01-22 10:56:34');
 
 -- --------------------------------------------------------
 
@@ -184,8 +193,7 @@ ALTER TABLE `jelentkezesek`
 ALTER TABLE `kepzesek`
   ADD PRIMARY KEY (`id`),
   ADD KEY `uv_ID` (`uv_ID`,`ua_ID`),
-  ADD KEY `ua_ID` (`ua_ID`),
-  ADD KEY `jelentkezes_ID` (`jelentkezes_ID`);
+  ADD KEY `ua_ID` (`ua_ID`);
 
 --
 -- A tábla indexei `user_ado`
@@ -220,7 +228,7 @@ ALTER TABLE `ajanlo`
 -- AUTO_INCREMENT a táblához `jelentkezesek`
 --
 ALTER TABLE `jelentkezesek`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT a táblához `kepzesek`
@@ -232,13 +240,13 @@ ALTER TABLE `kepzesek`
 -- AUTO_INCREMENT a táblához `user_ado`
 --
 ALTER TABLE `user_ado`
-  MODIFY `ua_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `ua_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT a táblához `user_vevo`
 --
 ALTER TABLE `user_vevo`
-  MODIFY `uv_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `uv_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT a táblához `vegzettseg`

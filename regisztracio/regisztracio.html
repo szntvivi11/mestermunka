@@ -65,7 +65,7 @@
 
     <!-- Választás: Felhasználó / Tanfolyamadó -->
     <label>
-      <input type="radio" name="role" value="student" checked> Diák
+      <input type="radio" name="role" value="user" checked> Sima felhasználó
     </label>
     <label>
       <input type="radio" name="role" value="teacher"> Tanfolyamadó
@@ -185,7 +185,7 @@
   });
 
   // ==== Hide 'Profil' link if user is not logged in ====
-  const user = JSON.parse(localStorage.getItem('student'));
+  const user = JSON.parse(localStorage.getItem('user'));
   if (!user) {
     document.querySelector('a[href="/profil"]').style.display = 'none';
   }
