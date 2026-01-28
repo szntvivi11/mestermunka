@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>Profil</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
 :root {
     --primary: #3399ff;
@@ -22,11 +23,24 @@ body {
     background: linear-gradient(180deg, #0f111a, #1a2a4b);
     color: var(--text);
     min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
+/* HEADER / ABSZTRAKT VONAL */
+header {
+    position: relative;
+    width: 100%;
+    height: 240px;
+}
+header svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 220px;
+    z-index: 1;
+}
+
+/* PROFIL KÁRTYA */
 .profil-card {
     background: var(--card-bg);
     border-radius: 24px;
@@ -35,6 +49,9 @@ body {
     max-width: 500px;
     text-align: center;
     box-shadow: 0 12px 40px rgba(51,153,255,0.4);
+    position: relative;
+    top: -80px; /* hullám fölé emeljük */
+    margin: 0 auto;
 }
 
 .profil-avatar {
@@ -47,7 +64,6 @@ body {
     transition: transform 0.2s;
 }
 .profil-avatar:hover { transform: scale(1.05); }
-
 .profil-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
 .profil-adatok h2 { margin: 8px 0 4px; font-size: 2em; }
@@ -104,7 +120,6 @@ body {
     color: #fff;
     font-size: 1.05em;
 }
-
 .modal-content button {
     padding: 14px;
     border-radius: 12px;
@@ -115,6 +130,7 @@ body {
 }
 .modal-content button:hover { opacity: 0.9; }
 
+/* RESPONZÍV */
 @media(max-width:480px){
     .profil-card { padding: 36px 24px; }
     .profil-avatar { width: 140px; height: 140px; margin-bottom: 20px; }
@@ -127,7 +143,25 @@ body {
 </head>
 <body>
 
-<div class="profil-card">
+<!-- HEADER / ABSZTRAKT VONAL -->
+<header>
+    <svg viewBox="0 0 1440 400" preserveAspectRatio="none" style="position:absolute; top:0; left:0; width:100%; height:220px; z-index:0;">
+        <defs>
+            <linearGradient id="wave1" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#3399ff"/>
+                <stop offset="100%" stop-color="#66b3ff"/>
+            </linearGradient>
+            <linearGradient id="wave2" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#66b3ff"/>
+                <stop offset="100%" stop-color="#a0d4ff"/>
+            </linearGradient>
+        </defs>
+        <path d="M0,180 C240,120 480,240 720,180 C960,120 1200,240 1440,180 L1440,320 C1200,380 960,100 720,320 C480,540 240,100 0,320 Z" fill="url(#wave1)" fill-opacity="0.85"/>
+        <path d="M0,210 C360,90 1080,330 1440,210 L1440,350 C1200,400 960,180 720,350 C480,520 240,180 0,350 Z" fill="url(#wave2)" fill-opacity="0.65"/>
+    </svg>
+</header>
+
+<div class="profil-card" style="position: relative; z-index: 2; top: -100px; margin: 0 auto;">
     <div class="profil-avatar">
         <img id="profileImage" alt="Profilkép">
     </div>
@@ -176,13 +210,11 @@ body {
 let user = JSON.parse(localStorage.getItem("user"));
 if(!user){ alert("Nincs bejelentkezve!"); location.href="/bejelentkezes"; }
 
-// Adatok
 document.getElementById("nev-megjelenit").textContent = user.nev;
 const roleMap = { student: "🎓 Diák", teacher: "📘 Tanár", admin: "👑 Admin" };
 document.getElementById("szerep-megjelenit").textContent = roleMap[user.role] || "Felhasználó";
 document.getElementById("bioDisplay").textContent = user.bio || "";
 
-// Profilkép
 const img = document.getElementById("profileImage");
 function updateProfileImage() {
     if(user.profilePicture && user.profilePicture.trim()!==""){
@@ -191,26 +223,23 @@ function updateProfileImage() {
 }
 updateProfileImage();
 
-// Modalok
 const bioModal = document.getElementById("bioModal");
 const passwordModal = document.getElementById("passwordModal");
 const uploadModal = document.getElementById("uploadModal");
 
-// Gombok
 document.getElementById("editBioBtn").onclick = ()=>{ document.getElementById("bio-input").value=user.bio||""; bioModal.style.display="flex";}
 document.getElementById("changePasswordBtn").onclick = ()=>{ document.getElementById("newPassword").value=""; passwordModal.style.display="flex";}
 document.getElementById("uploadPicBtn").onclick = ()=>{ document.getElementById("profileFile").value=""; uploadModal.style.display="flex";}
 document.querySelectorAll(".closeModal").forEach(btn=>{ btn.onclick=()=>{ bioModal.style.display="none"; passwordModal.style.display="none"; uploadModal.style.display="none"; }; });
 
-// Mentés
-document.getElementById("saveBioBtn").onclick = ()=>{
+document.getElementById("saveBioBtn").onclick = ()=> {
     user.bio = document.getElementById("bio-input").value;
     localStorage.setItem("user", JSON.stringify(user));
     document.getElementById("bioDisplay").textContent = user.bio;
     bioModal.style.display="none";
 };
 
-document.getElementById("savePasswordBtn").onclick = ()=>{
+document.getElementById("savePasswordBtn").onclick = ()=> {
     const newPass = document.getElementById("newPassword").value;
     if(newPass.trim()===""){ alert("Adj meg egy új jelszót!"); return; }
     user.password = newPass;
@@ -219,7 +248,7 @@ document.getElementById("savePasswordBtn").onclick = ()=>{
     alert("Jelszó módosítva!");
 };
 
-document.getElementById("savePicBtn").onclick = ()=>{
+document.getElementById("savePicBtn").onclick = ()=> {
     const file = document.getElementById("profileFile").files[0];
     if(!file){ alert("Válassz egy képet!"); return; }
     const reader = new FileReader();
@@ -232,7 +261,6 @@ document.getElementById("savePicBtn").onclick = ()=>{
     reader.readAsDataURL(file);
 };
 
-// Kijelentkezés
 document.getElementById("logout").onclick = ()=>{
     localStorage.removeItem("user");
     location.href="/";
