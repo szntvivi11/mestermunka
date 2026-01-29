@@ -148,50 +148,53 @@ app.post("/api/register-teacher", async (req, res) => {
 // =====================================================
 // ================== BEJELENTKEZÉS =====================
 // =====================================================
+// Strictly enforce role-based authentication
 app.post("/api/login", async (req, res) => {
-  const { email, jelszo } = req.body;
+  const { email, jelszo, role } = req.body;
 
-  if (!email || !jelszo)
+  if (!email || !jelszo || !role)
     return res.status(400).json({ success: false, message: "Hiányzó adatok" });
 
   try {
-    // USER
-    const [users] = await db.promise().query(
-      "SELECT uv_id, nev, email, jelszo FROM user_vevo WHERE email = ?",
-      [email]
-    );
+    if (role === "student") {
+      // Check if the user is a student
+      const [students] = await db.promise().query(
+        "SELECT uv_id, nev, email, jelszo FROM user_vevo WHERE email = ?",
+        [email]
+      );
 
-    if (users.length) {
-      const user = users[0];
-      const ok = await bcrypt.compare(jelszo, user.jelszo);
-      if (!ok) return res.status(401).json({ success: false, message: "Hibás jelszó" });
+      if (students.length) {
+        const student = students[0];
+        const ok = await bcrypt.compare(jelszo, student.jelszo);
+        if (!ok) return res.status(401).json({ success: false, message: "Hibás jelszó" });
 
-      return res.json({
-        success: true,
-        role: "user",
-        user: { id: user.uv_id, nev: user.nev, email: user.email }
-      });
+        return res.json({
+          success: true,
+          role: "student",
+          user: { id: student.uv_id, nev: student.nev, email: student.email }
+        });
+      }
+    } else if (role === "teacher") {
+      // Check if the user is a teacher
+      const [teachers] = await db.promise().query(
+        "SELECT ua_id, felhasznalonev, gmail, jelszo FROM user_ado WHERE gmail = ?",
+        [email]
+      );
+
+      if (teachers.length) {
+        const teacher = teachers[0];
+        const ok = await bcrypt.compare(jelszo, teacher.jelszo);
+        if (!ok) return res.status(401).json({ success: false, message: "Hibás jelszó" });
+
+        return res.json({
+          success: true,
+          role: "teacher",
+          user: { id: teacher.ua_id, nev: teacher.felhasznalonev, email: teacher.gmail }
+        });
+      }
     }
 
-    // TEACHER
-    const [teachers] = await db.promise().query(
-      "SELECT ua_id, felhasznalonev, gmail, jelszo FROM user_ado WHERE gmail = ?",
-      [email]
-    );
-
-    if (!teachers.length)
-      return res.status(401).json({ success: false, message: "Nincs ilyen felhasználó" });
-
-    const teacher = teachers[0];
-    const ok = await bcrypt.compare(jelszo, teacher.jelszo);
-    if (!ok) return res.status(401).json({ success: false, message: "Hibás jelszó" });
-
-    res.json({
-      success: true,
-      role: "teacher",
-      user: { id: teacher.ua_id, nev: teacher.felhasznalonev, email: teacher.gmail }
-    });
-
+    return res.status(401).json({ success: false, message: "Nincs ilyen felhasználó vagy helytelen szerepkör" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: "Szerver hiba" });
