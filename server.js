@@ -56,7 +56,7 @@ app.get("/profil", (req, res) => {
 // ===== ADATBÁZIS =====
 const db = mysql.createConnection({
   host: "localhost",
-  port: 3306,
+  port: 3307,
   user: "root",
   password: "",
   database: "mestermunka"
@@ -97,9 +97,9 @@ app.post("/api/register-user", async (req, res) => {
     // Felhasználó beszúrása a user_vevo táblába
     await db.promise().query(
       `INSERT INTO user_vevo
-       (email, felhasznalonev, jelszo, regisztracio_datum)
-       VALUES ( ?, ?, ?, NOW())`,
-      [email, nev, hash]
+       (nev, email, felhasznalonev, jelszo, regisztracio_datum)
+       VALUES (?, ?, ?, ?, NOW())`,
+      [nev, email, nev, hash]
     );
 
     res.json({ success: true });
@@ -157,7 +157,7 @@ app.post("/api/login", async (req, res) => {
   try {
     // USER
     const [users] = await db.promise().query(
-      "SELECT uv_id, email, jelszo FROM user_vevo WHERE email = ?",
+      "SELECT uv_id, nev, email, jelszo FROM user_vevo WHERE email = ?",
       [email]
     );
 
@@ -169,7 +169,7 @@ app.post("/api/login", async (req, res) => {
       return res.json({
         success: true,
         role: "user",
-        user: { id: user.uv_id, email: user.email }
+        user: { id: user.uv_id, nev: user.nev, email: user.email }
       });
     }
 

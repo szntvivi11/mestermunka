@@ -8,12 +8,9 @@ loginForm.addEventListener('submit', async (e) => {
   const jelszo = document.getElementById('login-password').value.trim();
 
   const container = document.querySelector('.aloldal-container');
-
-  // Eltávolítjuk az esetleges előző üzenetet
   const existing = document.querySelector('.login-message');
   if (existing) existing.remove();
 
-  // Ellenőrizzük, hogy minden mező ki van-e töltve
   if (!email || !jelszo) {
     const msg = document.createElement('div');
     msg.className = 'login-message login-error';
@@ -23,7 +20,6 @@ loginForm.addEventListener('submit', async (e) => {
   }
 
   try {
-    // Küldés a szerver felé
     const res = await fetch('/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -31,36 +27,34 @@ loginForm.addEventListener('submit', async (e) => {
     });
 
     const data = await res.json();
-
-    // Üzenet megjelenítése
     const msg = document.createElement('div');
     msg.className = `login-message ${data.success ? 'login-success' : 'login-error'}`;
     msg.textContent = data.message || (data.success ? '✅ Sikeres bejelentkezés' : '❌ Hiba');
+
     container.appendChild(msg);
 
     if (data.success) {
-      // Szerep kiválasztása a formból
+      // Include the selected role in the user data
       const selectedRole = document.querySelector('input[name="role"]:checked');
       if (selectedRole) {
-        data.user.role = selectedRole.value;
+          data.user.role = selectedRole.value;
       }
 
-      // Felhasználó mentése localStorage-be
+      // Store user data in localStorage
       localStorage.setItem('user', JSON.stringify(data.user));
 
-      // Navbar frissítése
+      // Hide 'Bejelentkezés' and 'Regisztráció' from the navbar
       const loginNav = document.querySelector('#nav-bejelentkezes');
       const registerNav = document.querySelector('#nav-regisztracio');
       if (loginNav) loginNav.style.display = 'none';
-      if (registerNav) registerNav.style.display = 'none';
+      if (registerNav) loginNav.style.display = 'none';
 
-      // Átirányítás a szerep alapján
+      // Redirect based on role
       setTimeout(() => {
-        const role = data.role || (data.user && data.user.role);
-        if (role === 'teacher') {
-          window.location.href = '/tanfolyamok'; // tanár landing
+        if (data.role === 'teacher') {
+          window.location.href = '/tanfolyamok'; // pl. oktató landing
         } else {
-          window.location.href = '/'; // diák landing
+          window.location.href = '/'; // felhasználó landing
         }
       }, 800);
     }
