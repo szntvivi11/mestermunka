@@ -206,6 +206,20 @@ header svg {
     </div>
 </div>
 
+<!-- Modal for adding a course -->
+<div id="addCourseModal" class="modal">
+    <div class="modal-content">
+        <h2>Tanfolyam hozzáadása</h2>
+        <input type="text" id="courseName" placeholder="Tanfolyam neve">
+        <textarea id="courseDescription" placeholder="Tanfolyam leírása"></textarea>
+        <input type="text" id="courseLocation" placeholder="Helyszín">
+        <input type="email" id="courseEmail" placeholder="Kapcsolattartó email">
+        <input type="number" id="coursePrice" placeholder="Ár">
+        <button id="saveCourseBtn">Mentés</button>
+        <button class="closeModal">Mégse</button>
+    </div>
+</div>
+
 <script>
 let user = JSON.parse(localStorage.getItem("user"));
 if(!user){ alert("Nincs bejelentkezve!"); location.href="/bejelentkezes"; }
@@ -265,6 +279,51 @@ document.getElementById("logout").onclick = ()=>{
     localStorage.removeItem("user");
     location.href="/";
 };
+
+// Check if the user is a teacher and add the "Add Course" button
+if (user.role === "teacher") {
+    const addCourseBtn = document.createElement("button");
+    addCourseBtn.textContent = "➕ Tanfolyam hozzáadása";
+    addCourseBtn.className = "profil-gomb";
+    addCourseBtn.onclick = () => {
+        document.getElementById("addCourseModal").style.display = "flex";
+    };
+    document.querySelector(".profil-card").appendChild(addCourseBtn);
+}
+
+// Save course details to the database
+const saveCourseBtn = document.getElementById("saveCourseBtn");
+saveCourseBtn.onclick = async () => {
+    const course = {
+        nev: document.getElementById("courseName").value,
+        leiras: document.getElementById("courseDescription").value,
+        helyileg: document.getElementById("courseLocation").value,
+        email: document.getElementById("courseEmail").value,
+        ár: document.getElementById("coursePrice").value,
+        ua_ID: user.id // Link the course to the teacher
+    };
+
+    const response = await fetch("/api/courses", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(course)
+    });
+
+    if (response.ok) {
+        alert("Tanfolyam sikeresen hozzáadva!");
+        document.getElementById("addCourseModal").style.display = "none";
+    } else {
+        alert("Hiba történt a tanfolyam hozzáadása során.");
+    }
+};
+
+// Close modal functionality
+const closeModalButtons = document.querySelectorAll(".closeModal");
+closeModalButtons.forEach(btn => {
+    btn.onclick = () => {
+        document.getElementById("addCourseModal").style.display = "none";
+    };
+});
 </script>
 
 </body>

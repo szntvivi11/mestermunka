@@ -224,6 +224,28 @@ app.get("/api/kepzesek", async (req, res) => {
   }
 });
 
+// Endpoint to add a new course
+app.post("/api/courses", async (req, res) => {
+  const { nev, leiras, helyileg, email, ár, ua_ID } = req.body;
+
+  if (!nev || !leiras || !helyileg || !email || !ár || !ua_ID) {
+    return res.status(400).json({ success: false, message: "Hiányzó adatok" });
+  }
+
+  try {
+    await db.promise().query(
+      `INSERT INTO kepzesek (nev, leiras, helyileg, email, ár, ua_ID)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [nev, leiras, helyileg, email, ár, ua_ID]
+    );
+
+    res.json({ success: true, message: "Tanfolyam sikeresen hozzáadva" });
+  } catch (err) {
+    console.error("❌ Hiba a tanfolyam hozzáadásakor:", err);
+    res.status(500).json({ success: false, message: "Szerver hiba" });
+  }
+});
+
 // ===== JELENTKEZÉS MENTÉSE =====
 app.post("/api/jelentkezes", async (req, res) => {
   const { userId, kepzesId } = req.body;
