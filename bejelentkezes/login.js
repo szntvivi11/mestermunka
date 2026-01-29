@@ -40,6 +40,15 @@ loginForm.addEventListener('submit', async (e) => {
           data.user.role = selectedRole.value;
       }
 
+      // Ensure only students can log in to student profiles
+      if (data.user.role !== 'student') {
+          const msg = document.createElement('div');
+          msg.className = 'login-message login-error';
+          msg.textContent = '❌ Csak diákok léphetnek be diák profilba!';
+          container.appendChild(msg);
+          return;
+      }
+
       // Store user data in localStorage
       localStorage.setItem('user', JSON.stringify(data.user));
 
