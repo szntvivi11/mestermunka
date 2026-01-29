@@ -20,31 +20,104 @@ loginForm.addEventListener('submit', async (e) => {
   }
 
   try {
+    // Include the selected role in the login request
+    const selectedRole = document.querySelector('input[name="role"]:checked');
+    if (!selectedRole) {
+        const msg = document.createElement('div');
+        msg.className = 'login-message login-error';
+        msg.textContent = '❌ Kérlek, válassz szerepkört!';
+        container.appendChild(msg);
+        return;
+    }
+
+    // Add the role to the request body
     const res = await fetch('/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, jelszo })
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, jelszo, role: selectedRole.value })
     });
 
     const data = await res.json();
+
     const msg = document.createElement('div');
     msg.className = `login-message ${data.success ? 'login-success' : 'login-error'}`;
     msg.textContent = data.message || (data.success ? '✅ Sikeres bejelentkezés' : '❌ Hiba');
 
     container.appendChild(msg);
 
+    // Ensure the role matches the profile type
+    if (data.success && data.role !== selectedRole.value) {
+        const msg = document.createElement('div');
+        msg.className = 'login-message login-error';
+        msg.textContent = '❌ A kiválasztott szerepkör nem egyezik a fiók szerepével!';
+        container.appendChild(msg);
+        return;
+    }
+
     if (data.success) {
       // Include the selected role in the user data
-      const selectedRole = document.querySelector('input[name="role"]:checked');
       if (selectedRole) {
           data.user.role = selectedRole.value;
       }
 
+      // Ensure users can only log in to profiles matching their role
+      if (selectedRole && selectedRole.value !== data.user.role) {
+          const msg = document.createElement('div');
+          msg.className = 'login-message login-error';
+          msg.textContent = '❌ A kiválasztott szerep nem egyezik a fiók szerepével!';
+          container.appendChild(msg);
+          return;
+      }
+
       // Ensure only students can log in to student profiles
-      if (data.user.role !== 'student') {
+      if (selectedRole && selectedRole.value === 'student' && data.user.role !== 'student') {
           const msg = document.createElement('div');
           msg.className = 'login-message login-error';
           msg.textContent = '❌ Csak diákok léphetnek be diák profilba!';
+          container.appendChild(msg);
+          return;
+      }
+
+      // Ensure only teachers can log in to teacher profiles
+      if (selectedRole && selectedRole.value === 'teacher' && data.user.role !== 'teacher') {
+          const msg = document.createElement('div');
+          msg.className = 'login-message login-error';
+          msg.textContent = '❌ Csak tanárok léphetnek be tanári profilba!';
+          container.appendChild(msg);
+          return;
+      }
+
+      // Strictly enforce role-based login
+      if (data.user.role === 'student' && selectedRole.value !== 'student') {
+          const msg = document.createElement('div');
+          msg.className = 'login-message login-error';
+          msg.textContent = '❌ Diákként nem léphetsz be tanári profilba!';
+          container.appendChild(msg);
+          return;
+      }
+
+      if (data.user.role === 'teacher' && selectedRole.value !== 'teacher') {
+          const msg = document.createElement('div');
+          msg.className = 'login-message login-error';
+          msg.textContent = '❌ Tanárként nem léphetsz be diák profilba!';
+          container.appendChild(msg);
+          return;
+      }
+
+      // Explicitly block students from accessing teacher profiles
+      if (data.user.role === 'student' && selectedRole.value === 'teacher') {
+          const msg = document.createElement('div');
+          msg.className = 'login-message login-error';
+          msg.textContent = '❌ Diákként nem léphetsz be tanári profilba!';
+          container.appendChild(msg);
+          return;
+      }
+
+      // Explicitly block teachers from accessing student profiles
+      if (data.user.role === 'teacher' && selectedRole.value === 'student') {
+          const msg = document.createElement('div');
+          msg.className = 'login-message login-error';
+          msg.textContent = '❌ Tanárként nem léphetsz be diák profilba!';
           container.appendChild(msg);
           return;
       }
