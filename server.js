@@ -3,6 +3,8 @@ const mysql = require("mysql2");
 const path = require("path");
 const bcrypt = require("bcrypt");
 const cors = require("cors");
+const multer = require("multer");
+
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -146,11 +148,11 @@ app.post("/api/register-teacher", async (req, res) => {
 // =====================================================
 // ================== BEJELENTKEZÉS =====================
 // =====================================================
-// Strictly enforce role-based authentication
+// Refined login endpoint to ensure proper role validation
 app.post("/api/login", async (req, res) => {
   const { email, jelszo, role } = req.body;
 
-  if (!email || !jelszo || !role)
+  if (!email || !jelszo)
     return res.status(400).json({ success: false, message: "Hiányzó adatok" });
 
   try {
@@ -190,6 +192,20 @@ app.post("/api/login", async (req, res) => {
           user: { id: teacher.ua_id, nev: teacher.felhasznalonev, email: teacher.gmail }
         });
       }
+    } else if (!role || role === "admin") {
+      // Admin login logic with fixed credentials
+      const adminUsername = "ADMIN1234";
+      const adminPassword = "admin4321";
+
+      if (email === adminUsername && jelszo === adminPassword) {
+        return res.json({
+          success: true,
+          role: "admin",
+          user: { id: 0, nev: "Adminisztrátor", email: adminUsername }
+        });
+      } else {
+        return res.status(401).json({ success: false, message: "Hibás admin felhasználónév vagy jelszó" });
+      }
     }
 
     return res.status(401).json({ success: false, message: "Nincs ilyen felhasználó vagy helytelen szerepkör" });
@@ -197,6 +213,21 @@ app.post("/api/login", async (req, res) => {
     console.error(err);
     res.status(500).json({ success: false, message: "Szerver hiba" });
   }
+});
+
+// Add an endpoint to handle profile picture uploads
+const upload = multer({ dest: "uploads/" });
+
+app.post("/api/upload-profile-picture", upload.single("profilePicture"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ success: false, message: "No file uploaded" });
+  }
+
+  res.json({
+    success: true,
+    message: "File uploaded successfully",
+    filePath: `/uploads/${req.file.filename}`
+  });
 });
 
 // ===== TANFOLYAMOK API =====
@@ -225,32 +256,6 @@ app.post("/api/courses", async (req, res) => {
       [nev, leiras, helyileg, email, ár, ua_ID]
     );
 
-    res.json({ success: true, message: "Tanfolyam sikeresen hozzáadva" });
-  } catch (err) {
-    console.error("❌ Hiba a tanfolyam hozzáadásakor:", err);
-    res.status(500).json({ success: false, message: "Szerver hiba" });
-  }
-});
-
-// Update the `/api/add-course` endpoint to handle image URLs instead of file uploads
-app.post("/api/add-course", async (req, res) => {
-  const { kep, nev, leiras, helyileg, email, o_nev, heves_kortol, uv_ID, ua_ID, ár } = req.body;
-
-  // Validate required fields
-  if (!kep || !nev || !leiras || !helyileg || !email || !o_nev || !heves_kortol || !ár) {
-    console.error("Validation failed: Missing required fields.");
-    return res.status(400).json({ success: false, message: "Hiányzó adatok" });
-  }
-
-  try {
-    // Insert the new course into the database
-    const [result] = await db.promise().query(
-      `INSERT INTO kepzesek (kep, nev, leiras, helyileg, email, o_nev, heves_kortol, uv_ID, ua_ID, ár)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [kep, nev, leiras, helyileg, email, o_nev, heves_kortol, uv_ID, ua_ID, ár]
-    );
-
-    console.log("Database insert result:", result); // Log the database result
     res.json({ success: true, message: "Tanfolyam sikeresen hozzáadva" });
   } catch (err) {
     console.error("❌ Hiba a tanfolyam hozzáadásakor:", err);

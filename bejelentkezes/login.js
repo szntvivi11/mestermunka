@@ -20,6 +20,28 @@ loginForm.addEventListener('submit', async (e) => {
   }
 
   try {
+    // Skip role selection for admin login
+    const isAdminLogin = email === 'ADMIN1234' && jelszo === 'admin4321';
+    if (isAdminLogin) {
+        const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, jelszo, role: 'admin' })
+        });
+
+        const data = await res.json();
+        const msg = document.createElement('div');
+        msg.className = `login-message ${data.success ? 'login-success' : 'login-error'}`;
+        msg.textContent = data.message || (data.success ? '✅ Sikeres bejelentkezés' : '❌ Hiba');
+        container.appendChild(msg);
+
+        if (data.success) {
+            localStorage.setItem('user', JSON.stringify(data.user));
+            setTimeout(() => window.location.href = '/profil', 800);
+        }
+        return;
+    }
+
     // Include the selected role in the login request
     const selectedRole = document.querySelector('input[name="role"]:checked');
     if (!selectedRole) {
