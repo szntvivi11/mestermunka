@@ -214,7 +214,7 @@ button:active,
     display: flex;
   }*/
 
-/* ==========================================
+  /* ==========================================
    PROFIL TELJES OLDAL
    ========================================== */
 
@@ -610,29 +610,6 @@ a {
 }
 
 /* ==========================================
-   TÖLTŐKÉPERNYŐ
-   ========================================== */
-#loading-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.9);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    visibility: hidden;
-    opacity: 0;
-    transition: visibility 0s, opacity 0.3s ease;
-}
-#loading-screen.active {
-    visibility: visible;
-    opacity: 1;
-}
-
-/* ==========================================
    RESPONSIVE
    ========================================== */
 @media (max-width: 768px) {
@@ -651,7 +628,7 @@ a {
 
 
 
-/* ==========================================
+  /* ==========================================
    INDEX KÁRTYÁK
    ========================================== */
    
@@ -802,8 +779,4 @@ a {
         margin: 0 4px;
     }
 }
-/* ================= Profil ================= */
 
-
-
-/*///////////////////////KITTI VÉGE////////////////////////////*/
