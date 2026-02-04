@@ -3,8 +3,6 @@ const mysql = require("mysql2");
 const path = require("path");
 const bcrypt = require("bcrypt");
 const cors = require("cors");
-const multer = require("multer");
-
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -201,21 +199,6 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-// Add an endpoint to handle profile picture uploads
-const upload = multer({ dest: "uploads/" });
-
-app.post("/api/upload-profile-picture", upload.single("profilePicture"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ success: false, message: "No file uploaded" });
-  }
-
-  res.json({
-    success: true,
-    message: "File uploaded successfully",
-    filePath: `/uploads/${req.file.filename}`
-  });
-});
-
 // ===== TANFOLYAMOK API =====
 app.get("/api/kepzesek", async (req, res) => {
   try {
@@ -242,6 +225,32 @@ app.post("/api/courses", async (req, res) => {
       [nev, leiras, helyileg, email, ár, ua_ID]
     );
 
+    res.json({ success: true, message: "Tanfolyam sikeresen hozzáadva" });
+  } catch (err) {
+    console.error("❌ Hiba a tanfolyam hozzáadásakor:", err);
+    res.status(500).json({ success: false, message: "Szerver hiba" });
+  }
+});
+
+// Update the `/api/add-course` endpoint to handle image URLs instead of file uploads
+app.post("/api/add-course", async (req, res) => {
+  const { kep, nev, leiras, helyileg, email, o_nev, heves_kortol, uv_ID, ua_ID, ár } = req.body;
+
+  // Validate required fields
+  if (!kep || !nev || !leiras || !helyileg || !email || !o_nev || !heves_kortol || !ár) {
+    console.error("Validation failed: Missing required fields.");
+    return res.status(400).json({ success: false, message: "Hiányzó adatok" });
+  }
+
+  try {
+    // Insert the new course into the database
+    const [result] = await db.promise().query(
+      `INSERT INTO kepzesek (kep, nev, leiras, helyileg, email, o_nev, heves_kortol, uv_ID, ua_ID, ár)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [kep, nev, leiras, helyileg, email, o_nev, heves_kortol, uv_ID, ua_ID, ár]
+    );
+
+    console.log("Database insert result:", result); // Log the database result
     res.json({ success: true, message: "Tanfolyam sikeresen hozzáadva" });
   } catch (err) {
     console.error("❌ Hiba a tanfolyam hozzáadásakor:", err);
