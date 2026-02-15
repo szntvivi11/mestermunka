@@ -5,9 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tanfolyamok</title>
     <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Kereső stílusa */
+        .search-container {
+            max-width: 600px;
+            margin: 20px auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .search-container i {
+            position: absolute;
+            left: 15px;
+            color: #b185f5;
+        }
+        #courseSearch {
+            width: 100%;
+            padding: 12px 12px 12px 45px;
+            border-radius: 25px;
+            border: 2px solid rgba(123, 47, 242, 0.3);
+            background: rgba(40, 40, 90, 0.5);
+            color: white;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+        }
+        #courseSearch:focus {
+            border-color: #7b2ff2;
+            box-shadow: 0 0 10px rgba(123, 47, 242, 0.5);
+        }
+    </style>
 </head>
 <body>
-    <h1>Üdvözlünk a tanfolyamok oldalán!</h1><img src="Tanfolyamok/kepek/logo.png" alt="Logo" style="position: absolute; top: 10px; left: 10px; width: 100px; height: auto; z-index: 3; cursor: pointer;" onclick="window.location.href='/'">
+    <h1>Üdvözlünk a tanfolyamok oldalán!</h1>
+    <img src="Tanfolyamok/kepek/logo.png" alt="Logo" style="position: absolute; top: 10px; left: 10px; width: 100px; height: auto; z-index: 3; cursor: pointer;" onclick="window.location.href='/'">
 <header id="absztrakt-vonal">
     <div style="position: relative; width: 100%; height: 240px;">
         <svg viewBox="0 0 1440 400" width="100%" height="220" preserveAspectRatio="none" style="display:block; position:absolute; top:0; left:0; z-index:1;">
@@ -25,27 +57,25 @@
             <path d="M0,210 C360,90 1080,330 1440,210 L1440,350 C1200,400 960,180 720,350 C480,520 240,180 0,350 Z" fill="url(#wave2)" fill-opacity="0.65"></path>
         </svg>
         <nav id="navigacio" style="position:absolute; top:120px; left:0; width:100%; display:flex; justify-content:center; gap:24px; font-size:20px; font-weight:600;">
-            <a id="nav-fo" href="/" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5);
-             text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Főoldal</a>
-            <a id="nav-tanfolyamok" href="/tanfolyamok" style="color:#fff; padding:14px 24px; border-radius:10px;
-             background:rgba(40,40,90,0.5); text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Tanfolyamok</a>
-            <a id="nav-bejelentkezes" href="/bejelentkezes" style="color:#fff; padding:14px 24px; border-radius:10px; 
-            background:rgba(40,40,90,0.5); text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Bejelentkezés</a>
-            <a id="nav-regisztracio" href="/regisztracio" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5);
-             text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Regisztráció</a>
-            <a id="nav-kapcsolat" href="/kapcsolat" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5);
-             text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Kapcsolat</a>
-            
-    
+            <a id="nav-fo" href="/" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5); text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Főoldal</a>
+            <a id="nav-tanfolyamok" href="/tanfolyamok" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5); text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Tanfolyamok</a>
+            <a id="nav-bejelentkezes" href="/bejelentkezes" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5); text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Bejelentkezés</a>
+            <a id="nav-regisztracio" href="/regisztracio" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5); text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Regisztráció</a>
+            <a id="nav-kapcsolat" href="/kapcsolat" style="color:#fff; padding:14px 24px; border-radius:10px; background:rgba(40,40,90,0.5); text-decoration:none; box-shadow: inset 0 0 8px rgba(255,255,255,0.1); transition: 0.2s all;">Kapcsolat</a>
         </nav>
     </div>
 </header>
 
 <main id="tanfolyamokmain">
     <h1>Tanfolyamok</h1>
+
+    <div class="search-container">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="courseSearch" placeholder="Keress tanfolyam neve alapján...">
+    </div>
+
     <div id="tanfolyamokcards" class="tanfolyamkartya-container"></div>
 
-    <!-- Modal -->
     <div id="modal">
         <div id="modal-content">
             <button id="closeModal">&times;</button>
@@ -75,8 +105,11 @@
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
     const container = document.getElementById('tanfolyamokcards');
+    const searchInput = document.getElementById('courseSearch');
     const modal = document.getElementById('modal');
     const closeModal = document.getElementById('closeModal');
+    
+    // Element referenciák a modalhoz
     const modalTitle = document.getElementById('modalTitle');
     const modalDescription = document.getElementById('modalDescription');
     const modalPrice = document.getElementById('modalPrice');
@@ -86,13 +119,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     const modalImage = document.getElementById('modalImage');
     const applyButton = document.getElementById('applyButton');
 
+    let allCourses = []; // Itt tároljuk az összes tanfolyamot a szűréshez
+
     // Betöltjük a tanfolyamokat
     try {
         const res = await fetch('/api/kepzesek');
         if (!res.ok) throw new Error('Hiba a lekéréskor');
-        const courses = await res.json();
+        allCourses = await res.json();
+        
+        renderCourses(allCourses);
+    } catch (err) {
+        console.error('Hiba a tanfolyamok betöltésekor:', err);
+        container.innerHTML = '<p>Nem sikerült betölteni a tanfolyamokat.</p>';
+    }
 
+    // Függvény a kártyák kirajzolásához
+    function renderCourses(courses) {
         container.innerHTML = '';
+        if (courses.length === 0) {
+            container.innerHTML = '<p>Nincs a keresésnek megfelelő tanfolyam.</p>';
+            return;
+        }
+
         courses.forEach(course => {
             const card = document.createElement('div');
             card.className = 'tanfolyamkartya';
@@ -105,9 +153,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 modalTitle.textContent = course.nev;
                 modalTitle.dataset.courseId = course.id;
                 modalDescription.textContent = course.leiras;
-                modalPrice.textContent = course.ár;
+                modalPrice.textContent = course.ár + " Ft";
                 modalEmail.textContent = course.email;
-                modalAge.textContent = course.heves_kortol;
+                modalAge.textContent = course.heves_kortol + "+ év";
                 modalLocation.textContent = course.helyileg;
                 modalImage.src = `/tanfolyamok/kepek/${course.kep}`;
                 modalImage.alt = course.nev;
@@ -116,10 +164,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             container.appendChild(card);
         });
-    } catch (err) {
-        console.error('Hiba a tanfolyamok betöltésekor:', err);
-        container.innerHTML = '<p>Nem sikerült betölteni a tanfolyamokat.</p>';
     }
+
+    // KERESÉS FUNKCIÓ
+    searchInput.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        const filteredCourses = allCourses.filter(course => 
+            course.nev.toLowerCase().includes(searchTerm)
+        );
+        renderCourses(filteredCourses);
+    });
 
     // Modal bezárása
     closeModal.addEventListener('click', () => modal.style.display = 'none');
@@ -149,7 +203,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // Ha user be van jelentkezve, elrejtjük a login/regisztráció linkeket
+    // Login/regisztráció linkek kezelése
     const user = JSON.parse(localStorage.getItem('user'));
     if (user) {
         const loginNav = document.getElementById('nav-bejelentkezes');
