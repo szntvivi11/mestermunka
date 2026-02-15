@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rendszerkezelés - Admin</title>
+    <style>
+        :root { --primary: #3399ff; --purple: #7b2ff2; --danger: #ff4d4d; --bg: #0f111a; --card: #242440; --text: #ffffff; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { text-align: center; color: var(--primary); margin-bottom: 40px; }
+        h2 { border-left: 4px solid var(--purple); padding-left: 10px; margin-top: 40px; margin-bottom: 20px; }
+        
+        .nav-buttons { margin-bottom: 20px; display: flex; gap: 10px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; color: white; transition: 0.3s; text-decoration: none; display: inline-block; }
+        .btn-back { background: #444; }
+        .btn-danger { background: var(--danger); font-size: 12px; }
+
+        table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 10px; overflow: hidden; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        th { background: rgba(255,255,255,0.05); color: var(--primary); }
+        tr:hover { background: rgba(255,255,255,0.02); }
+
+        .badge { padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .badge-student { background: var(--primary); }
+        .badge-course { background: var(--purple); }
+        .badge-teacher { background: #2ecc71; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="nav-buttons">
+        <a href="/profil" class="btn btn-back">⬅ Vissza a profilhoz</a>
+        <a href="/admin" class="btn" style="background: var(--purple);">📧 Üzenetek megtekintése</a>
+    </div>
+
+    <h1>🛠️ Rendszerfelügyelet</h1>
+
+    <h2>📚 Tanfolyamok kezelése</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Cím</th>
+                <th>Oktató e-mail</th>
+                <th>Ár</th>
+                <th>Művelet</th>
+            </tr>
+        </thead>
+        <tbody id="tanfolyam-lista"></tbody>
+    </table>
+
+    <h2>👨‍🏫 Regisztrált tanárok</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Név</th>
+                <th>E-mail</th>
+                <th>Végzettség</th>
+            </tr>
+        </thead>
+        <tbody id="tanar-lista"></tbody>
+    </table>
+
+    <h2>🎓 Regisztrált diákok</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Név</th>
+                <th>E-mail</th>
+            </tr>
+        </thead>
+        <tbody id="diak-lista"></tbody>
+    </table>
+
+    <h2>📝 Aktuális jelentkezések</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Diák neve</th>
+                <th>Tanfolyam</th>
+            </tr>
+        </thead>
+        <tbody id="jelentkezes-lista"></tbody>
+    </table>
+</div>
+
+<script>
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user || user.role !== 'admin') {
+        alert("Nincs jogosultságod!");
+        location.href = "/bejelentkezes";
+    }
+
+    async function loadData() {
+        try {
+            // 1. Tanfolyamok
+            const resK = await fetch('/api/kepzesek');
+            const kepzesek = await resK.json();
+            document.getElementById('tanfolyam-lista').innerHTML = kepzesek.map(k => `
+                <tr>
+                    <td>${k.id}</td>
+                    <td><b>${k.nev}</b></td>
+                    <td>${k.email}</td>
+                    <td>${k.ár} Ft</td>
+                    <td><button class="btn btn-danger" onclick="deleteCourse(${k.id})">Törlés</button></td>
+                </tr>
+            `).join('');
+
+            // 2. Tanárok (AZ ÚJ RÉSZ)
+            const resT = await fetch('/api/admin/osszes-tanar');
+            const tanarok = await resT.json();
+            document.getElementById('tanar-lista').innerHTML = tanarok.map(t => `
+                <tr>
+                    <td>${t.ua_id}</td>
+                    <td><span class="badge badge-teacher">${t.felhasznalonev}</span></td>
+                    <td>${t.gmail}</td>
+                    <td>${t.vegzettseg || 'Nincs megadva'}</td>
+                </tr>
+            `).join('');
+
+            // 3. Diákok
+            const resD = await fetch('/api/admin/osszes-diak');
+            const diakok = await resD.json();
+            document.getElementById('diak-lista').innerHTML = diakok.map(d => `
+                <tr>
+                    <td>${d.uv_id}</td>
+                    <td>${d.nev}</td>
+                    <td>${d.email}</td>
+                </tr>
+            `).join('');
+
+            // 4. Jelentkezések
+            const resJ = await fetch('/api/admin/osszes-jelentkezes');
+            const jelentkezések = await resJ.json();
+            document.getElementById('jelentkezes-lista').innerHTML = jelentkezések.map(j => `
+                <tr>
+                    <td><span class="badge badge-student">${j.diak}</span></td>
+                    <td><span class="badge badge-course">${j.tanfolyam}</span></td>
+                </tr>
+            `).join('');
+        } catch (err) {
+            console.error("Hiba az adatok betöltésekor:", err);
+        }
+    }
+
+    async function deleteCourse(id) {
+        if (confirm("Biztosan törölni akarod ezt a tanfolyamot?")) {
+            const res = await fetch(`/api/admin/kepzesek/${id}`, { method: 'DELETE' });
+            if (res.ok) loadData();
+            else alert("Hiba történt a törlés során!");
+        }
+    }
+
+    loadData();
+</script>
+</body>
+</html>

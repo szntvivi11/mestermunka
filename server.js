@@ -4,6 +4,7 @@ const path = require("path");
 const bcrypt = require("bcrypt");
 const cors = require("cors");
 const multer = require("multer");
+const nodemailer = require("nodemailer");
 
 const app = express();
 app.use(express.json());
@@ -171,7 +172,7 @@ app.post("/api/login", async (req, res) => {
         return res.json({
           success: true,
           role: "student",
-          user: { id: student.uv_id, nev: student.nev, email: student.email }
+          user: { id: student.uv_id, nev: student.nev, email: student.email, role: "student" }
         });
       }
     } else if (role === "teacher") {
@@ -189,7 +190,7 @@ app.post("/api/login", async (req, res) => {
         return res.json({
           success: true,
           role: "teacher",
-          user: { id: teacher.ua_id, nev: teacher.felhasznalonev, email: teacher.gmail }
+          user: { id: teacher.ua_id, nev: teacher.felhasznalonev, email: teacher.gmail, role: "teacher" }
         });
       }
     } else if (!role || role === "admin") {
@@ -201,7 +202,12 @@ app.post("/api/login", async (req, res) => {
         return res.json({
           success: true,
           role: "admin",
-          user: { id: 0, nev: "Adminisztrátor", email: adminUsername }
+          user: { 
+            id: 0, 
+            nev: "Adminisztrátor", 
+            email: adminUsername,
+            role: "admin" // Ez biztosítja, hogy a frontend lássa a jogosultságot
+          }
         });
       } else {
         return res.status(401).json({ success: false, message: "Hibás admin felhasználónév vagy jelszó" });
@@ -288,26 +294,109 @@ app.post("/api/jelentkezes", async (req, res) => {
 });
 
 
-// ===== KAPCSOLATI ÜZENET MENTÉSE =====
+// ===== KAPCSOLATI ÜZENET MENTÉSE ÉS EMAIL =====
 app.post("/api/kapcsolat", async (req, res) => {
     const { nev, email, uzenet } = req.body;
-
-    if (!nev || !email || !uzenet) {
-        return res.status(400).json({ success: false, message: "Minden mező kitöltése kötelező!" });
-    }
+    if (!nev || !email || !uzenet) return res.status(400).json({ success: false, message: "Minden mező kitöltése kötelező!" });
 
     try {
-        await db.promise().query(
-            "INSERT INTO uzenetek (nev, email, uzenet) VALUES (?, ?, ?)",
-            [nev, email, uzenet]
-        );
-        res.json({ success: true, message: "Üzenet sikeresen elküldve!" });
+        await db.promise().query("INSERT INTO uzenetek (nev, email, uzenet) VALUES (?, ?, ?)", [nev, email, uzenet]);
+        
+        // Ezt csak akkor aktiváld, ha a user/pass adatokat kitöltötted!
+        /*
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: { user: 'SajatEmail@gmail.com', pass: '16jegyukod' }
+        });
+        await transporter.sendMail({
+            from: 'SajatEmail@gmail.com',
+            to: 'info@tanfolyamok.hu',
+            subject: 'Új üzenet az oldalról',
+            text: `${nev} (${email}) küldte: ${uzenet}`
+        });
+        */
+        res.json({ success: true, message: "Üzenet elmentve!" });
     } catch (err) {
-        console.error("Hiba az üzenet mentésekor:", err);
-        res.status(500).json({ success: false, message: "Szerverhiba történt az üzenet küldésekor." });
+        console.error(err);
+        res.status(500).json({ success: false, message: "Szerver hiba történt." });
     }
 });
- 
+
+// Üzenetek kezelése oldal (admin.html)
+app.get("/admin", (req, res) => {
+    res.sendFile(path.join(__dirname, "admin.html"));
+});
+
+// Teljes rendszerkezelés oldal (admin-full.html)
+// Fontos: a profil oldaladról /admin-full.html-re hivatkozol, így itt is az legyen!
+app.get("/admin-full.html", (req, res) => {
+    res.sendFile(path.join(__dirname, "admin-full.html"));
+});
+
+// ================= ADMIN FUNKCIÓK =================
+app.get("/api/admin/uzenetek", async (req, res) => {
+    try {
+        const [rows] = await db.promise().query("SELECT * FROM uzenetek ORDER BY datum DESC");
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ success: false });
+    }
+});
+
+app.delete("/api/admin/uzenetek/:id", async (req, res) => {
+    try {
+        await db.promise().query("DELETE FROM uzenetek WHERE id = ?", [req.params.id]);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false });
+    }
+});
+
+app.post("/api/admin/valasz", async (req, res) => {
+    const { email, uzenet } = req.body;
+    console.log(`Válasz küldése ide: ${email} -> ${uzenet}`);
+    // Ide jöhet majd a nodemailer sendMail része a válaszhoz
+    res.json({ success: true });
+});
+
+
+// --- ADMIN EXTRA API-K ---
+// Tanfolyam törlése
+app.delete("/api/admin/kepzesek/:id", async (req, res) => {
+    try {
+        await db.promise().query("DELETE FROM kepzesek WHERE id = ?", [req.params.id]);
+        res.json({ success: true });
+    } catch (err) { res.status(500).json({ success: false }); }
+});
+
+// Összes diák lekérése
+app.get("/api/admin/osszes-diak", async (req, res) => {
+    try {
+        const [rows] = await db.promise().query("SELECT uv_id, nev, email FROM user_vevo");
+        res.json(rows);
+    } catch (err) { res.status(500).json({ success: false }); }
+});
+
+// Összes jelentkezés lekérése (Ki -> Mire)
+app.get("/api/admin/osszes-jelentkezes", async (req, res) => {
+    try {
+        const sql = `
+            SELECT v.nev as diak, k.nev as tanfolyam 
+            FROM jelentkezesek j
+            JOIN user_vevo v ON j.user_id = v.uv_id
+            JOIN kepzesek k ON j.kepzes_id = k.id`;
+        const [rows] = await db.promise().query(sql);
+        res.json(rows);
+    } catch (err) { res.status(500).json({ success: false }); }
+});
+
+app.get("/api/admin/osszes-tanar", async (req, res) => {
+    try {
+        const [rows] = await db.promise().query("SELECT ua_id, felhasznalonev, gmail, vegzettseg FROM user_ado");
+        res.json(rows);
+    } catch (err) { res.status(500).json({ success: false }); }
+});
+
 
 // ===== 404 =====
 app.use((req, res) => {

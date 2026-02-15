@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="hu" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Üzenetek</title>
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        /* ADMIN SPECIFIKUS STÍLUSOK */
+        .admin-container {
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .admin-table-wrapper {
+            background: rgba(40, 40, 90, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            border: 1px solid rgba(177, 133, 245, 0.2);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #fff;
+        }
+
+        th {
+            background: rgba(123, 47, 242, 0.4);
+            padding: 15px;
+            text-align: left;
+            border-bottom: 2px solid #7b2ff2;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(177, 133, 245, 0.1);
+            vertical-align: middle;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* GOMBOK */
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .reply-btn { background: #4CAF50; color: white; margin-right: 5px; }
+        .reply-btn:hover { background: #45a049; }
+
+        .delete-btn { background: #f22f2f; color: white; }
+        .delete-btn:hover { background: #d32f2f; }
+
+        /* MODAL (VÁLASZ ABLAK) */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0; top: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: #1a1a2e;
+            margin: 10% auto;
+            padding: 30px;
+            border: 1px solid #7b2ff2;
+            width: 500px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(123, 47, 242, 0.5);
+        }
+
+        .modal-content h2 { color: #b185f5; margin-top: 0; }
+
+        .modal-content textarea {
+            width: 100%;
+            height: 150px;
+            background: #28285a;
+            color: white;
+            border: 1px solid #b185f5;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            resize: vertical;
+        }
+    </style>
+</head>
+<body>
+
+    <div style="padding: 20px;">
+        <a href="/" style="color: #b185f5; text-decoration: none; font-weight: bold;">← Vissza a Főoldalra</a>
+    </div>
+
+    <div class="admin-container">
+        <h1 style="text-align: center; margin-bottom: 30px;">Beérkezett Üzenetek Kezelése</h1>
+
+        <div class="admin-table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dátum</th>
+                        <th>Név</th>
+                        <th>Email</th>
+                        <th>Üzenet</th>
+                        <th>Műveletek</th>
+                    </tr>
+                </thead>
+                <tbody id="uzenetek-table">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="replyModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Válasz küldése</h2>
+            <input type="hidden" id="replyEmail">
+            <textarea id="replyText" placeholder="Írd ide a választ a felhasználónak..."></textarea>
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button class="btn" style="background: #555;" onclick="document.getElementById('replyModal').style.display='none'">Mégse</button>
+                <button class="btn reply-btn" onclick="valaszKuldese()">Válasz elküldése</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Ellenőrizzük, hogy tényleg az admin van-e itt
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user || user.role !== "admin") {
+            alert("Hozzáférés megtagadva!");
+            window.location.href = "/bejelentkezes";
+        }
+
+        async function uzenetekBetoltese() {
+            try {
+                const res = await fetch('/api/admin/uzenetek');
+                const data = await res.json();
+                const table = document.getElementById('uzenetek-table');
+                table.innerHTML = "";
+
+                data.forEach(u => {
+                    const datum = new Date(u.datum).toLocaleString('hu-HU');
+                    table.innerHTML += `
+                        <tr>
+                            <td style="font-size: 0.8em; color: #b185f5;">${datum}</td>
+                            <td><b>${u.nev}</b></td>
+                            <td><a href="mailto:${u.email}" style="color: #fff;">${u.email}</a></td>
+                            <td style="max-width: 300px;">${u.uzenet}</td>
+                            <td>
+                                <button class="btn reply-btn" onclick="valaszAblak('${u.email}', '${u.nev}')">Válasz</button>
+                                <button class="btn delete-btn" onclick="torles(${u.id})">Törlés</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                console.error("Hiba:", err);
+            }
+        }
+
+        function valaszAblak(email, nev) {
+            document.getElementById('replyModal').style.display = 'block';
+            document.getElementById('modalTitle').textContent = `Válasz: ${nev}`;
+            document.getElementById('replyEmail').value = email;
+        }
+
+        async function valaszKuldese() {
+            const email = document.getElementById('replyEmail').value;
+            const uzenet = document.getElementById('replyText').value;
+
+            if(!uzenet) return alert("Az üzenet nem lehet üres!");
+
+            const res = await fetch('/api/admin/valasz', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, uzenet })
+            });
+
+            if(res.ok) {
+                alert("Válasz sikeresen elküldve!");
+                document.getElementById('replyModal').style.display = 'none';
+                document.getElementById('replyText').value = "";
+            }
+        }
+
+        async function torles(id) {
+            if (!confirm("Biztosan törlöd?")) return;
+            const res = await fetch(`/api/admin/uzenetek/${id}`, { method: 'DELETE' });
+            if (res.ok) uzenetekBetoltese();
+        }
+
+        uzenetekBetoltese();
+    </script>
+</body>
+</html>

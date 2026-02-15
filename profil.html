@@ -224,115 +224,130 @@ header svg {
 </div>
 
 <script>
-let user = JSON.parse(localStorage.getItem("user"));
-if(!user){ alert("Nincs bejelentkezve!"); location.href="/bejelentkezes"; }
+    // 1. Felhasználó ellenőrzése
+    let user = null;
+    try {
+        const userData = localStorage.getItem("user");
+        if (userData) user = JSON.parse(userData);
+    } catch (e) { console.error("Hibás user adat a tárolóban."); }
 
-document.getElementById("nev-megjelenit").textContent = user.nev;
-const roleMap = { student: "🎓 Diák", teacher: "📘 Tanár", admin: "👑 Admin" };
-document.getElementById("szerep-megjelenit").textContent = roleMap[user.role] || "Felhasználó";
-document.getElementById("bioDisplay").textContent = user.bio || "";
+    if (!user) {
+        alert("Nincs bejelentkezve!");
+        location.href = "/bejelentkezes";
+    }
 
-const img = document.getElementById("profileImage");
-function updateProfileImage() {
-    if(user.profilePicture && user.profilePicture.trim()!==""){
-        img.src = user.profilePicture;
-    } else { img.src="/default-avatar.png"; }
-}
-updateProfileImage();
+    // 2. Adatok megjelenítése
+    document.getElementById("nev-megjelenit").textContent = user.nev;
+    const roleMap = { student: "🎓 Diák", teacher: "📘 Tanár", admin: "👑 Admin" };
+    document.getElementById("szerep-megjelenit").textContent = roleMap[user.role] || "Felhasználó";
+    document.getElementById("bioDisplay").textContent = user.bio || "";
 
-const bioModal = document.getElementById("bioModal");
-const passwordModal = document.getElementById("passwordModal");
-const uploadModal = document.getElementById("uploadModal");
+    const img = document.getElementById("profileImage");
+    function updateProfileImage() {
+        img.src = (user.profilePicture && user.profilePicture.trim() !== "") ? user.profilePicture : "/default-avatar.png";
+    }
+    updateProfileImage();
 
-document.getElementById("editBioBtn").onclick = ()=>{ document.getElementById("bio-input").value=user.bio||""; bioModal.style.display="flex";}
-document.getElementById("changePasswordBtn").onclick = ()=>{ document.getElementById("newPassword").value=""; passwordModal.style.display="flex";}
-document.getElementById("uploadPicBtn").onclick = ()=>{ document.getElementById("profileFile").value=""; uploadModal.style.display="flex";}
-document.querySelectorAll(".closeModal").forEach(btn=>{ btn.onclick=()=>{ bioModal.style.display="none"; passwordModal.style.display="none"; uploadModal.style.display="none"; }; });
+    // 3. Modál kezelők
+    const bioModal = document.getElementById("bioModal");
+    const passwordModal = document.getElementById("passwordModal");
+    const uploadModal = document.getElementById("uploadModal");
+    const addCourseModal = document.getElementById("addCourseModal");
 
-document.getElementById("saveBioBtn").onclick = ()=> {
-    user.bio = document.getElementById("bio-input").value;
-    localStorage.setItem("user", JSON.stringify(user));
-    document.getElementById("bioDisplay").textContent = user.bio;
-    bioModal.style.display="none";
-};
-
-document.getElementById("savePasswordBtn").onclick = ()=> {
-    const newPass = document.getElementById("newPassword").value;
-    if(newPass.trim()===""){ alert("Adj meg egy új jelszót!"); return; }
-    user.password = newPass;
-    localStorage.setItem("user", JSON.stringify(user));
-    passwordModal.style.display="none";
-    alert("Jelszó módosítva!");
-};
-
-document.getElementById("savePicBtn").onclick = ()=> {
-    const file = document.getElementById("profileFile").files[0];
-    if(!file){ alert("Válassz egy képet!"); return; }
-    const reader = new FileReader();
-    reader.onload = e=>{
-        user.profilePicture = e.target.result;
-        localStorage.setItem("user", JSON.stringify(user));
-        updateProfileImage();
-        uploadModal.style.display="none";
-    };
-    reader.readAsDataURL(file);
-};
-
-document.getElementById("logout").onclick = ()=>{
-    localStorage.removeItem("user");
-    location.href="/";
-};
-
-// Check if the user is a teacher and add the "Add Course" button
-if (user.role === "teacher") {
-    const addCourseBtn = document.createElement("button");
-    addCourseBtn.textContent = "➕ Tanfolyam hozzáadása";
-    addCourseBtn.className = "profil-gomb";
-    addCourseBtn.onclick = () => {
-        document.getElementById("addCourseModal").style.display = "flex";
-    };
-    document.querySelector(".profil-card").appendChild(addCourseBtn);
-}
-
-// Save course details to the database
-const saveCourseBtn = document.getElementById("saveCourseBtn");
-saveCourseBtn.onclick = async () => {
-    const courseData = {
-        kep: document.getElementById("courseImage").value, // Use URL instead of file upload
-        nev: document.getElementById("courseName").value,
-        leiras: document.getElementById("courseDescription").value,
-        helyileg: document.getElementById("courseLocation").value,
-        email: document.getElementById("courseEmail").value,
-        o_nev: document.getElementById("courseOwner").value,
-        heves_kortol: parseInt(document.getElementById("courseAgeLimit").value, 10),
-        uv_ID: user.id,
-        ua_ID: user.id,
-        ár: parseInt(document.getElementById("coursePrice").value, 10)
-    };
-
-    const response = await fetch("/api/add-course", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(courseData)
+    document.getElementById("editBioBtn").onclick = () => { document.getElementById("bio-input").value = user.bio || ""; bioModal.style.display = "flex"; }
+    document.getElementById("changePasswordBtn").onclick = () => { document.getElementById("newPassword").value = ""; passwordModal.style.display = "flex"; }
+    document.getElementById("uploadPicBtn").onclick = () => { uploadModal.style.display = "flex"; }
+    
+    document.querySelectorAll(".closeModal").forEach(btn => {
+        btn.onclick = () => { 
+            bioModal.style.display = "none"; 
+            passwordModal.style.display = "none"; 
+            uploadModal.style.display = "none"; 
+            addCourseModal.style.display = "none";
+        };
     });
 
-    if (response.ok) {
-        alert("Tanfolyam sikeresen hozzáadva!");
-        document.getElementById("addCourseModal").style.display = "none";
-    } else {
-        alert("Hiba történt a tanfolyam hozzáadása során.");
-    }
-};
-
-// Close modal functionality
-const closeModalButtons = document.querySelectorAll(".closeModal");
-closeModalButtons.forEach(btn => {
-    btn.onclick = () => {
-        document.getElementById("addCourseModal").style.display = "none";
+    // 4. Mentés funkciók
+    document.getElementById("saveBioBtn").onclick = () => {
+        user.bio = document.getElementById("bio-input").value;
+        localStorage.setItem("user", JSON.stringify(user));
+        document.getElementById("bioDisplay").textContent = user.bio;
+        bioModal.style.display = "none";
     };
-});
+
+    document.getElementById("savePicBtn").onclick = () => {
+        const file = document.getElementById("profileFile").files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+            user.profilePicture = e.target.result;
+            localStorage.setItem("user", JSON.stringify(user));
+            updateProfileImage();
+            uploadModal.style.display = "none";
+        };
+        reader.readAsDataURL(file);
+    };
+
+    document.getElementById("logout").onclick = () => {
+        localStorage.removeItem("user");
+        location.href = "/";
+    };
+
+    // 5. ADMIN ÉS TANÁR GOMBOK DINAMIKUS HOZZÁADÁSA
+    const card = document.querySelector(".profil-card");
+    const logoutBtn = document.getElementById("logout");
+
+    // Ha TANÁR: Tanfolyam hozzáadása gomb
+    if (user.role === "teacher") {
+        const teacherBtn = document.createElement("button");
+        teacherBtn.textContent = "➕ Tanfolyam hozzáadása";
+        teacherBtn.className = "profil-gomb";
+        teacherBtn.onclick = () => addCourseModal.style.display = "flex";
+        card.insertBefore(teacherBtn, logoutBtn);
+    }
+
+    // Ha ADMIN: Adminisztrációs vezérlő panel
+    if (user.role === "admin") {
+        const adminBox = document.createElement("div");
+        adminBox.style.marginTop = "20px";
+        adminBox.style.padding = "15px";
+        adminBox.style.border = "2px dashed #7b2ff2";
+        adminBox.style.borderRadius = "15px";
+        adminBox.innerHTML = `
+            <h3 style='color:#7b2ff2; margin-bottom:10px;'>Adminisztrációs Vezérlő</h3>
+            <button class="profil-gomb" onclick="location.href='/admin'" style="background:#7b2ff2;">📧 Üzenetek Kezelése</button>
+            <button class="profil-gomb" onclick="location.href='/admin_full.html'" style="background:linear-gradient(45deg, #7b2ff2, #3399ff)">🛠️ Rendszer Kezelése</button>
+        `;
+        card.insertBefore(adminBox, logoutBtn);
+    }
+
+    // 6. Tanfolyam mentése (API hívás)
+    document.getElementById("saveCourseBtn").onclick = async () => {
+        const courseData = {
+            kep: document.getElementById("courseImage").value,
+            nev: document.getElementById("courseName").value,
+            leiras: document.getElementById("courseDescription").value,
+            helyileg: document.getElementById("courseLocation").value,
+            email: document.getElementById("courseEmail").value,
+            o_nev: document.getElementById("courseOwner").value,
+            heves_kortol: parseInt(document.getElementById("courseAgeLimit").value, 10),
+            ua_ID: user.id,
+            ár: parseInt(document.getElementById("coursePrice").value, 10)
+        };
+
+        const res = await fetch("/api/add-course", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(courseData)
+        });
+
+        if (res.ok) {
+            alert("Sikeres mentés!");
+            addCourseModal.style.display = "none";
+        } else {
+            alert("Hiba történt!");
+        }
+    };
 </script>
 
 </body>
