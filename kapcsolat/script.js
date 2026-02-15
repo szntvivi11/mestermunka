@@ -35,3 +35,51 @@ window.onload = function() {
         };
     });
 };
+
+// User állapot kezelése
+        const user = JSON.parse(localStorage.getItem('user')) || null;
+        if (!user) {
+            const navProfil = document.getElementById('nav-profil');
+            if(navProfil) navProfil.style.display = 'none';
+        } else {
+            const loginNav = document.getElementById('nav-bejelentkezes');
+            const registerNav = document.getElementById('nav-regisztracio');
+            if (loginNav) loginNav.style.display = 'none';
+            if (registerNav) registerNav.style.display = 'none';
+        }
+
+        // Form beküldése a szervernek
+        document.getElementById('contactForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const nev = document.getElementById('kapcsolat-nev').value;
+            const email = document.getElementById('kapcsolat-email').value;
+            const uzenet = document.getElementById('kapcsolat-uzenet').value;
+            const responseMsg = document.getElementById('responseMsg');
+            const submitBtn = document.getElementById('submitBtn');
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Küldés...";
+
+            try {
+                const res = await fetch('/api/kapcsolat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nev, email, uzenet })
+                });
+
+                if (res.ok) {
+                    responseMsg.style.color = "#4CAF50";
+                    responseMsg.textContent = "Sikeres küldés! Hamarosan válaszolunk.";
+                    document.getElementById('contactForm').reset();
+                } else {
+                    responseMsg.style.color = "#ff4d4d";
+                    responseMsg.textContent = "Hiba történt a küldés során.";
+                }
+            } catch (err) {
+                responseMsg.style.color = "#ff4d4d";
+                responseMsg.textContent = "Szerverhiba történt.";
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Küldés";
+            }
+        });

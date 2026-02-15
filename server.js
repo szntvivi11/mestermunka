@@ -288,6 +288,27 @@ app.post("/api/jelentkezes", async (req, res) => {
 });
 
 
+// ===== KAPCSOLATI ÜZENET MENTÉSE =====
+app.post("/api/kapcsolat", async (req, res) => {
+    const { nev, email, uzenet } = req.body;
+
+    if (!nev || !email || !uzenet) {
+        return res.status(400).json({ success: false, message: "Minden mező kitöltése kötelező!" });
+    }
+
+    try {
+        await db.promise().query(
+            "INSERT INTO uzenetek (nev, email, uzenet) VALUES (?, ?, ?)",
+            [nev, email, uzenet]
+        );
+        res.json({ success: true, message: "Üzenet sikeresen elküldve!" });
+    } catch (err) {
+        console.error("Hiba az üzenet mentésekor:", err);
+        res.status(500).json({ success: false, message: "Szerverhiba történt az üzenet küldésekor." });
+    }
+});
+ 
+
 // ===== 404 =====
 app.use((req, res) => {
   res.status(404).send("Az oldal nem található");

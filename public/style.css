@@ -609,6 +609,66 @@ a {
     box-shadow: 0 0 18px rgba(51,153,255,0.5);
 }
 
+ /* Kereső stílusa */
+        .search-container {
+            max-width: 600px;
+            margin: 20px auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .search-container i {
+            position: absolute;
+            left: 15px;
+            color: #b185f5;
+        }
+        #courseSearch {
+            width: 100%;
+            padding: 12px 12px 12px 45px;
+            border-radius: 25px;
+            border: 2px solid rgba(123, 47, 242, 0.3);
+            background: rgba(40, 40, 90, 0.5);
+            color: white;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+        }
+        #courseSearch:focus {
+            border-color: #7b2ff2;
+            box-shadow: 0 0 10px rgba(123, 47, 242, 0.5);
+        }
+
+       /* Itt javítjuk ki az írás színét és a hátteret */
+        .auth-form input, 
+        .auth-form textarea {
+            color: #000000 !important; /* Kényszerítjük a fekete szöveget */
+            background-color: #f0f0f0 !important; /* Világosszürke háttér a mezőknek */
+            border: 2px solid #b185f5;
+            padding: 12px;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box; /* Hogy ne lógjon ki a széleken */
+            margin-bottom: 15px;
+        }
+
+        /* Ha inkább sötét hátteret szeretnél fehér írással a mezőkbe is: */
+        /*
+        .auth-form input, .auth-form textarea {
+            color: #ffffff !important;
+            background-color: #2a2a5a !important;
+            border: 1px solid #7b2ff2;
+        }
+        */
+
+        .aloldal-container {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+/*//////////////////////Kitti vege/////////////////////////*/
+
 /* ==========================================
    RESPONSIVE
    ========================================== */
