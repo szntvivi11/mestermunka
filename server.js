@@ -329,8 +329,8 @@ app.get("/admin", (req, res) => {
 
 // Teljes rendszerkezelés oldal (admin-full.html)
 // Fontos: a profil oldaladról /admin-full.html-re hivatkozol, így itt is az legyen!
-app.get("/admin-full.html", (req, res) => {
-    res.sendFile(path.join(__dirname, "admin-full.html"));
+app.get("/admin_full.html", (req, res) => {
+    res.sendFile(path.join(__dirname, "admin_full.html"));
 });
 
 // ================= ADMIN FUNKCIÓK =================

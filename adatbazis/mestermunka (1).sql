@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Gép: 127.0.0.1:3307
--- Létrehozás ideje: 2026. Feb 04. 09:03
--- Kiszolgáló verziója: 10.4.28-MariaDB
--- PHP verzió: 8.2.4
+-- Gép: 127.0.0.1
+-- Létrehozás ideje: 2026. Feb 15. 16:11
+-- Kiszolgáló verziója: 10.4.32-MariaDB
+-- PHP verzió: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,7 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Adatbázis: `mestermunka`
 --
-
+CREATE DATABASE IF NOT EXISTS `mestermunka` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci;
+USE `mestermunka`;
 -- --------------------------------------------------------
 
 --
@@ -154,7 +155,29 @@ CREATE TABLE `user_vevo` (
 INSERT INTO `user_vevo` (`uv_id`, `nev`, `email`, `felhasznalonev`, `jelszo`, `regisztracio_datum`) VALUES
 (14, 'anyuka', 'anyuka@gmail.com', 'anyuka', '$2b$10$qlPOB049twjkC1i0QnGVwe1VaeLhIhzPVuZt8n3vqyD3oSisbU1P6', '2026-01-22 10:56:34'),
 (23, 'katy', 'katy@gmail.com', 'katy', '$2b$10$Zij6k0qX3SRpc0fXr.k6jeB9HYna3zCW5JMq61HE38OOMwUV6x0hK', '2026-01-29 12:01:55'),
-(24, 'vivi', 'vivi@gmai.com', 'vivi', '$2b$10$AMcRTAoTeZRb.1XFhhbm0u90BAvrhTAQXZfKHKbaH4b3aLFOLtsBW', '2026-01-29 12:14:00');
+(24, 'vivi', 'vivi@gmai.com', 'vivi', '$2b$10$AMcRTAoTeZRb.1XFhhbm0u90BAvrhTAQXZfKHKbaH4b3aLFOLtsBW', '2026-01-29 12:14:00'),
+(25, 'kerlek', 'kerlek@gmail.com', 'kerlek', '$2b$10$mCwE0rmvVufcvR/zcSA.H.g4ogx15CWEhAcfpldRWsgIkxNKNSaCS', '2026-02-15 15:10:53');
+
+-- --------------------------------------------------------
+
+--
+-- Tábla szerkezet ehhez a táblához `uzenetek`
+--
+
+CREATE TABLE `uzenetek` (
+  `id` int(11) NOT NULL,
+  `nev` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `uzenet` text NOT NULL,
+  `datum` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
+
+--
+-- A tábla adatainak kiíratása `uzenetek`
+--
+
+INSERT INTO `uzenetek` (`id`, `nev`, `email`, `uzenet`, `datum`) VALUES
+(1, 'laednf', 'joskit208@hengersor.hu', 'gvjdf', '2026-02-15 11:59:31');
 
 -- --------------------------------------------------------
 
@@ -209,6 +232,12 @@ ALTER TABLE `user_vevo`
   ADD PRIMARY KEY (`uv_id`);
 
 --
+-- A tábla indexei `uzenetek`
+--
+ALTER TABLE `uzenetek`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- A tábla indexei `vegzettseg`
 --
 ALTER TABLE `vegzettseg`
@@ -247,7 +276,13 @@ ALTER TABLE `user_ado`
 -- AUTO_INCREMENT a táblához `user_vevo`
 --
 ALTER TABLE `user_vevo`
-  MODIFY `uv_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `uv_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+
+--
+-- AUTO_INCREMENT a táblához `uzenetek`
+--
+ALTER TABLE `uzenetek`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT a táblához `vegzettseg`
