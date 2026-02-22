@@ -15,8 +15,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/bejelentkezes", express.static(path.join(__dirname, "bejelentkezes")));
 app.use("/regisztracio", express.static(path.join(__dirname, "regisztracio")));
 app.use("/kapcsolat", express.static(path.join(__dirname, "kapcsolat")));
-app.use("/tanfolyamok/kepek", express.static(path.join(__dirname, "Tanfolyamok", "kepek")));
 app.use("/tanfolyamok/oldalak", express.static(path.join(__dirname, "Tanfolyamok", "oldalak")));
+app.use('/Tanfolyamok/kepek', express.static(path.join(__dirname, 'Tanfolyamok', 'kepek')));
 
 // ===== HTML OLDALAK =====
 app.get("/", (req, res) =>
@@ -220,20 +220,53 @@ app.post("/api/login", async (req, res) => {
     res.status(500).json({ success: false, message: "Szerver hiba" });
   }
 });
+//multer
+// Meghatározzuk, hova kerüljenek a képek és mi legyen a nevük
+const storage = multer.diskStorage({
+    destination: './Tanfolyamok/kepek/', 
+    filename: function(req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+});
 
-// Add an endpoint to handle profile picture uploads
-const upload = multer({ dest: "uploads/" });
+const upload = multer({ storage: storage });
+const uploadCourseImg = multer({ storage: storage }); 
+// Profil frissítése (Kép és Bio)
+// Használjuk ugyanazt az uploadCourseImg-t, hogy ugyanoda mentse a képet!
+app.post("/api/update-profile", upload.single('profilePicture'), async (req, res) => {
+    try {
+        const { id, role, bemutatkozas } = req.body;
+        const profilkep = req.file ? req.file.filename : null;
 
-app.post("/api/upload-profile-picture", upload.single("profilePicture"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ success: false, message: "No file uploaded" });
-  }
+        // Ellenőrizzük, hogy megérkeztek-e az adatok (debug)
+        console.log("Frissítés adatai:", { id, role, bemutatkozas, profilkep });
 
-  res.json({
-    success: true,
-    message: "File uploaded successfully",
-    filePath: `/uploads/${req.file.filename}`
-  });
+        if (!id || !role) {
+            return res.status(400).json({ error: "Hiányzó ID vagy szerepkör!" });
+        }
+
+        const tabla = (role === 'teacher') ? 'user_ado' : 'user_vevo';
+        const azonositoOszlop = (role === 'teacher') ? 'ua_id' : 'uv_id';
+
+        let sql = `UPDATE ${tabla} SET bemutatkozas = ?`;
+        let params = [bemutatkozas];
+
+        if (profilkep) {
+            sql += ", profilkep = ?";
+            params.push(profilkep);
+        }
+
+        sql += ` WHERE ${azonositoOszlop} = ?`;
+        params.push(id);
+
+        // FONTOS: .promise() hozzáadása, ha sima connectiont használsz!
+        await db.promise().query(sql, params);
+
+        res.json({ success: true, newPic: profilkep });
+    } catch (err) {
+        console.error("❌ Profil frissítési hiba:", err); // Ez fog megjelenni a VS Code konzolban!
+        res.status(500).json({ error: "Szerver hiba történt a mentéskor." });
+    }
 });
 
 // ===== TANFOLYAMOK API =====
@@ -249,15 +282,7 @@ app.get("/api/kepzesek", async (req, res) => {
 
 // --- KÉPFELTÖLTÉS BEÁLLÍTÁSA ---
 // --- MULTER BEÁLLÍTÁS (ha még nincs bent) ---
-const storageCourse = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, 'Tanfolyamok', 'kepek'));
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname);
-  }
-});
-const uploadCourseImg = multer({ storage: storageCourse });
+
 
 // --- A JAVÍTOTT POST ÚTVONAL ---
 app.post("/api/courses", uploadCourseImg.single('kep'), async (req, res) => {
@@ -421,6 +446,26 @@ app.get("/api/admin/osszes-tanar", async (req, res) => {
         const [rows] = await db.promise().query("SELECT ua_id, felhasznalonev, gmail, vegzettseg FROM user_ado");
         res.json(rows);
     } catch (err) { res.status(500).json({ success: false }); }
+});
+
+
+app.post("/api/update-password", async (req, res) => {
+    try {
+        const { id, role, jelszo } = req.body;
+        if (!id || !role || !jelszo) return res.status(400).json({ error: "Hiányzó adatok" });
+
+        const hash = await bcrypt.hash(jelszo, 10);
+        const tabla = (role === 'teacher') ? 'user_ado' : 'user_vevo';
+        const azonositoOszlop = (role === 'teacher') ? 'ua_id' : 'uv_id';
+
+        const sql = `UPDATE ${tabla} SET jelszo = ? WHERE ${azonositoOszlop} = ?`;
+        await db.promise().query(sql, [hash, id]);
+
+        res.json({ success: true, message: "Jelszó sikeresen frissítve!" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Szerver hiba a jelszómentéskor" });
+    }
 });
 
 

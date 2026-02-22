@@ -93,15 +93,16 @@
         .profil-vissza:hover { text-decoration: underline; }
 
         /* MODAL */
-        .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.7);
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-        }
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85); /* Kicsit sötétebb háttér */
+    justify-content: center;
+    align-items: center;
+    z-index: 10000; /* Legyen magasabb, mint a header és a kártya */
+    backdrop-filter: blur(5px); /* Ez menő modern homályosítást ad a háttérnek */
+}
         .modal-content {
             background: var(--card-bg);
             padding: 32px;
@@ -164,7 +165,7 @@
 
 <div class="profil-card" style="position: relative; z-index: 2; top: -100px; margin: 0 auto;">
     <div class="profil-avatar">
-        <img id="profileImage" alt="Profilkép">
+        <img id="profileImage" src="https://via.placeholder.com/180/242440/3399ff?text=Avatar" alt="Profilkép">
     </div>
     <div class="profil-adatok">
         <h2 id="nev-megjelenit"></h2>
@@ -222,133 +223,6 @@
     </div>
 </div>
 
-<script>
-    // 1. Felhasználó ellenőrzése
-    let user = null;
-    try {
-        const userData = localStorage.getItem("user");
-        if (userData) user = JSON.parse(userData);
-    } catch (e) { console.error("Hibás user adat."); }
-
-    if (!user) {
-        alert("Nincs bejelentkezve!");
-        location.href = "/bejelentkezes";
-    }
-
-    // 2. Adatok megjelenítése
-    document.getElementById("nev-megjelenit").textContent = user.nev;
-    const roleMap = { student: "🎓 Diák", teacher: "📘 Tanár", admin: "👑 Admin" };
-    document.getElementById("szerep-megjelenit").textContent = roleMap[user.role] || "Felhasználó";
-    document.getElementById("bioDisplay").textContent = user.bio || "";
-
-    const img = document.getElementById("profileImage");
-    function updateProfileImage() {
-        img.src = (user.profilePicture && user.profilePicture.trim() !== "") ? user.profilePicture : "/default-avatar.png";
-    }
-    updateProfileImage();
-
-    // 3. Modál kezelők
-    const modals = ["bioModal", "passwordModal", "uploadModal", "addCourseModal"];
-    
-    document.getElementById("editBioBtn").onclick = () => { document.getElementById("bio-input").value = user.bio || ""; document.getElementById("bioModal").style.display = "flex"; }
-    document.getElementById("changePasswordBtn").onclick = () => { document.getElementById("passwordModal").style.display = "flex"; }
-    document.getElementById("uploadPicBtn").onclick = () => { document.getElementById("uploadModal").style.display = "flex"; }
-    
-    document.querySelectorAll(".closeModal").forEach(btn => {
-        btn.onclick = () => { modals.forEach(m => document.getElementById(m).style.display = "none"); };
-    });
-
-    // 4. Mentés funkciók (Profil)
-    document.getElementById("saveBioBtn").onclick = () => {
-        user.bio = document.getElementById("bio-input").value;
-        localStorage.setItem("user", JSON.stringify(user));
-        document.getElementById("bioDisplay").textContent = user.bio;
-        document.getElementById("bioModal").style.display = "none";
-    };
-
-    document.getElementById("savePicBtn").onclick = () => {
-        const file = document.getElementById("profileFile").files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = e => {
-            user.profilePicture = e.target.result;
-            localStorage.setItem("user", JSON.stringify(user));
-            updateProfileImage();
-            document.getElementById("uploadModal").style.display = "none";
-        };
-        reader.readAsDataURL(file);
-    };
-
-    document.getElementById("logout").onclick = () => {
-        localStorage.removeItem("user");
-        location.href = "/";
-    };
-
-    // 5. TANÁR / ADMIN GOMBOK
-    const card = document.querySelector(".profil-card");
-    const logoutBtn = document.getElementById("logout");
-
-    if (user.role === "teacher") {
-        const teacherBtn = document.createElement("button");
-        teacherBtn.textContent = "➕ Tanfolyam hozzáadása";
-        teacherBtn.className = "profil-gomb";
-        teacherBtn.onclick = () => document.getElementById("addCourseModal").style.display = "flex";
-        card.insertBefore(teacherBtn, logoutBtn);
-    }
-
-    if (user.role === "admin") {
-        const adminBox = document.createElement("div");
-        adminBox.style.marginTop = "20px";
-        adminBox.innerHTML = `
-            <button class="profil-gomb" onclick="location.href='/admin'" style="background:#7b2ff2;">📧 Üzenetek Kezelése</button>
-            <button class="profil-gomb" onclick="location.href='/admin_full.html'" style="background:linear-gradient(45deg, #7b2ff2, #3399ff)">🛠️ Rendszer Kezelése</button>
-        `;
-        card.insertBefore(adminBox, logoutBtn);
-    }
-
-    // 6. TANFOLYAM MENTÉSE - FORM DATA-VAL JAVÍTVA
-    document.getElementById("saveCourseBtn").onclick = async () => {
-        const fileInput = document.getElementById("courseImageFile");
-        
-        if (!fileInput.files[0]) {
-            alert("Kérlek, válassz ki egy képet a tanfolyamhoz!");
-            return;
-        }
-
-        const formData = new FormData();
-        // A "kep" kulcsnak egyeznie kell a szerveroldali upload.single('kep') beállítással!
-        formData.append("kep", fileInput.files[0]);
-        formData.append("nev", document.getElementById("courseName").value);
-        formData.append("leiras", document.getElementById("courseDescription").value);
-        formData.append("helyileg", document.getElementById("courseLocation").value);
-        formData.append("email", document.getElementById("courseEmail").value);
-        formData.append("ár", document.getElementById("coursePrice").value);
-        formData.append("o_nev", document.getElementById("courseOwner").value);
-        formData.append("heves_kortol", document.getElementById("courseAgeLimit").value);
-        formData.append("ua_ID", user.id);
-
-        try {
-            const res = await fetch("/api/courses", {
-                method: "POST",
-                // FONTOS: FormData esetén NEM szabad Content-Type headert megadni!
-                body: formData
-            });
-
-            const result = await res.json();
-
-            if (res.ok && result.success) {
-                alert("Tanfolyam sikeresen hozzáadva!");
-                document.getElementById("addCourseModal").style.display = "none";
-                // Opcionális: űrlap ürítése
-                location.reload();
-            } else {
-                alert("Hiba: " + (result.message || "Szerver hiba történt."));
-            }
-        } catch (err) {
-            console.error(err);
-            alert("Hiba történt a küldés során.");
-        }
-    };
-</script>
+<script src="/profil.js?v=1"></script>
 </body>
 </html>
