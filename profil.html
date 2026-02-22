@@ -9,141 +9,142 @@
 <body>
     <style>
         :root {
-    --primary: #3399ff;
-    --primary-hover: #1a78d1;
-    --danger: #ff4d4d;
-    --danger-hover: #e63939;
-    --surface: #1a1a2e;
-    --card-bg: #242440;
-    --text: #ffffff;
-}
+            --primary: #3399ff;
+            --primary-hover: #1a78d1;
+            --danger: #ff4d4d;
+            --danger-hover: #e63939;
+            --surface: #1a1a2e;
+            --card-bg: #242440;
+            --text: #ffffff;
+        }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(180deg, #0f111a, #1a2a4b);
-    color: var(--text);
-    min-height: 100vh;
-}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(180deg, #0f111a, #1a2a4b);
+            color: var(--text);
+            min-height: 100vh;
+        }
 
-/* HEADER / ABSZTRAKT VONAL */
-header {
-    position: relative;
-    width: 100%;
-    height: 240px;
-}
-header svg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 220px;
-    z-index: 1;
-}
+        /* HEADER / ABSZTRAKT VONAL */
+        header {
+            position: relative;
+            width: 100%;
+            height: 240px;
+        }
+        header svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 220px;
+            z-index: 1;
+        }
 
-/* PROFIL KÁRTYA */
-.profil-card {
-    background: var(--card-bg);
-    border-radius: 24px;
-    padding: 48px 36px;
-    width: 90%;
-    max-width: 500px;
-    text-align: center;
-    box-shadow: 0 12px 40px rgba(51,153,255,0.4);
-    position: relative;
-    top: -80px; /* hullám fölé emeljük */
-    margin: 0 auto;
-}
+        /* PROFIL KÁRTYA */
+        .profil-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 48px 36px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 12px 40px rgba(51,153,255,0.4);
+            position: relative;
+            top: -80px; 
+            margin: 0 auto;
+        }
 
-.profil-avatar {
-    width: 180px;
-    height: 180px;
-    margin: 0 auto 24px;
-    border-radius: 50%;
-    overflow: hidden;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
-    transition: transform 0.2s;
-}
-.profil-avatar:hover { transform: scale(1.05); }
-.profil-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .profil-avatar {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 24px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+            transition: transform 0.2s;
+        }
+        .profil-avatar:hover { transform: scale(1.05); }
+        .profil-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-.profil-adatok h2 { margin: 8px 0 4px; font-size: 2em; }
-.profil-szerep { color: var(--primary); font-weight: 600; margin-bottom: 16px; font-size: 1.1em; }
-.profil-bio { font-style: italic; opacity: 0.9; margin-bottom: 28px; font-size: 1.05em; }
+        .profil-adatok h2 { margin: 8px 0 4px; font-size: 2em; }
+        .profil-szerep { color: var(--primary); font-weight: 600; margin-bottom: 16px; font-size: 1.1em; }
+        .profil-bio { font-style: italic; opacity: 0.9; margin-bottom: 28px; font-size: 1.05em; }
 
-.profil-gomb {
-    width: 100%;
-    padding: 18px;
-    margin: 8px 0;
-    font-size: 1.15em;
-    border: none;
-    border-radius: 14px;
-    cursor: pointer;
-    color: #fff;
-    background: var(--primary);
-    transition: 0.3s;
-}
-.profil-gomb:hover { background: var(--primary-hover); box-shadow: 0 6px 20px rgba(51,153,255,0.5); }
+        .profil-gomb {
+            width: 100%;
+            padding: 18px;
+            margin: 8px 0;
+            font-size: 1.15em;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            color: #fff;
+            background: var(--primary);
+            transition: 0.3s;
+        }
+        .profil-gomb:hover { background: var(--primary-hover); box-shadow: 0 6px 20px rgba(51,153,255,0.5); }
 
-.veszely-gomb { background: var(--danger); }
-.veszely-gomb:hover { background: var(--danger-hover); box-shadow: 0 6px 20px rgba(255,77,77,0.5); }
+        .veszely-gomb { background: var(--danger); }
+        .veszely-gomb:hover { background: var(--danger-hover); box-shadow: 0 6px 20px rgba(255,77,77,0.5); }
 
-.profil-vissza { display:block; margin-top:20px; color: var(--primary); text-decoration: none; font-weight: bold; font-size: 1.05em; }
-.profil-vissza:hover { text-decoration: underline; }
+        .profil-vissza { display:block; margin-top:20px; color: var(--primary); text-decoration: none; font-weight: bold; font-size: 1.05em; }
+        .profil-vissza:hover { text-decoration: underline; }
 
-/* MODAL */
-.modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    justify-content: center;
-    align-items: center;
-    z-index: 10;
-}
-.modal-content {
-    background: var(--card-bg);
-    padding: 32px;
-    border-radius: 20px;
-    width: 90%;
-    max-width: 450px;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-}
-.modal-content textarea,
-.modal-content input[type="password"],
-.modal-content input[type="file"] {
-    padding: 14px;
-    border-radius: 12px;
-    border: none;
-    background: #2c2c3c;
-    color: #fff;
-    font-size: 1.05em;
-}
-.modal-content button {
-    padding: 14px;
-    border-radius: 12px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
-}
-.modal-content button:hover { opacity: 0.9; }
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+        .modal-content {
+            background: var(--card-bg);
+            padding: 32px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 450px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-content textarea,
+        .modal-content input[type="password"],
+        .modal-content input[type="text"],
+        .modal-content input[type="email"],
+        .modal-content input[type="number"],
+        .modal-content input[type="file"] {
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            background: #2c2c3c;
+            color: #fff;
+            font-size: 1.05em;
+        }
+        .modal-content button {
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .modal-content button:hover { opacity: 0.9; }
 
-/* RESPONZÍV */
-@media(max-width:480px){
-    .profil-card { padding: 36px 24px; }
-    .profil-avatar { width: 140px; height: 140px; margin-bottom: 20px; }
-    .profil-adatok h2 { font-size: 1.8em; }
-    .profil-szerep { font-size: 1em; }
-    .profil-bio { font-size: 1em; }
-    .profil-gomb { padding: 16px; font-size: 1.05em; }
-}
+        @media(max-width:480px){
+            .profil-card { padding: 36px 24px; }
+            .profil-avatar { width: 140px; height: 140px; margin-bottom: 20px; }
+            .profil-adatok h2 { font-size: 1.8em; }
+            .profil-gomb { padding: 16px; font-size: 1.05em; }
+        }
     </style>
 
-<!-- HEADER / ABSZTRAKT VONAL -->
 <header>
     <svg viewBox="0 0 1440 400" preserveAspectRatio="none" style="position:absolute; top:0; left:0; width:100%; height:220px; z-index:0;">
         <defs>
@@ -178,13 +179,12 @@ header svg {
     <a href="/" class="profil-vissza">⬅ Vissza a főoldalra</a>
 </div>
 
-<!-- MODALOK -->
 <div id="bioModal" class="modal">
     <div class="modal-content">
         <h2>Bemutatkozás szerkesztése</h2>
         <textarea id="bio-input" rows="4" placeholder="Írd ide a bemutatkozásodat..."></textarea>
-        <button id="saveBioBtn">Mentés</button>
-        <button class="closeModal">Mégse</button>
+        <button id="saveBioBtn" style="background: var(--primary); color:white;">Mentés</button>
+        <button class="closeModal" style="background: #444; color:white;">Mégse</button>
     </div>
 </div>
 
@@ -192,8 +192,8 @@ header svg {
     <div class="modal-content">
         <h2>Profilkép feltöltése</h2>
         <input type="file" id="profileFile" accept="image/*">
-        <button id="savePicBtn">Feltöltés</button>
-        <button class="closeModal">Mégse</button>
+        <button id="savePicBtn" style="background: var(--primary); color:white;">Feltöltés</button>
+        <button class="closeModal" style="background: #444; color:white;">Mégse</button>
     </div>
 </div>
 
@@ -201,12 +201,11 @@ header svg {
     <div class="modal-content">
         <h2>Jelszó módosítása</h2>
         <input type="password" id="newPassword" placeholder="Új jelszó">
-        <button id="savePasswordBtn">Mentés</button>
-        <button class="closeModal">Mégse</button>
+        <button id="savePasswordBtn" style="background: var(--primary); color:white;">Mentés</button>
+        <button class="closeModal" style="background: #444; color:white;">Mégse</button>
     </div>
 </div>
 
-<!-- Modal for adding a course -->
 <div id="addCourseModal" class="modal">
     <div class="modal-content">
         <h2>Tanfolyam hozzáadása</h2>
@@ -214,12 +213,12 @@ header svg {
         <textarea id="courseDescription" placeholder="Tanfolyam leírása"></textarea>
         <input type="text" id="courseLocation" placeholder="Helyszín">
         <input type="email" id="courseEmail" placeholder="Kapcsolattartó email">
-        <input type="number" id="coursePrice" placeholder="Ár">
-        <input type="text" id="courseImage" placeholder="Kép URL"> <!-- New input for image -->
-        <input type="text" id="courseOwner" placeholder="Tulajdonos neve"> <!-- New input for owner name -->
-        <input type="number" id="courseAgeLimit" placeholder="Korhatár"> <!-- New input for age limit -->
-        <button id="saveCourseBtn">Mentés</button>
-        <button class="closeModal">Mégse</button>
+        <input type="number" id="coursePrice" placeholder="Ár (Ft)">
+        <label style="font-size: 0.9em; color: var(--primary);">Tanfolyam borítóképe:</label>
+        <input type="file" id="courseImageFile" accept="image/*"> <input type="text" id="courseOwner" placeholder="Tulajdonos neve">
+        <input type="number" id="courseAgeLimit" placeholder="Korhatár">
+        <button id="saveCourseBtn" style="background: var(--primary); color:white;">Mentés</button>
+        <button class="closeModal" style="background: #444; color:white;">Mégse</button>
     </div>
 </div>
 
@@ -229,7 +228,7 @@ header svg {
     try {
         const userData = localStorage.getItem("user");
         if (userData) user = JSON.parse(userData);
-    } catch (e) { console.error("Hibás user adat a tárolóban."); }
+    } catch (e) { console.error("Hibás user adat."); }
 
     if (!user) {
         alert("Nincs bejelentkezve!");
@@ -249,30 +248,22 @@ header svg {
     updateProfileImage();
 
     // 3. Modál kezelők
-    const bioModal = document.getElementById("bioModal");
-    const passwordModal = document.getElementById("passwordModal");
-    const uploadModal = document.getElementById("uploadModal");
-    const addCourseModal = document.getElementById("addCourseModal");
-
-    document.getElementById("editBioBtn").onclick = () => { document.getElementById("bio-input").value = user.bio || ""; bioModal.style.display = "flex"; }
-    document.getElementById("changePasswordBtn").onclick = () => { document.getElementById("newPassword").value = ""; passwordModal.style.display = "flex"; }
-    document.getElementById("uploadPicBtn").onclick = () => { uploadModal.style.display = "flex"; }
+    const modals = ["bioModal", "passwordModal", "uploadModal", "addCourseModal"];
+    
+    document.getElementById("editBioBtn").onclick = () => { document.getElementById("bio-input").value = user.bio || ""; document.getElementById("bioModal").style.display = "flex"; }
+    document.getElementById("changePasswordBtn").onclick = () => { document.getElementById("passwordModal").style.display = "flex"; }
+    document.getElementById("uploadPicBtn").onclick = () => { document.getElementById("uploadModal").style.display = "flex"; }
     
     document.querySelectorAll(".closeModal").forEach(btn => {
-        btn.onclick = () => { 
-            bioModal.style.display = "none"; 
-            passwordModal.style.display = "none"; 
-            uploadModal.style.display = "none"; 
-            addCourseModal.style.display = "none";
-        };
+        btn.onclick = () => { modals.forEach(m => document.getElementById(m).style.display = "none"); };
     });
 
-    // 4. Mentés funkciók
+    // 4. Mentés funkciók (Profil)
     document.getElementById("saveBioBtn").onclick = () => {
         user.bio = document.getElementById("bio-input").value;
         localStorage.setItem("user", JSON.stringify(user));
         document.getElementById("bioDisplay").textContent = user.bio;
-        bioModal.style.display = "none";
+        document.getElementById("bioModal").style.display = "none";
     };
 
     document.getElementById("savePicBtn").onclick = () => {
@@ -283,7 +274,7 @@ header svg {
             user.profilePicture = e.target.result;
             localStorage.setItem("user", JSON.stringify(user));
             updateProfileImage();
-            uploadModal.style.display = "none";
+            document.getElementById("uploadModal").style.display = "none";
         };
         reader.readAsDataURL(file);
     };
@@ -293,62 +284,71 @@ header svg {
         location.href = "/";
     };
 
-    // 5. ADMIN ÉS TANÁR GOMBOK DINAMIKUS HOZZÁADÁSA
+    // 5. TANÁR / ADMIN GOMBOK
     const card = document.querySelector(".profil-card");
     const logoutBtn = document.getElementById("logout");
 
-    // Ha TANÁR: Tanfolyam hozzáadása gomb
     if (user.role === "teacher") {
         const teacherBtn = document.createElement("button");
         teacherBtn.textContent = "➕ Tanfolyam hozzáadása";
         teacherBtn.className = "profil-gomb";
-        teacherBtn.onclick = () => addCourseModal.style.display = "flex";
+        teacherBtn.onclick = () => document.getElementById("addCourseModal").style.display = "flex";
         card.insertBefore(teacherBtn, logoutBtn);
     }
 
-    // Ha ADMIN: Adminisztrációs vezérlő panel
     if (user.role === "admin") {
         const adminBox = document.createElement("div");
         adminBox.style.marginTop = "20px";
-        adminBox.style.padding = "15px";
-        adminBox.style.border = "2px dashed #7b2ff2";
-        adminBox.style.borderRadius = "15px";
         adminBox.innerHTML = `
-            <h3 style='color:#7b2ff2; margin-bottom:10px;'>Adminisztrációs Vezérlő</h3>
             <button class="profil-gomb" onclick="location.href='/admin'" style="background:#7b2ff2;">📧 Üzenetek Kezelése</button>
             <button class="profil-gomb" onclick="location.href='/admin_full.html'" style="background:linear-gradient(45deg, #7b2ff2, #3399ff)">🛠️ Rendszer Kezelése</button>
         `;
         card.insertBefore(adminBox, logoutBtn);
     }
 
-    // 6. Tanfolyam mentése (API hívás)
+    // 6. TANFOLYAM MENTÉSE - FORM DATA-VAL JAVÍTVA
     document.getElementById("saveCourseBtn").onclick = async () => {
-        const courseData = {
-            kep: document.getElementById("courseImage").value,
-            nev: document.getElementById("courseName").value,
-            leiras: document.getElementById("courseDescription").value,
-            helyileg: document.getElementById("courseLocation").value,
-            email: document.getElementById("courseEmail").value,
-            o_nev: document.getElementById("courseOwner").value,
-            heves_kortol: parseInt(document.getElementById("courseAgeLimit").value, 10),
-            ua_ID: user.id,
-            ár: parseInt(document.getElementById("coursePrice").value, 10)
-        };
+        const fileInput = document.getElementById("courseImageFile");
+        
+        if (!fileInput.files[0]) {
+            alert("Kérlek, válassz ki egy képet a tanfolyamhoz!");
+            return;
+        }
 
-        const res = await fetch("/api/add-course", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(courseData)
-        });
+        const formData = new FormData();
+        // A "kep" kulcsnak egyeznie kell a szerveroldali upload.single('kep') beállítással!
+        formData.append("kep", fileInput.files[0]);
+        formData.append("nev", document.getElementById("courseName").value);
+        formData.append("leiras", document.getElementById("courseDescription").value);
+        formData.append("helyileg", document.getElementById("courseLocation").value);
+        formData.append("email", document.getElementById("courseEmail").value);
+        formData.append("ár", document.getElementById("coursePrice").value);
+        formData.append("o_nev", document.getElementById("courseOwner").value);
+        formData.append("heves_kortol", document.getElementById("courseAgeLimit").value);
+        formData.append("ua_ID", user.id);
 
-        if (res.ok) {
-            alert("Sikeres mentés!");
-            addCourseModal.style.display = "none";
-        } else {
-            alert("Hiba történt!");
+        try {
+            const res = await fetch("/api/courses", {
+                method: "POST",
+                // FONTOS: FormData esetén NEM szabad Content-Type headert megadni!
+                body: formData
+            });
+
+            const result = await res.json();
+
+            if (res.ok && result.success) {
+                alert("Tanfolyam sikeresen hozzáadva!");
+                document.getElementById("addCourseModal").style.display = "none";
+                // Opcionális: űrlap ürítése
+                location.reload();
+            } else {
+                alert("Hiba: " + (result.message || "Szerver hiba történt."));
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Hiba történt a küldés során.");
         }
     };
 </script>
-
 </body>
 </html>

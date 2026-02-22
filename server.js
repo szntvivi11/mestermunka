@@ -57,7 +57,7 @@ app.get("/profil", (req, res) => {
 // ===== ADATBÁZIS =====
 const db = mysql.createConnection({
   host: "localhost",
-  port: 3307,
+  port: 3306,
   user: "root",
   password: "",
   database: "mestermunka"
@@ -247,25 +247,51 @@ app.get("/api/kepzesek", async (req, res) => {
   }
 });
 
-// Endpoint to add a new course
-app.post("/api/courses", async (req, res) => {
-  const { nev, leiras, helyileg, email, ár, ua_ID } = req.body;
-
-  if (!nev || !leiras || !helyileg || !email || !ár || !ua_ID) {
-    return res.status(400).json({ success: false, message: "Hiányzó adatok" });
+// --- KÉPFELTÖLTÉS BEÁLLÍTÁSA ---
+// --- MULTER BEÁLLÍTÁS (ha még nincs bent) ---
+const storageCourse = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, 'Tanfolyamok', 'kepek'));
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
   }
+});
+const uploadCourseImg = multer({ storage: storageCourse });
 
+// --- A JAVÍTOTT POST ÚTVONAL ---
+app.post("/api/courses", uploadCourseImg.single('kep'), async (req, res) => {
   try {
-    await db.promise().query(
-      `INSERT INTO kepzesek (nev, leiras, helyileg, email, ár, ua_ID)
-       VALUES (?, ?, ?, ?, ?, ?)`,
-      [nev, leiras, helyileg, email, ár, ua_ID]
-    );
+    // Az oszlopnevek pontosan a te CREATE TABLE parancsodból:
+    const { nev, leiras, helyileg, email, o_nev, heves_kortol, ua_ID, ár } = req.body;
+    
+   if (!req.file) {
+    return res.status(400).json({ success: false, message: "Kép feltöltése kötelező!" });
+}
 
-    res.json({ success: true, message: "Tanfolyam sikeresen hozzáadva" });
+// CSAK a fájl nevét mentjük el, az útvonalat nem!
+const kepNev = req.file.filename; 
+
+const sql = `INSERT INTO kepzesek 
+             (kep, nev, leiras, helyileg, email, o_nev, heves_kortol, ua_ID, ár) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+await db.promise().query(sql, [
+    kepNev, // Itt most már csak pl. "1708612345-kep.jpg" megy be
+    nev,
+    leiras,
+    helyileg,
+    email,
+    o_nev,
+    parseInt(heves_kortol) || 0,
+    parseInt(ua_ID),
+    parseInt(ár) || 0
+])
+
+    res.json({ success: true, message: "Tanfolyam sikeresen mentve!" });
   } catch (err) {
-    console.error("❌ Hiba a tanfolyam hozzáadásakor:", err);
-    res.status(500).json({ success: false, message: "Szerver hiba" });
+    console.error("❌ MySQL Hiba:", err);
+    res.status(500).json({ success: false, message: "Adatbázis hiba: " + err.sqlMessage });
   }
 });
 
