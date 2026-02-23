@@ -122,8 +122,9 @@ CREATE TABLE `user_ado` (
   `felhasznalonev` varchar(45) DEFAULT NULL,
   `jelszo` varchar(100) DEFAULT NULL,
   `gmail` varchar(45) DEFAULT NULL,
-  `vegzettseg` varchar(45) DEFAULT NULL
-  `profilkep` varchar(255) DEFAULT NULL
+  `vegzettseg` varchar(45) DEFAULT NULL,
+   `regisztracio_datum` timestamp NULL DEFAULT NULL,
+  `profilkep` varchar(255) DEFAULT NULL,
   `bemutatkozas` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
@@ -147,8 +148,8 @@ CREATE TABLE `user_vevo` (
   `email` varchar(45) DEFAULT NULL,
   `felhasznalonev` varchar(45) DEFAULT NULL,
   `jelszo` varchar(80) DEFAULT NULL,
-  `regisztracio_datum` timestamp NULL DEFAULT NULL
-  `profilkep` varchar(255) DEFAULT NULL
+  `regisztracio_datum` timestamp NULL DEFAULT NULL,
+  `profilkep` varchar(255) DEFAULT NULL,
   `bemutatkozas` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 

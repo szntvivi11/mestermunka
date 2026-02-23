@@ -41,6 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const logoutBtn = document.getElementById("logout");
         const btn = document.createElement("button");
         btn.className = "profil-gomb";
+        btn.id = "openAddCourseBtn"; // Adunk neki ID-t a biztonság kedvéért
         btn.textContent = "➕ Tanfolyam hozzáadása";
         btn.onclick = () => document.getElementById("addCourseModal").style.display = "flex";
         card.insertBefore(btn, logoutBtn);
@@ -53,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
     });
 
-    // 3. MENTÉSI FUNKCIÓ (Bio és Kép)
+    // 3. MENTÉSI FUNKCIÓ (Bio és Kép frissítése)
     const handleProfileUpdate = async (fileInput = null) => {
         const userId = user.ua_id || user.uv_id || user.id; 
         const bioText = document.getElementById("bio-input").value;
@@ -78,10 +79,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (data.newPic) {
                     user.profilkep = data.newPic;
                     const profileImg = document.getElementById("profileImage");
-                    // Cache-törlés ?t= segítségével
                     profileImg.src = `/Tanfolyamok/kepek/${data.newPic}?t=${new Date().getTime()}`;
                 }
-                
                 user.bemutatkozas = bioText;
                 localStorage.setItem("user", JSON.stringify(user));
                 document.getElementById("bioDisplay").textContent = bioText;
@@ -98,16 +97,59 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // Gombok eseményei
     document.getElementById("saveBioBtn").onclick = () => handleProfileUpdate();
-
     document.getElementById("savePicBtn").onclick = () => {
         const fileInput = document.getElementById("profileFile");
         if (!fileInput.files[0]) return alert("Válassz ki egy képet!");
         handleProfileUpdate(fileInput);
     };
 
-    // Jelszó mentése
+// --- 4. TANFOLYAM MENTÉSE JAVÍTVA ---
+const saveCourseBtn = document.getElementById("saveCourseBtn");
+if (saveCourseBtn) {
+    saveCourseBtn.onclick = async () => {
+        const userId = user.ua_id || user.uv_id || user.id; // Megkeressük a tanár ID-ját
+        const formData = new FormData();
+        
+        // Fontos: Olyan neveket használunk, amiket a server.js vár!
+        formData.append("nev", document.getElementById("courseName").value);
+        formData.append("leiras", document.getElementById("courseDescription").value);
+        formData.append("helyileg", document.getElementById("courseLocation").value);
+        formData.append("email", document.getElementById("courseEmail").value);
+        formData.append("ár", document.getElementById("coursePrice").value);
+        formData.append("o_nev", document.getElementById("courseOwner").value);
+        formData.append("heves_kortol", document.getElementById("courseAgeLimit").value);
+        formData.append("ua_ID", userId); // Ez kell a szervernek!
+
+        const fileInput = document.getElementById("courseImageFile");
+        if (fileInput.files[0]) {
+            formData.append("kep", fileInput.files[0]); // A szerver 'kep' néven várja a fájlt!
+        } else {
+            return alert("Kép feltöltése kötelező!");
+        }
+
+        try {
+            // A szervereden az útvonal: /api/courses
+            const res = await fetch("/api/courses", {
+                method: "POST",
+                body: formData
+            });
+            const data = await res.json();
+            
+            if (data.success) {
+                alert("Tanfolyam sikeresen hozzáadva!");
+                location.reload(); // Frissítjük az oldalt
+            } else {
+                alert("Hiba: " + data.message);
+            }
+        } catch (e) {
+            console.error("Hiba:", e);
+            alert("Szerver hiba történt a mentés során.");
+        }
+    };
+}
+
+    // 5. JELSZÓ MENTÉSE
     const savePasswordBtn = document.getElementById("savePasswordBtn");
     if (savePasswordBtn) {
         savePasswordBtn.onclick = async () => {
@@ -120,11 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const res = await fetch("/api/update-password", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ 
-                        id: userId, 
-                        role: user.role, 
-                        jelszo: newPass 
-                    })
+                    body: JSON.stringify({ id: userId, role: user.role, jelszo: newPass })
                 });
                 if (res.ok) {
                     alert("Jelszó módosítva!");
@@ -133,13 +171,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     alert("Hiba történt a jelszó módosítása közben.");
                 }
             } catch (e) {
-                console.error("Jelszó hiba:", e);
                 alert("Hiba a mentés során!");
             }
         };
     }
 
-    // Kijelentkezés
+    // 6. KIJELENTKEZÉS
     document.getElementById("logout").onclick = () => {
         localStorage.removeItem("user");
         location.href = "/";
