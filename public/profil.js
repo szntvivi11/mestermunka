@@ -35,16 +35,37 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("passwordModal").style.display = "flex";
     };
 
-    // Tanár gomb (tanfolyam hozzáadása) dinamikus létrehozása
+    // --- DINAMIKUS GOMBOK ---
+    const card = document.querySelector(".profil-card");
+    const logoutBtn = document.getElementById("logout");
+
+    // HA TANÁR: Tanfolyam hozzáadása gomb
     if (user.role === "teacher") {
-        const card = document.querySelector(".profil-card");
-        const logoutBtn = document.getElementById("logout");
         const btn = document.createElement("button");
         btn.className = "profil-gomb";
-        btn.id = "openAddCourseBtn"; // Adunk neki ID-t a biztonság kedvéért
         btn.textContent = "➕ Tanfolyam hozzáadása";
         btn.onclick = () => document.getElementById("addCourseModal").style.display = "flex";
         card.insertBefore(btn, logoutBtn);
+    }
+
+    // HA ADMIN: Adminisztrációs vezérlő panel
+    if (user.role === "admin") {
+        const adminBox = document.createElement("div");
+        adminBox.style.marginTop = "20px";
+        adminBox.style.padding = "15px";
+        adminBox.style.border = "2px dashed #7b2ff2";
+        adminBox.style.borderRadius = "15px";
+        adminBox.style.marginBottom = "10px";
+        
+        adminBox.innerHTML = `
+            <h3 style='color:#7b2ff2; margin-bottom:10px; font-size: 1.1em;'>Adminisztrációs Vezérlő</h3>
+            <button class="profil-gomb" id="adminMessagesBtn" style="background:#7b2ff2; margin-bottom: 8px;">📧 Üzenetek Kezelése</button>
+            <button class="profil-gomb" id="adminFullBtn" style="background:linear-gradient(45deg, #7b2ff2, #3399ff)">🛠️ Rendszer Kezelése</button>
+        `;
+        card.insertBefore(adminBox, logoutBtn);
+
+        document.getElementById("adminMessagesBtn").onclick = () => { location.href = "/admin"; };
+        document.getElementById("adminFullBtn").onclick = () => { location.href = "/admin_full.html"; };
     }
 
     // Modálok lezárása (Mégse gombok)
