@@ -39,6 +39,10 @@ app.get("/tanfolyamok", (req, res) =>
   res.sendFile(path.join(__dirname, "Tanfolyamok", "tanfolyamok.html"))
 );
 
+app.get("/profil", (req, res) => {
+  res.sendFile(path.join(__dirname, "profil.html"));
+});
+
 // Dinamikus tanfolyam oldalak
 app.get("/tanfolyamok/:slug", (req, res) => {
   const slug = path.basename(req.params.slug).replace(".html", "");
@@ -49,15 +53,10 @@ app.get("/tanfolyamok/:slug", (req, res) => {
   });
 });
 
-// Add a route to serve the profile page
-app.get("/profil", (req, res) => {
-  res.sendFile(path.join(__dirname, "profil.html"));
-});
-
 // ===== ADATBÁZIS =====
 const db = mysql.createConnection({
   host: "localhost",
-  port: 3307,
+  port: 3306,
   user: "root",
   password: "",
   database: "mestermunka"
@@ -75,7 +74,7 @@ db.connect(err => {
 // ================= REGISZTRÁCIÓ =======================
 // =====================================================
 
-// ---- USER (user_vevo) ----
+// ---- diák (user_vevo) ----
 app.post("/api/register-user", async (req, res) => {
   const { nev, email, jelszo } = req.body;
 

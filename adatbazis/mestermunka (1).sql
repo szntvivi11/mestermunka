@@ -107,10 +107,7 @@ INSERT INTO `kepzesek` (`id`, `kep`, `nev`, `leiras`, `helyileg`, `email`, `o_ne
 (52, 'villanyszzerelo.jpg', 'Villanyszerelő Alapok', 'Elektromos rendszerek telepítése és karbantar', 'Offline', 'info@villany.hu', 'Kiss András', 40, NULL, NULL, 0),
 (53, 'festo.jpg', 'Festő Tanfolyam', 'Beltéri és kültéri festési technikák.', 'Offline', 'info@festo.hu', 'Németh Ágnes', 28, NULL, NULL, 0),
 (54, 'tetofedo.jpg', 'Tetőfedő Tanfolyam', 'Tetőfedés és javítás alapjai.', 'Offline', 'info@tetkos.hu', 'Pál Gábor', 35, NULL, NULL, 0),
-(55, 'klima.jpg', 'Klímaszerelő Alapok', 'Légkondicionáló rendszerek telepítése és karb', 'Offline', 'info@klima.hu', 'Varga Attila', 32, NULL, NULL, 0),
-(56, NULL, 'valami', 'feuifesjnl', 'Pest', 'doha@gmail.com', NULL, NULL, NULL, 13, 12345),
-(57, NULL, 'ujtanfolyam', 'ujtanfolyam hozzaadasddge', 'Budapest hengersor utca ', 'Ujtanfolyam@gmail.com', NULL, NULL, NULL, 14, 123456789);
-
+(55, 'klima.jpg', 'Klímaszerelő Alapok', 'Légkondicionáló rendszerek telepítése és karb', 'Offline', 'info@klima.hu', 'Varga Attila', 32, NULL, NULL, 0)
 -- --------------------------------------------------------
 
 --

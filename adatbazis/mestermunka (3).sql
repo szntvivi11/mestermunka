@@ -108,9 +108,6 @@ INSERT INTO `kepzesek` (`id`, `kep`, `nev`, `leiras`, `helyileg`, `email`, `o_ne
 (53, 'festo.jpg', 'Festő Tanfolyam', 'Beltéri és kültéri festési technikák.', 'Budapest, Szín-ház utca 2.', 'info@festo.hu', 'Németh Ágnes', 18, NULL, NULL, 160000),
 (54, 'tetofedo.jpg', 'Tetőfedő Tanfolyam', 'Tetőfedés és javítás alapjai.', 'Érd, Magas tető út 1.', 'info@tetkos.hu', 'Pál Gábor', 18, NULL, NULL, 290000),
 (55, 'klima.jpg', 'Klímaszerelő Alapok', 'Légkondicionáló rendszerek telepítése és karb', 'Budapest, Hűtő körút 10.', 'info@klima.hu', 'Varga Attila', 18, NULL, NULL, 260000),
-(56, NULL, 'valami', 'feuifesjnl', 'Pest', 'doha@gmail.com', NULL, NULL, NULL, 13, 12345),
-(57, NULL, 'ujtanfolyam', 'ujtanfolyam hozzaadasddge', 'Budapest hengersor utca ', 'Ujtanfolyam@gmail.com', NULL, NULL, NULL, 14, 123456789),
-(60, '1771763451063-received_451344334448871.jpeg', 'zhtg', 'oulizkujthztg', 'zmkujthnbg', 'joskit208@hengersor.hu', 'kuizjth', 18, NULL, 14, 0),
 (61, '1771871976870-OIP.webp', 'zhtg', 'jhgb', 'zmkujthnbg', 'joskit208@hengersor.hu', 'kuizjth', 18, NULL, 14, 0);
 
 -- --------------------------------------------------------

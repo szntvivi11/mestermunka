@@ -66,10 +66,10 @@
 
     <!-- Választás: Felhasználó / Tanfolyamadó -->
     <label>
-      <input type="radio" name="role" value="user" checked> Sima felhasználó
+      <input type="radio" name="role" value="user" checked> Tanuló
     </label>
     <label>
-      <input type="radio" name="role" value="teacher"> Tanfolyamadó
+      <input type="radio" name="role" value="teacher"> Oktató
     </label>
 
     <form class="auth-form" id="register-form">
@@ -83,11 +83,17 @@
       <input id="reg-password" type="password" required>
 
       <!-- Tanfolyamadó mezők -->
-      <div class="teacher-fields">
-        <label for="teacher-course">Kurzus / végzettség</label>
-        <input id="teacher-course" type="text">
-
-      </div>
+ <div class="teacher-fields">
+  <label for="teacher-course">Végzettség</label>
+  <select id="teacher-course">
+    <option value="">-- Kérlek, válassz! --</option>
+    <option value="erettsegi">Érettségi</option>
+    <option value="bsc">Bachelor (BSc/BA)</option>
+    <option value="msc">Master (MSc/MA)</option>
+    <option value="phd">Doktori (PhD)</option>
+    <option value="egyeb">Egyéb</option>
+  </select>
+</div>
 
       <button type="submit">Regisztráció</button>
     </form>
