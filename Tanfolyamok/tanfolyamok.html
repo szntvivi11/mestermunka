@@ -7,6 +7,27 @@
     <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+<style>
+    .pagination-btn {
+    background: #7b2ff2; /* A lila színed */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.pagination-btn:disabled {
+    background: #444;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: #b185f5;
+}
+</style>
 <body>
     <h1>Üdvözlünk a tanfolyamok oldalán!</h1>
     <img src="Tanfolyamok/kepek/logo.png" alt="Logo" style="position: absolute; top: 10px; left: 10px; width: 100px; height: auto; z-index: 3; cursor: pointer;" onclick="window.location.href='/'">
@@ -74,44 +95,54 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
+    // 1. Alapvető referenciák
     const container = document.getElementById('tanfolyamokcards');
     const searchInput = document.getElementById('courseSearch');
     const modal = document.getElementById('modal');
     const closeModal = document.getElementById('closeModal');
     
-    // Element referenciák a modalhoz
-    const modalTitle = document.getElementById('modalTitle');
-    const modalDescription = document.getElementById('modalDescription');
-    const modalPrice = document.getElementById('modalPrice');
-    const modalEmail = document.getElementById('modalEmail');
-    const modalAge = document.getElementById('modalAge');
-    const modalLocation = document.getElementById('modalLocation');
-    const modalImage = document.getElementById('modalImage');
-    const applyButton = document.getElementById('applyButton');
+    // 2. Lapozáshoz és szűréshez szükséges változók
+    let allCourses = [];      // A szerverről lekért összes adat
+    let filteredCourses = []; // Amit éppen látunk (szűrés után)
+    let currentPage = 1;      // Aktuális oldalszám
+    const coursesPerPage = 12; // Hány darabot lássunk egyszerre
 
-    let allCourses = []; // Itt tároljuk az összes tanfolyamot a szűréshez
+    // 3. Lapozó gombok konténerének létrehozása (a kártyák alá kerül)
+    const paginationContainer = document.createElement('div');
+    paginationContainer.id = 'pagination';
+    paginationContainer.style.cssText = 'display:flex; justify-content:center; align-items:center; gap:20px; margin: 30px 0; font-size:18px; color: white;';
+    container.after(paginationContainer);
 
-    // Betöltjük a tanfolyamokat
+    // 4. Adatok letöltése a szerverről
     try {
         const res = await fetch('/api/kepzesek');
         if (!res.ok) throw new Error('Hiba a lekéréskor');
         allCourses = await res.json();
+        filteredCourses = [...allCourses]; // Kezdetben a szűrt lista ugyanaz, mint az összes
         
-        renderCourses(allCourses);
+        renderCourses(); // Első kirajzolás
     } catch (err) {
         console.error('Hiba a tanfolyamok betöltésekor:', err);
         container.innerHTML = '<p>Nem sikerült betölteni a tanfolyamokat.</p>';
     }
 
-    // Függvény a kártyák kirajzolásához
-    function renderCourses(courses) {
+    // 5. Függvény a kártyák kirajzolásához (Csak az adott 10-et mutatja)
+    function renderCourses() {
         container.innerHTML = '';
-        if (courses.length === 0) {
-            container.innerHTML = '<p>Nincs a keresésnek megfelelő tanfolyam.</p>';
+        
+        // Kiszámoljuk, melyik elemtől melyik elemig kell mutatni
+        const startIndex = (currentPage - 1) * coursesPerPage;
+        const endIndex = startIndex + coursesPerPage;
+        const currentItems = filteredCourses.slice(startIndex, endIndex);
+
+        if (currentItems.length === 0) {
+            container.innerHTML = '<p>Nincs találat.</p>';
+            paginationContainer.innerHTML = '';
             return;
         }
 
-        courses.forEach(course => {
+        // Kártyák létrehozása
+        currentItems.forEach(course => {
             const card = document.createElement('div');
             card.className = 'tanfolyamkartya';
             card.innerHTML = `
@@ -119,67 +150,108 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <h2>${course.nev}</h2>
             `;
 
+            // Modal megnyitása kattintáskor
             card.addEventListener('click', () => {
-                modalTitle.textContent = course.nev;
-                modalTitle.dataset.courseId = course.id;
-                modalDescription.textContent = course.leiras;
-                modalPrice.textContent = course.ár + " Ft";
-                modalEmail.textContent = course.email;
-                modalAge.textContent = course.heves_kortol + "+ év";
-                modalLocation.textContent = course.helyileg;
-                modalImage.src = `/tanfolyamok/kepek/${course.kep}`;
-                modalImage.alt = course.nev;
+                document.getElementById('modalTitle').textContent = course.nev;
+                document.getElementById('modalTitle').dataset.courseId = course.id;
+                document.getElementById('modalDescription').textContent = course.leiras;
+                document.getElementById('modalPrice').textContent = course.ár + " Ft";
+                document.getElementById('modalEmail').textContent = course.email;
+                document.getElementById('modalAge').textContent = course.heves_kortol + "+ év";
+                document.getElementById('modalLocation').textContent = course.helyileg;
+                document.getElementById('modalImage').src = `/tanfolyamok/kepek/${course.kep}`;
                 modal.style.display = 'flex';
             });
 
             container.appendChild(card);
         });
+
+        renderPaginationControls(); // Frissítjük a nyilakat is
     }
 
-    // KERESÉS FUNKCIÓ
+    // 6. Függvény a lapozó gombok (nyilak) kezeléséhez
+    function renderPaginationControls() {
+        paginationContainer.innerHTML = '';
+        const totalPages = Math.ceil(filteredCourses.length / coursesPerPage);
+
+        if (totalPages <= 1) return; // Ha elfér 1 oldalon, nem kell nyíl
+
+        // Balra nyíl
+        const prevBtn = document.createElement('button');
+        prevBtn.innerHTML = '<i class="fa-solid fa-chevron-left"></i>';
+        prevBtn.style.cssText = 'padding: 10px 20px; cursor: pointer; background: #7b2ff2; color: white; border: none; border-radius: 5px;';
+        prevBtn.disabled = currentPage === 1;
+        if (prevBtn.disabled) prevBtn.style.opacity = "0.3";
+        
+        prevBtn.onclick = () => {
+            currentPage--;
+            renderCourses();
+            window.scrollTo(0, 300); // Kicsit feljebb ugrik a kártyákhoz
+        };
+
+        // Oldalszám szöveg
+        const pageInfo = document.createElement('span');
+        pageInfo.textContent = `${currentPage} / ${totalPages}`;
+
+        // Jobbra nyíl
+        const nextBtn = document.createElement('button');
+        nextBtn.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
+        nextBtn.style.cssText = 'padding: 10px 20px; cursor: pointer; background: #7b2ff2; color: white; border: none; border-radius: 5px;';
+        nextBtn.disabled = currentPage === totalPages;
+        if (nextBtn.disabled) nextBtn.style.opacity = "0.3";
+
+        nextBtn.onclick = () => {
+            currentPage++;
+            renderCourses();
+            window.scrollTo(0, 300);
+        };
+
+        paginationContainer.append(prevBtn, pageInfo, nextBtn);
+    }
+
+    // 7. Keresés funkció
     searchInput.addEventListener('input', (e) => {
         const searchTerm = e.target.value.toLowerCase();
-        const filteredCourses = allCourses.filter(course => 
+        // Szűrjük az alap listát
+        filteredCourses = allCourses.filter(course => 
             course.nev.toLowerCase().includes(searchTerm)
         );
-        renderCourses(filteredCourses);
+        currentPage = 1; // Keresésnél mindig ugorjunk az elejére!
+        renderCourses();
     });
 
-    // Modal bezárása
+    // 8. Modal és Jelentkezés kezelése
     closeModal.addEventListener('click', () => modal.style.display = 'none');
     window.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
 
-    // Jelentkezés
-    applyButton.addEventListener('click', async () => {
+    document.getElementById('applyButton').addEventListener('click', async () => {
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user) { alert('Jelentkezéshez be kell jelentkezni!'); return; }
-        const courseId = parseInt(modalTitle.dataset.courseId);
+        
+        const courseId = parseInt(document.getElementById('modalTitle').dataset.courseId);
         try {
             const res = await fetch('/api/jelentkezes', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId: user.id, kepzesId: courseId })
             });
-            const data = await res.json();
             if (res.ok) {
                 alert('Sikeres jelentkezés!');
                 modal.style.display = 'none';
             } else {
+                const data = await res.json();
                 alert(data.message || 'Hiba történt');
             }
         } catch (err) {
-            console.error(err);
-            alert('Szerverhiba');
+            alert('Szerverhiba történt a jelentkezéskor.');
         }
     });
 
-    // Login/regisztráció linkek kezelése
+    // 9. Login/regisztráció gombok elrejtése, ha be van lépve
     const user = JSON.parse(localStorage.getItem('user'));
     if (user) {
-        const loginNav = document.getElementById('nav-bejelentkezes');
-        const registerNav = document.getElementById('nav-regisztracio');
-        if (loginNav) loginNav.style.display = 'none';
-        if (registerNav) registerNav.style.display = 'none';
+        if (document.getElementById('nav-bejelentkezes')) document.getElementById('nav-bejelentkezes').style.display = 'none';
+        if (document.getElementById('nav-regisztracio')) document.getElementById('nav-regisztracio').style.display = 'none';
     }
 });
 </script>
