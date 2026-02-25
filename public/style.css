@@ -338,23 +338,95 @@ hr {
 /* ==========================================
    ALAP OLDALAK (pl. kapcsolat)
    ========================================== */
+/* ==========================================
+   KAPCSOLAT OLDAL (KÖZÉPSŐ RÉSZ) FINOMÍTÁSA
+   ========================================== */
+
+/* A tartály, ami a Kapcsolat űrlapot fogja közre */
 .aloldal-container {
-    max-width: 600px;
-    margin: 32px auto;
-    background: var(--surface);
-    border-radius: 16px;
-    box-shadow: 0 2px 16px rgba(51,153,255,0.25);
-    padding: 32px 18px;
-    text-align: center;
+    max-width: 450px; /* Kompaktabb megjelenés */
+    margin: 60px auto; /* Több hely a hullám alatt */
+    background: var(--surface); /* A meglévő sötétkék felületed */
+    border-radius: 20px;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4), 0 0 20px var(--accent-shadow);
+    padding: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: transform 0.3s ease;
+}
+
+/* Kicsi lebegő hatás, ha a doboz fölé mész */
+.aloldal-container:hover {
+    transform: translateY(-5px);
 }
 
 .aloldal-container h1 {
-    color: var(--primary);
+    margin-top: 0;
+    margin-bottom: 30px;
+    font-size: 2.2em;
+    letter-spacing: 1px;
+    /* Színátmenet a címen, hogy passzoljon a kék témához */
+    background: linear-gradient(135deg, var(--primary), #ffffff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-.aloldal-container p {
-    font-size: 1.1em;
-    color: #ffffff;
+/* Űrlap elrendezése */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 100%; /* Kitölti a konténert */
+}
+
+/* Feliratok stílusa */
+.auth-form label {
+    text-align: left;
+    font-size: 0.9em;
+    font-weight: bold;
+    color: var(--primary);
+    margin-bottom: -12px;
+    padding-left: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Bemeneti mezők (Input és Textarea) */
+.auth-form input, 
+.auth-form textarea {
+    color: var(--text) !important; /* Fehér szöveg */
+    background-color: var(--muted) !important; /* Sötétkék háttér */
+    border: 2px solid rgba(51, 153, 255, 0.3) !important;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.auth-form input:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 12px var(--accent-shadow);
+}
+
+/* A küldés gomb egyedivé tétele */
+#submitBtn {
+    width: 100%; /* Teljes szélességű gomb */
+    margin-top: 10px;
+    height: 55px;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* Alsó elérhetőségi szöveg */
+.aloldal-container p[style*="color:#b185f5"] {
+    color: var(--primary) !important; /* Lila helyett a téma kékje */
+    margin-top: 25px;
+    font-size: 0.9em;
+    opacity: 0.7;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 20px;
 }
 
 /* ==========================================

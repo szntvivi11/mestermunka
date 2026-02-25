@@ -100,28 +100,41 @@
         .profil-vissza:hover { text-decoration: underline; }
 
         /* MODAL */
-.modal {
-    display: none;
+        .modal {
+    display: none; 
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.85); /* Kicsit sötétebb háttér */
+    background: rgba(0,0,0,0.85);
+    z-index: 10000;
+    backdrop-filter: blur(5px);
+    
+    /* JAVÍTÁS: Nem align-items: center-t használunk, 
+       hanem engedjük a függőleges görgetést a teljes háttéren */
+    overflow-y: auto; 
+    padding: 40px 20px; /* Térköz a tetején és alján, hogy ne ragadjon a széléhez */
+    display: none; /* JS-ből kapja majd a flex-et */
     justify-content: center;
-    align-items: center;
-    z-index: 10000; /* Legyen magasabb, mint a header és a kártya */
-    backdrop-filter: blur(5px); /* Ez menő modern homályosítást ad a háttérnek */
+    align-items: flex-start; /* A tetejétől indul a tartalom */
 }
-        .modal-content {
-            background: var(--card-bg);
-            padding: 32px;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 450px;
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
+
+/* Amikor aktív a modal, ezt kapja JS-ből (vagy manuálisan teszed rá) */
+.modal[style*="display: block"],
+.modal[style*="display: flex"] {
+    display: flex !important;
+}
+
+.modal-content {
+    background: var(--card-bg);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 550px;
+    position: relative;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    margin-bottom: 40px; /* Alsó biztonsági távolság */
+    
+    /* Itt már nem kell max-height és belső overflow, 
+       mert az egész modal háttér görgethető lett */
+}
         .modal-content textarea,
         .modal-content input[type="password"],
         .modal-content input[type="text"],
@@ -151,6 +164,167 @@
             .profil-adatok h2 { font-size: 1.8em; }
             .profil-gomb { padding: 16px; font-size: 1.05em; }
         }
+        /* Tanfolyam modal specifikus igazítás */
+.tanfolyam-modal .modal-body {
+    padding: 20px;
+    overflow-y: visible; /* A tartalom mehet belül */
+}
+
+/* Görgetősáv stílusosabbá tétele (Chrome/Safari/Edge) */
+.modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: #1a1a2e;
+    border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 10px;
+}
+/* Tanfolyam modal specifikus kiegészítés */
+.tanfolyam-modal {
+    overflow: hidden; /* A kerekített sarkok miatt */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Görgetősáv stílusosabbá tétele a teljes modal háttéren */
+.modal::-webkit-scrollbar {
+    width: 10px;
+}
+.modal::-webkit-scrollbar-track {
+    background: #0f111a;
+}
+.modal::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 10px;
+    border: 2px solid #0f111a;
+}
+
+/* Ha fekvő módban van a telefon vagy nagyon kicsi a laptop kijelző */
+@media (max-height: 600px) {
+    .modal-content {
+        max-height: 95vh;
+    }
+    .modal-header {
+        padding: 15px;
+    }
+    .modal-body {
+        gap: 10px;
+    }
+}
+
+        .tanfolyam-modal {
+    max-width: 550px; /* Szélesebb, hogy kényelmesebb legyen */
+    padding: 0; /* A belső paddinget a header/body kapja */
+    overflow: hidden;
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #1a2a4b, #242440);
+    padding: 25px;
+    border-bottom: 2px solid var(--primary);
+    text-align: center;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.5em;
+    color: var(--primary);
+}
+
+.modal-header p {
+    font-size: 0.9em;
+    opacity: 0.7;
+    margin-top: 5px;
+}
+.modal-body {
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: left;
+}
+
+.input-group label {
+    font-size: 0.85em;
+    font-weight: bold;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.input-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+/* Fájlfeltöltő gomb design */
+.file-upload-wrapper {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.custom-file-upload {
+    display: inline-block;
+    padding: 12px 20px;
+    background: rgba(51, 153, 255, 0.1);
+    border: 2px dashed var(--primary);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 100%;
+}
+
+.custom-file-upload:hover {
+    background: rgba(51, 153, 255, 0.2);
+}
+
+#courseImageFile {
+    display: none; /* Elrejtjük az eredetit */
+}
+
+.modal-footer {
+    padding: 20px 25px 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.primary-btn {
+    background: var(--primary) !important;
+    color: white;
+    font-size: 1.1em !important;
+    box-shadow: 0 4px 15px rgba(51, 153, 255, 0.3);
+}
+
+.secondary-btn {
+    background: transparent !important;
+    color: #aaa !important;
+    border: 1px solid #444 !important;
+}
+
+.secondary-btn:hover {
+    color: white !important;
+    border-color: #666 !important;
+}
+
+@media (max-width: 480px) {
+    .input-row {
+        grid-template-columns: 1fr;
+    }
+}
+
     </style>
 
 <header>
@@ -215,18 +389,63 @@
 </div>
 
 <div id="addCourseModal" class="modal">
-    <div class="modal-content">
-        <h2>Tanfolyam hozzáadása</h2>
-        <input type="text" id="courseName" placeholder="Tanfolyam neve">
-        <textarea id="courseDescription" placeholder="Tanfolyam leírása"></textarea>
-        <input type="text" id="courseLocation" placeholder="Helyszín">
-        <input type="email" id="courseEmail" placeholder="Kapcsolattartó email">
-        <input type="number" id="coursePrice" placeholder="Ár (Ft)">
-        <label style="font-size: 0.9em; color: var(--primary);">Tanfolyam borítóképe:</label>
-        <input type="file" id="courseImageFile" accept="image/*"> <input type="text" id="courseOwner" placeholder="Tulajdonos neve">
-        <input type="number" id="courseAgeLimit" placeholder="Korhatár">
-        <button id="saveCourseBtn" style="background: var(--primary); color:white;">Mentés</button>
-        <button class="closeModal" style="background: #444; color:white;">Mégse</button>
+    <div class="modal-content tanfolyam-modal">
+        <div class="modal-header">
+            <h2>🚀 Új tanfolyam hirdetése</h2>
+            <p>Töltsd ki az adatokat a közzétételhez</p>
+        </div>
+
+        <div class="modal-body">
+            <div class="input-group">
+                <label><i class="icon">🏷️</i> Tanfolyam neve</label>
+                <input type="text" id="courseName" placeholder="Pl. Kezdő Webfejlesztés">
+            </div>
+
+            <div class="input-group">
+                <label><i class="icon">📝</i> Leírás</label>
+                <textarea id="courseDescription" rows="3" placeholder="Miről szól a képzés?"></textarea>
+            </div>
+
+            <div class="input-row">
+                <div class="input-group">
+                    <label><i class="icon">📍</i> Helyszín</label>
+                    <input type="text" id="courseLocation" placeholder="Város vagy Online">
+                </div>
+                <div class="input-group">
+                    <label><i class="icon">👤</i> Oktató / Tulaj</label>
+                    <input type="text" id="courseOwner" placeholder="Saját neved">
+                </div>
+            </div>
+
+            <div class="input-row">
+                <div class="input-group">
+                    <label><i class="icon">💰</i> Ár (Ft)</label>
+                    <input type="number" id="coursePrice" placeholder="50000">
+                </div>
+                <div class="input-group">
+                    <label><i class="icon">🔞</i> Korhatár</label>
+                    <input type="number" id="courseAgeLimit" placeholder="Pl. 18">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label><i class="icon">📧</i> Kapcsolattartó email</label>
+                <input type="email" id="courseEmail" placeholder="pelda@email.hu">
+            </div>
+
+            <div class="file-upload-wrapper">
+                <label for="courseImageFile" class="custom-file-upload">
+                    <span>🖼️ Borítókép kiválasztása</span>
+                </label>
+                <input type="file" id="courseImageFile" accept="image/*">
+                <p id="fileNameDisplay" style="font-size: 0.8em; color: var(--primary); margin-top: 5px;"></p>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button id="saveCourseBtn" class="primary-btn">✨ Tanfolyam közzététele</button>
+            <button class="closeModal secondary-btn">Mégse</button>
+        </div>
     </div>
 </div>
 
