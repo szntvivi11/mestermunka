@@ -46,14 +46,19 @@
         }
 
         /* GOMBOK */
-        .btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: 0.3s;
-        }
+        .btn { 
+    padding: 12px 24px; 
+    border: none; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    font-weight: 600; 
+    color: white; 
+    transition: all 0.2s ease; 
+    text-decoration: none; 
+    display: inline-flex;
+    align-items: center;
+    font-size: 14px;
+}
 
         .reply-btn { background: #4CAF50; color: white; margin-right: 5px; }
         .reply-btn:hover { background: #45a049; }
@@ -94,13 +99,41 @@
             margin: 15px 0;
             resize: vertical;
         }
+        .nav-buttons { 
+    margin-bottom: 30px; 
+    display: flex; 
+    gap: 15px; 
+    align-items: center;
+}
+       
+.btn-back { 
+    background: #2a2d3e; 
+    border: 1px solid #444;
+}
+.btn-back:hover { 
+    background: #363a50; 
+    border-color: #666;
+}
+.btn-messages {
+    background: var(--purple);
+    box-shadow: 0 4px 12px rgba(123, 47, 242, 0.3);
+}
+.btn-messages:hover {
+    background: #8a46f5;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(123, 47, 242, 0.4);
+}
+        
+        
+
     </style>
 </head>
 <body>
-
-    <div style="padding: 20px;">
-        <a href="/" style="color: #b185f5; text-decoration: none; font-weight: bold;">← Vissza a Főoldalra</a>
-    </div>
+    <div class="container">
+        <div class="nav-buttons">
+            <a href="/profil" class="btn btn-back">⬅ Vissza a profilhoz</a>
+            <a href="/admin" class="btn btn-messages">📧 Üzenetek megtekintése</a>
+        </div>
 
     <div class="admin-container">
         <h1 style="text-align: center; margin-bottom: 30px;">Beérkezett Üzenetek Kezelése</h1>
@@ -121,7 +154,7 @@
             </table>
         </div>
     </div>
-
+</div>
     <div id="replyModal" class="modal">
         <div class="modal-content">
             <h2 id="modalTitle">Válasz küldése</h2>
