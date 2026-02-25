@@ -17,6 +17,7 @@ app.use("/regisztracio", express.static(path.join(__dirname, "regisztracio")));
 app.use("/kapcsolat", express.static(path.join(__dirname, "kapcsolat")));
 app.use("/tanfolyamok/oldalak", express.static(path.join(__dirname, "Tanfolyamok", "oldalak")));
 app.use('/Tanfolyamok/kepek', express.static(path.join(__dirname, 'Tanfolyamok', 'kepek')));
+app.use('/tanfolyamok/kepek', express.static(path.join(__dirname, 'Tanfolyamok', 'kepek')));
 
 // ===== HTML OLDALAK =====
 app.get("/", (req, res) =>
@@ -56,7 +57,7 @@ app.get("/tanfolyamok/:slug", (req, res) => {
 // ===== ADATBÁZIS =====
 const db = mysql.createConnection({
   host: "localhost",
-  port: 3306,
+  port: 3307,
   user: "root",
   password: "",
   database: "mestermunka"
@@ -230,6 +231,40 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 const uploadCourseImg = multer({ storage: storage }); 
+// Profil adatok lekérdezése adatbázisból
+app.get("/api/profile", async (req, res) => {
+    try {
+        const { id, role } = req.query;
+        
+        if (!id || !role) {
+            return res.status(400).json({ success: false, message: "Hiányzó ID vagy szerepkör" });
+        }
+
+        let sql, params;
+        
+        if (role === 'teacher') {
+            sql = "SELECT ua_id as id, felhasznalonev as nev, gmail as email, profilkep, bemutatkozas FROM user_ado WHERE ua_id = ?";
+            params = [id];
+        } else if (role === 'student') {
+            sql = "SELECT uv_id as id, nev, email, profilkep, bemutatkozas FROM user_vevo WHERE uv_id = ?";
+            params = [id];
+        } else {
+            return res.status(400).json({ success: false, message: "Érvénytelen szerepkör" });
+        }
+
+        const [rows] = await db.promise().query(sql, params);
+        
+        if (rows.length === 0) {
+            return res.status(404).json({ success: false, message: "Felhasználó nem található" });
+        }
+
+        res.json({ success: true, user: rows[0] });
+    } catch (err) {
+        console.error("❌ Profil lekérdezési hiba:", err);
+        res.status(500).json({ success: false, message: "Szerver hiba" });
+    }
+});
+
 // Profil frissítése (Kép és Bio)
 // Használjuk ugyanazt az uploadCourseImg-t, hogy ugyanoda mentse a képet!
 app.post("/api/update-profile", upload.single('profilePicture'), async (req, res) => {
@@ -248,7 +283,7 @@ app.post("/api/update-profile", upload.single('profilePicture'), async (req, res
         const azonositoOszlop = (role === 'teacher') ? 'ua_id' : 'uv_id';
 
         let sql = `UPDATE ${tabla} SET bemutatkozas = ?`;
-        let params = [bemutatkozas];
+        let params = [bemutatkozas || ''];
 
         if (profilkep) {
             sql += ", profilkep = ?";
@@ -257,6 +292,8 @@ app.post("/api/update-profile", upload.single('profilePicture'), async (req, res
 
         sql += ` WHERE ${azonositoOszlop} = ?`;
         params.push(id);
+
+        console.log("SQL:", sql, "Params:", params);
 
         // FONTOS: .promise() hozzáadása, ha sima connectiont használsz!
         await db.promise().query(sql, params);
@@ -475,7 +512,7 @@ app.use((req, res) => {
 
 
 // ===== SERVER START =====
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3003;
 app.listen(PORT, () =>
   console.log(`🚀 Szerver fut: http://localhost:${PORT}`)
 );
