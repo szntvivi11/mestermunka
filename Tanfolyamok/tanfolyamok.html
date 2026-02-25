@@ -8,25 +8,48 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <style>
-    .pagination-btn {
-    background: #7b2ff2; /* A lila színed */
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s;
-}
+    #pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        margin: 40px 0;
+        font-family: sans-serif;
+    }
+.pagination-btn {
+        background: rgba(123, 47, 242, 0.2);
+        border: 1px solid #7b2ff2;
+        color: white;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%; /* Teljesen kerek */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 14px; /* Kisebb nyilak */
+    }
 
 .pagination-btn:disabled {
-    background: #444;
-    cursor: not-allowed;
-    opacity: 0.5;
-}
+        border-color: #444;
+        color: #666;
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
 
-.pagination-btn:hover:not(:disabled) {
-    background: #b185f5;
-}
+    .pagination-btn:hover:not(:disabled) {
+        background: #7b2ff2;
+        box-shadow: 0 0 15px rgba(123, 47, 242, 0.5);
+        transform: translateY(-2px);
+    }
+.page-info {
+        color: #b185f5;
+        font-weight: 600;
+        letter-spacing: 1px;
+        background: rgba(255,255,255,0.05);
+        padding: 5px 15px;
+        border-radius: 20px;}
 </style>
 <body>
     <h1>Üdvözlünk a tanfolyamok oldalán!</h1>
@@ -171,43 +194,40 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 6. Függvény a lapozó gombok (nyilak) kezeléséhez
     function renderPaginationControls() {
-        paginationContainer.innerHTML = '';
-        const totalPages = Math.ceil(filteredCourses.length / coursesPerPage);
+    paginationContainer.innerHTML = '';
+    const totalPages = Math.ceil(filteredCourses.length / coursesPerPage);
 
-        if (totalPages <= 1) return; // Ha elfér 1 oldalon, nem kell nyíl
+    if (totalPages <= 1) return;
 
-        // Balra nyíl
-        const prevBtn = document.createElement('button');
-        prevBtn.innerHTML = '<i class="fa-solid fa-chevron-left"></i>';
-        prevBtn.style.cssText = 'padding: 10px 20px; cursor: pointer; background: #7b2ff2; color: white; border: none; border-radius: 5px;';
-        prevBtn.disabled = currentPage === 1;
-        if (prevBtn.disabled) prevBtn.style.opacity = "0.3";
-        
-        prevBtn.onclick = () => {
-            currentPage--;
-            renderCourses();
-            window.scrollTo(0, 300); // Kicsit feljebb ugrik a kártyákhoz
-        };
+    // Balra nyíl
+    const prevBtn = document.createElement('button');
+    prevBtn.innerHTML = '<i class="fa-solid fa-chevron-left"></i>';
+    prevBtn.className = 'pagination-btn'; // A CSS-ben megadott osztály
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.onclick = () => {
+        currentPage--;
+        renderCourses();
+        document.getElementById('tanfolyamokmain').scrollIntoView({ behavior: 'smooth' });
+    };
 
-        // Oldalszám szöveg
-        const pageInfo = document.createElement('span');
-        pageInfo.textContent = `${currentPage} / ${totalPages}`;
+    // Oldalszám
+    const pageInfo = document.createElement('span');
+    pageInfo.className = 'page-info';
+    pageInfo.textContent = `${currentPage} / ${totalPages}`;
 
-        // Jobbra nyíl
-        const nextBtn = document.createElement('button');
-        nextBtn.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
-        nextBtn.style.cssText = 'padding: 10px 20px; cursor: pointer; background: #7b2ff2; color: white; border: none; border-radius: 5px;';
-        nextBtn.disabled = currentPage === totalPages;
-        if (nextBtn.disabled) nextBtn.style.opacity = "0.3";
+    // Jobbra nyíl
+    const nextBtn = document.createElement('button');
+    nextBtn.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
+    nextBtn.className = 'pagination-btn';
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.onclick = () => {
+        currentPage++;
+        renderCourses();
+        document.getElementById('tanfolyamokmain').scrollIntoView({ behavior: 'smooth' });
+    };
 
-        nextBtn.onclick = () => {
-            currentPage++;
-            renderCourses();
-            window.scrollTo(0, 300);
-        };
-
-        paginationContainer.append(prevBtn, pageInfo, nextBtn);
-    }
+    paginationContainer.append(prevBtn, pageInfo, nextBtn);
+}
 
     // 7. Keresés funkció
     searchInput.addEventListener('input', (e) => {
