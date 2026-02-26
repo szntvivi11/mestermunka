@@ -18,6 +18,7 @@ app.use("/kapcsolat", express.static(path.join(__dirname, "kapcsolat")));
 app.use("/tanfolyamok/oldalak", express.static(path.join(__dirname, "Tanfolyamok", "oldalak")));
 app.use('/Tanfolyamok/kepek', express.static(path.join(__dirname, 'Tanfolyamok', 'kepek')));
 app.use('/tanfolyamok/kepek', express.static(path.join(__dirname, 'Tanfolyamok', 'kepek')));
+app.use (express.static(path.join(__dirname, 'rolunk')));
 
 // ===== HTML OLDALAK =====
 app.get("/", (req, res) =>
@@ -44,6 +45,10 @@ app.get("/profil", (req, res) => {
   res.sendFile(path.join(__dirname, "profil.html"));
 });
 
+app.get("/rolunk", (req, res) => {
+  res.sendFile(path.join(__dirname, "rolunk.html"));
+});
+
 // Dinamikus tanfolyam oldalak
 app.get("/tanfolyamok/:slug", (req, res) => {
   const slug = path.basename(req.params.slug).replace(".html", "");
@@ -57,7 +62,7 @@ app.get("/tanfolyamok/:slug", (req, res) => {
 // ===== ADATBÁZIS =====
 const db = mysql.createConnection({
   host: "localhost",
-  port: 3307,
+  port: 3306,
   user: "root",
   password: '',
   database: "mestermunka"
@@ -70,6 +75,7 @@ db.connect(err => {
   }
   console.log("✅ MySQL kapcsolat létrejött");
 });
+
 
 // =====================================================
 // ================= REGISZTRÁCIÓ =======================
