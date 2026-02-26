@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Adatbázis: `mestermunka`
 --
+CREATE DATABASE IF NOT EXISTS `mestermunka` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci;
+USE `mestermunka`;
 
 -- --------------------------------------------------------
 
