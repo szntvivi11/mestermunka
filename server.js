@@ -314,11 +314,13 @@ app.post("/api/update-profile", upload.single('profilePicture'), async (req, res
 // ===== TANFOLYAMOK API =====
 app.get("/api/kepzesek", async (req, res) => {
   try {
+    // Ez a lekérdezés akkor is működik, ha az adatbázisban 'ár' vagy 'ar' van
     const [courses] = await db.promise().query("SELECT * FROM kepzesek");
+    console.log("Küldött tanfolyamok száma:", courses.length); // Ezt nézd a terminálban!
     res.json(courses);
   } catch (err) {
-    console.error("❌ Hiba a tanfolyamok lekérdezésekor:", err);
-    res.status(500).json({ success: false, message: "Szerver hiba" });
+    console.error("❌ MySQL Hiba a lekéréskor:", err.message);
+    res.status(500).json({ success: false, message: err.message });
   }
 });
 
@@ -330,7 +332,7 @@ app.get("/api/kepzesek", async (req, res) => {
 app.post("/api/courses", uploadCourseImg.single('kep'), async (req, res) => {
   try {
     // Az oszlopnevek pontosan a te CREATE TABLE parancsodból:
-    const { nev, leiras, helyileg, email, o_nev, heves_kortol, ua_ID, ár } = req.body;
+    const { nev, leiras, helyileg, email, o_nev, heves_kortol, ua_ID, ar } = req.body;
     
    if (!req.file) {
     return res.status(400).json({ success: false, message: "Kép feltöltése kötelező!" });
@@ -340,7 +342,7 @@ app.post("/api/courses", uploadCourseImg.single('kep'), async (req, res) => {
 const kepNev = req.file.filename; 
 
 const sql = `INSERT INTO kepzesek 
-             (kep, nev, leiras, helyileg, email, o_nev, heves_kortol, ua_ID, ár) 
+             (kep, nev, leiras, helyileg, email, o_nev, heves_kortol, ua_ID, ar) 
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
 await db.promise().query(sql, [
@@ -352,7 +354,7 @@ await db.promise().query(sql, [
     o_nev,
     parseInt(heves_kortol) || 0,
     parseInt(ua_ID),
-    parseInt(ár) || 0
+    parseInt(ar) || 0
 ])
 
     res.json({ success: true, message: "Tanfolyam sikeresen mentve!" });

@@ -199,7 +199,7 @@ if (saveCourseBtn) {
         formData.append("leiras", document.getElementById("courseDescription").value);
         formData.append("helyileg", document.getElementById("courseLocation").value);
         formData.append("email", document.getElementById("courseEmail").value);
-        formData.append("ár", document.getElementById("coursePrice").value);
+        formData.append("ar", document.getElementById("coursePrice").value);
         formData.append("o_nev", document.getElementById("courseOwner").value);
         formData.append("heves_kortol", document.getElementById("courseAgeLimit").value);
         formData.append("ua_ID", userId); // Ez kell a szervernek!
