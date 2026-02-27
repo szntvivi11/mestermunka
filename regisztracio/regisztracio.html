@@ -48,46 +48,60 @@
 <main style="position: relative; z-index: 3;">
   <div class="aloldal-container">
     <h1>Regisztráció</h1>
-
-    <!-- Választás: Felhasználó / Tanfolyamadó -->
-    <label>
-      <input type="radio" name="role" value="user" checked> Tanuló
-    </label>
-    <label>
-      <input type="radio" name="role" value="teacher"> Oktató
-    </label>
+    <p class="auth-subtitle">Hozd létre a fiókod pár kattintással!</p>
 
     <form class="auth-form" id="register-form">
-      <label for="reg-username">Felhasználónév</label>
-      <input id="reg-username" type="text" required>
+      
+      <div class="role-selection">
+        <span class="role-title">Válaszd ki a szerepköröd:</span>
+        <div class="radio-group">
+          <label class="radio-label">
+            <input type="radio" name="role" value="user" checked>
+            <span class="custom-radio">Tanuló</span>
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="role" value="teacher">
+            <span class="custom-radio">Oktató</span>
+          </label>
+        </div>
+      </div>
 
-      <label for="reg-email">Email</label>
-      <input id="reg-email" type="email" required>
+      <div class="input-group">
+        <label for="reg-username">Felhasználónév</label>
+        <input id="reg-username" type="text" placeholder="Példa: Janika99" required>
+      </div>
 
-      <label for="reg-password">Jelszó</label>
-      <input id="reg-password" type="password" required>
+      <div class="input-group">
+        <label for="reg-email">Email cím</label>
+        <input id="reg-email" type="email" placeholder="pelda@email.hu" required>
+      </div>
 
-      <!-- Tanfolyamadó mezők -->
- <div class="teacher-fields">
-  <label for="teacher-course">Végzettség</label>
-  <select id="teacher-course">
-    <option value="">-- Kérlek, válassz! --</option>
-    <option value="erettsegi">Érettségi</option>
-    <option value="bsc">Bachelor (BSc/BA)</option>
-    <option value="msc">Master (MSc/MA)</option>
-    <option value="phd">Doktori (PhD)</option>
-    <option value="egyeb">Egyéb</option>
-  </select>
-</div>
+      <div class="input-group">
+        <label for="reg-password">Jelszó</label>
+        <input id="reg-password" type="password" placeholder="••••••••" required>
+      </div>
 
-      <button type="submit">Regisztráció</button>
+      <div class="teacher-fields input-group" id="teacher-section">
+        <label for="teacher-course">Legmagasabb végzettség</label>
+        <select id="teacher-course" class="auth-form-input">
+          <option value="">-- Kérlek, válassz! --</option>
+          <option value="msc">8 általános</option>
+          <option value="erettsegi">Érettségi</option>
+          <option value="bsc">Szakközép</option>
+          <option value="diploma">Diploma</option>
+          <option value="phd">Doktori (PhD)</option>
+          <option value="egyeb">Egyéb</option>
+        </select>
+      </div>
+
+      <button type="submit" class="submit-btn" id="submitBtn">Regisztráció</button>
     </form>
 
     <div id="message" class="message"></div>
 
-    <p style="margin-top:20px;">
-      Van már fiókod?
-      <a href="/bejelentkezes">Jelentkezz be</a>
+    <p class="auth-footer-text">
+      Van már fiókod? 
+      <a href="/bejelentkezes">Jelentkezz be itt!</a>
     </p>
   </div>
 </main>

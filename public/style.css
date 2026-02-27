@@ -215,10 +215,10 @@ button:active,
 .auth-form {
     display: flex;               
     flex-direction: column;      
-    gap: 14px;                   
+    gap: 10px !important; /* Kisebb köz az elemek között */
+    padding-top: 0 !important;                  
     max-width: 340px;            
     margin: 0 auto;
-    padding-top: 18px;
 }
 
 .auth-form label {
@@ -372,70 +372,209 @@ hr {
    ========================================== */
 
 /* A tartály, ami a Kapcsolat űrlapot fogja közre */
+/* Oldal szintű igazítás */
+.auth-page {
+    position: relative;
+    z-index: 3;
+    margin-top: -40px; /* Felhúzzuk a hullám alá */
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* A központi kártya modernizálása */
 .aloldal-container {
-    max-width: 450px; /* Kompaktabb megjelenés */
-    margin: 60px auto; /* Több hely a hullám alatt */
-    background: var(--surface); /* A meglévő sötétkék felületed */
-    border-radius: 20px;
-    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4), 0 0 20px var(--accent-shadow);
-    padding: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    transition: transform 0.3s ease;
-}
-
-/* Kicsi lebegő hatás, ha a doboz fölé mész */
-.aloldal-container:hover {
-    transform: translateY(-5px);
-}
-
-.aloldal-container h1 {
-    margin-top: 0;
-    margin-bottom: 30px;
-    font-size: 2.2em;
-    letter-spacing: 1px;
-    /* Színátmenet a címen, hogy passzoljon a kék témához */
-    background: linear-gradient(135deg, var(--primary), #ffffff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-/* Űrlap elrendezése */
-.auth-form {
+    background: var(--surface) !important;
+    border: 1px solid rgba(51, 153, 255, 0.2);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 15px rgba(51, 153, 255, 0.1);
+    max-width: 400px;
+    width: 100%;
+    padding: 25px 30px !important;
+    border-radius: 24px;
+    backdrop-filter: blur(10px);
+    margin-left: auto !important;
+    margin-right: auto !important;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    max-width: 100%; /* Kitölti a konténert */
+    align-items: center; /* Ez rakja középre a benne lévő dolgokat */
+    text-align: center;
+}
+.aloldal-container h1 {
+    margin-top: 0;
+    margin-bottom: 5px;
 }
 
-/* Feliratok stílusa */
+.auth-subtitle {
+    text-align: center;
+    opacity: 0.7;
+    margin-bottom: 15px !important;
+    font-size: 0.95rem;
+}
+
+/* Input csoportok */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 5px !important;
+}
+
 .auth-form label {
-    text-align: left;
-    font-size: 0.9em;
-    font-weight: bold;
-    color: var(--primary);
-    margin-bottom: -12px;
-    padding-left: 5px;
-    text-transform: uppercase;
+    font-size: 0.85rem;
+    color: var(--primary) !important;
     letter-spacing: 0.5px;
+    margin-bottom: 2px !important;
 }
 
-/* Bemeneti mezők (Input és Textarea) */
-.auth-form input, 
-.auth-form textarea {
-    color: var(--text) !important; /* Fehér szöveg */
-    background-color: var(--muted) !important; /* Sötétkék háttér */
-    border: 2px solid rgba(51, 153, 255, 0.3) !important;
-    padding: 14px;
-    border-radius: 12px;
-    font-size: 16px;
-    width: 100%;
-    box-sizing: border-box;
-    transition: all 0.3s ease;
+.auth-form input {
+    background: rgba(255, 255, 255, 0.05) !important; /* Sötét maradjon */
+    color: white !important; /* A szöveg legyen fehér! */
+    border: 1.5px solid rgba(51, 153, 255, 0.3) !important;
+    padding: 10px 15px !important;
+    border-radius: 12px !important;
+    transition: all 0.3s ease !important;
+}
+#submitBtn, .submit-btn {
+    margin-top: 5px !important;
+}
+
+.auth-footer-text {
+    margin-top: 15px !important; /* 25px helyett kevesebb */
 }
 
 .auth-form input:focus {
+    background: rgba(51, 153, 255, 0.1) !important;
     border-color: var(--primary) !important;
-    box-shadow: 0 0 12px var(--accent-shadow);
+    box-shadow: 0 0 15px rgba(51, 153, 255, 0.2);
+}
+
+/* Szerepkör választó (Radio gombok) */
+.role-selection {
+    margin-bottom: 25px;
+}
+
+.role-title {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--primary);
+    margin-bottom: 12px;
+    font-weight: bold;
+}
+
+.radio-group {
+    display: flex;
+    gap: 10px;
+}
+
+.radio-label {
+    flex: 1;
+    cursor: pointer;
+}
+
+.radio-label input {
+    display: none; /* Elrejtjük a gyári kört */
+}
+
+.custom-radio {
+    display: block;
+    text-align: center;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(51, 153, 255, 0.3);
+    border-radius: 10px;
+    font-size: 0.9rem;
+    transition: 0.3s;
+}
+
+.radio-label input:checked + .custom-radio {
+    background: var(--primary);
+    color: #000;
+    font-weight: bold;
+    box-shadow: 0 0 15px rgba(51, 153, 255, 0.4);
+}
+
+/* Beküldő gomb */
+.submit-btn {
+    width: 100% !important;
+    height: 55px !important;
+    font-weight: 800 !important;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-top: 10px;
+}
+
+.auth-footer-text {
+    margin-top: 25px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.auth-footer-text a {
+    color: var(--primary);
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.auth-footer-text a:hover {
+    text-decoration: underline;
+}
+/* ==========================================
+   BEJELENTKEZÉS ÉS ŰRLAPOK VÉGLEGES JAVÍTÁSA
+   ========================================== */
+
+/* Az összes beviteli mező egységesítése */
+.auth-form input, 
+.auth-form textarea,
+#courseSearch {
+    background-color: rgba(15, 17, 26, 0.95) !important; /* Nagyon sötét kék */
+    color: #ffffff !important;                         /* Garantáltan fehér szöveg */
+    border: 2px solid rgba(51, 153, 255, 0.4) !important; /* Finom kék keret */
+    padding: 14px 18px !important;
+    border-radius: 12px !important;
+    font-size: 16px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Fókusz állapot (amikor beleklikkelsz) */
+.auth-form input:focus, 
+.auth-form textarea:focus,
+#courseSearch:focus {
+    outline: none !important;
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 15px rgba(51, 153, 255, 0.4) !important;
+    background-color: #1a1f2b !important;
+}
+
+/* Feliratok (E-mail, Jelszó) javítása */
+.auth-form label {
+    color: var(--primary) !important;
+    font-weight: bold !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.85rem;
+    margin-bottom: 5px !important;
+    display: block !important;
+    text-shadow: none !important; /* Tiszta megjelenés */
+}
+
+/* Placeholder (minta szöveg) színe */
+.auth-form input::placeholder {
+    color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Regisztrációs link az alján */
+.auth-footer-text a {
+    color: var(--primary);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: 0.3s;
+}
+
+.auth-footer-text a:hover {
+    border-bottom: 1px solid var(--primary);
+    opacity: 0.8;
 }
 
 /* A küldés gomb egyedivé tétele */

@@ -32,31 +32,41 @@
 </header>
 
 <!-- ===== FŐ TARTALOM ===== -->
-<main style="position: relative; z-index: 3; margin-top: 40px;">
+<main class="auth-page">
     <div class="aloldal-container">
-        <h1>Bejelentkezés</h1>
+        <h1>Üdvözlünk újra!</h1>
+        <p class="auth-subtitle">Kérjük, jelentkezz be a folytatáshoz.</p>
 
         <form class="auth-form" id="login-form" novalidate>
-            <label for="login-username">E-mail</label>
-            <input id="login-username" name="username" type="username" autocomplete="username" required>
+            <div class="input-group">
+                <label for="login-username">E-mail cím</label>
+                <input id="login-username" name="username" type="email" placeholder="pelda@email.hu" required>
+            </div>
 
-            <label for="login-password">Jelszó</label>
-            <input id="login-password" name="password" type="password" autocomplete="current-password" required>
+            <div class="input-group">
+                <label for="login-password">Jelszó</label>
+                <input id="login-password" name="password" type="password" placeholder="••••••••" required>
+            </div>
 
-            <fieldset style="border:0; padding:0; margin:10px 0;">
-                <legend style="font-size:14px;">Szerep (opcionális)</legend>
-                <label id="student"><input type="radio" name="role" value="student"> Tanuló</label>
-                <label id="Tanar"><input type="radio" name="role" value="teacher"> Oktató</label>
-             <!-- <label id="Admin"><input type="radio" name="role" value="admin"> Admin</label>-->
-            </fieldset>
+            <div class="role-selection">
+                <span class="role-title">Szerepkör kiválasztása</span>
+                <div class="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="role" value="student" checked>
+                        <span class="custom-radio">Tanuló</span>
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="role" value="teacher">
+                        <span class="custom-radio">Oktató</span>
+                    </label>
+                </div>
+            </div>
 
-            
-
-            <button type="submit">Bejelentkezés</button>
+            <button type="submit" class="submit-btn">Bejelentkezés</button>
         </form>
 
-        <p style="text-align:center; margin-top:14px;">
-            Nincs fiókod? <a href="/regisztracio">Regisztrálj itt!</a>
+        <p class="auth-footer-text">
+            Nincs még fiókod? <a href="/regisztracio">Regisztrálj itt!</a>
         </p>
     </div>
 </main>
