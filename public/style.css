@@ -524,29 +524,30 @@ hr {
 
 /* Az összes beviteli mező egységesítése */
 .auth-form input, 
-.auth-form textarea,
+.auth-form textarea, 
+.auth-form select,
 #courseSearch {
-    background-color: rgba(15, 17, 26, 0.95) !important; /* Nagyon sötét kék */
-    color: #ffffff !important;                         /* Garantáltan fehér szöveg */
-    border: 2px solid rgba(51, 153, 255, 0.4) !important; /* Finom kék keret */
-    padding: 14px 18px !important;
+    background-color: rgba(15, 17, 26, 0.95) !important; /* Sötétkék alap */
+    color: #ffffff !important;                         /* Fehér írás */
+    border: 2px solid rgba(51, 153, 255, 0.4) !important; /* Halvány kék keret */
+    padding: 12px 15px !important;
     border-radius: 12px !important;
-    font-size: 16px !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
     transition: all 0.3s ease !important;
 }
 
-/* Fókusz állapot (amikor beleklikkelsz) */
+/* Amikor rákattintasz (fókuszba kerül) */
 .auth-form input:focus, 
-.auth-form textarea:focus,
-#courseSearch:focus {
-    outline: none !important;
-    border-color: var(--primary) !important;
+.auth-form textarea:focus, 
+.auth-form select:focus {
+    background-color: #1a1f2b !important;              /* Kicsit világosabb sötétkék */
+    border-color: var(--primary) !important;           /* Erős kék keret */
     box-shadow: 0 0 15px rgba(51, 153, 255, 0.4) !important;
-    background-color: #1a1f2b !important;
+    outline: none !important;
 }
-
+.auth-form select option {
+    background-color: #1a1f2b;            /* Sötét háttér a listának */
+    color: #ffffff;                       /* Fehér szöveg a listában */
+}
 /* Feliratok (E-mail, Jelszó) javítása */
 .auth-form label {
     color: var(--primary) !important;
@@ -889,30 +890,14 @@ a {
        /* Itt javítjuk ki az írás színét és a hátteret */
         .auth-form input, 
         .auth-form textarea {
-            color: #000000 !important; /* Kényszerítjük a fekete szöveget */
-            background-color: #f0f0f0 !important; /* Világosszürke háttér a mezőknek */
+            color: #58ccea !important; /* Kényszerítjük a fekete szöveget */
+            background-color: #2f2b2b !important; /* Világosszürke háttér a mezőknek */
             border: 2px solid #b185f5;
             padding: 12px;
             font-size: 16px;
             width: 100%;
             box-sizing: border-box; /* Hogy ne lógjon ki a széleken */
             margin-bottom: 15px;
-        }
-
-        /* Ha inkább sötét hátteret szeretnél fehér írással a mezőkbe is: */
-        /*
-        .auth-form input, .auth-form textarea {
-            color: #ffffff !important;
-            background-color: #2a2a5a !important;
-            border: 1px solid #7b2ff2;
-        }
-        */
-
-        .aloldal-container {
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
 
 
