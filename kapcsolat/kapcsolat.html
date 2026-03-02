@@ -10,6 +10,11 @@
 <body>
     
    <header id="fejlec">
+    <div class="logo-container">
+        <a href="/">
+            <img src="../Tanfolyamok/kepek/logooo.png" alt="Logo" class="header-logo">
+        </a>
+    </div>
     <div class="header-wave-container">
         <svg class="wave-svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
             <defs>
@@ -34,25 +39,39 @@
     </div>
 </header>
 
-    <main>
-        <div class="aloldal-container">
-            <h1>Kapcsolat</h1>
-            <form id="contactForm" class="auth-form" style="max-width:400px; display: flex; flex-direction: column;">
-                <label for="kapcsolat-nev">Név:</label>
-                <input id="kapcsolat-nev" type="text" placeholder="Teljes neved" required>
-                
-                <label for="kapcsolat-email">Email:</label>
+<main style="position: relative; z-index: 3;">
+    <div class="aloldal-container">
+        <h1>Kapcsolat</h1>
+        <p class="auth-subtitle">Kérdésed van? Írj nekünk bátran!</p>
+
+        <form id="contactForm" class="auth-form">
+            
+            <div class="input-group">
+                <label for="kapcsolat-nev">Teljes név</label>
+                <input id="kapcsolat-nev" type="text" placeholder="Példa János" required>
+            </div>
+
+            <div class="input-group">
+                <label for="kapcsolat-email">Email cím</label>
                 <input id="kapcsolat-email" type="email" placeholder="email@pelda.hu" required>
-                
-                <label for="kapcsolat-uzenet">Üzenet:</label>
+            </div>
+
+            <div class="input-group">
+                <label for="kapcsolat-uzenet">Üzenet</label>
                 <textarea id="kapcsolat-uzenet" rows="5" placeholder="Miben segíthetünk?" required></textarea>
-                
-                <button type="submit" id="submitBtn" style="padding: 12px; background: #7b2ff2; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">Küldés</button>
-            </form>
-            <p id="responseMsg" style="text-align:center; margin-top:15px; font-weight:bold;"></p>
-            <p style="text-align:center; margin-top:18px; color:#b185f5;">Elérhetőség: info@tanfolyamok.hu</p>
-        </div>
-    </main>
+            </div>
+
+            <button type="submit" id="submitBtn" class="submit-btn">Üzenet küldése</button>
+        </form>
+
+        <p id="responseMsg" style="text-align:center; margin-top:15px; font-weight:bold;"></p>
+        
+        <p class="auth-footer-text" style="opacity: 0.7; font-size: 0.9em;">
+            Közvetlen elérhetőség: <br>
+            <a href="mailto:info@tanfolyamok.hu">info@tanfolyamok.hu</a>
+        </p>
+    </div>
+</main>
 
     <footer id="footer" style="margin-top: 50px;">
         <div class="footer-container">

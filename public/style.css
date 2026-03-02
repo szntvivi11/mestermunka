@@ -25,6 +25,39 @@
     --nav-bg: rgba(102, 179, 255, 0.15); /* átlátszó nav */
     --nav-text: #ffffff;         /* nav szöveg fehér marad */
 }
+/*LOGOOO*/
+/* Logó konténer elhelyezése */
+.logo-container {
+    position: absolute;
+    top: -2px;   /* Távolság a tetejétől */
+    left: 20px;  /* Távolság a bal szélétől */
+    z-index: 100; /* Hogy a hullám felett legyen */
+}
+
+/* Logó méretezése */
+.header-logo {
+    height: 130px; /* Ezt állítsd be a logód arányaihoz */
+    width: auto;
+    transition: transform 0.3s ease;
+    display: block;
+    filter: drop-shadow(0 4px 12px rgba(51,153,255,0.5)); /* Kék árnyék a logón */
+    transition: transform 0.3s ease, filter 0.3s ease; /* Simább átmenet a hover effektushoz */
+}
+
+.header-logo:hover {
+    transform: scale(1.05); /* Kicsi nagyítás, ha rásimítasz */
+}
+
+/* Mobilon érdemes visszavenni a méretből, hogy ne takarja el a menüt */
+@media (max-width: 768px) {
+    .header-logo {
+        height: 60px;
+    }
+}
+
+
+
+
 /* ================= FEJLÉC ÉS HULLÁM ================= */
 #fejlec {
     position: relative;
