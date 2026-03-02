@@ -62,7 +62,7 @@ app.get("/tanfolyamok/:slug", (req, res) => {
 // ===== ADATBÁZIS =====
 const db = mysql.createConnection({
   host: "localhost",
-  port: 3306,
+  port: 3307,
   user: "root",
   password: '',
   database: "mestermunka"

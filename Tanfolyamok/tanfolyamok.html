@@ -73,7 +73,7 @@
             <a id="nav-regisztracio" href="/regisztracio">Regisztráció</a>
             <a id="nav-kapcsolat" href="/kapcsolat">Kapcsolat</a>
             <a id="nav-rolunk" href="/rolunk">Rólunk</a>
-             <a id="nav-profil" href="/profil">Profil</a>
+            <a id="nav-profil" href="/profil">Profil</a>
         </nav>
     </div>
 </header>
@@ -226,6 +226,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     paginationContainer.append(prevBtn, pageInfo, nextBtn);
 }
+
+// User állapot kezelése
+const profil = JSON.parse(localStorage.getItem('user')) || null;
+        if (!profil) {
+            const navProfil = document.getElementById('nav-profil');
+            if(navProfil) navProfil.style.display = 'none';
+        } else {
+            const loginNav = document.getElementById('nav-bejelentkezes');
+            const registerNav = document.getElementById('nav-regisztracio');
+            if (loginNav) loginNav.style.display = 'none';
+            if (registerNav) registerNav.style.display = 'none';
+        }
 
     // 7. Keresés funkció
     searchInput.addEventListener('input', (e) => {
