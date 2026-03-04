@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1:3307
--- Létrehozás ideje: 2026. Már 04. 12:10
+-- Létrehozás ideje: 2026. Már 04. 12:51
 -- Kiszolgáló verziója: 10.4.28-MariaDB
 -- PHP verzió: 8.2.4
 
@@ -20,9 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Adatbázis: `mestermunka`
 --
-CREATE DATABASE IF NOT EXISTS `mestermunka` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci;
-USE `mestermunka`;
--- --------------------
+
 -- --------------------------------------------------------
 
 --
@@ -98,7 +96,6 @@ INSERT INTO `kepzesek` (`id`, `kep`, `nev`, `leiras`, `helyileg`, `email`, `o_ne
 (40, 'haladoszemoldok.jpg', 'Szemöldök Laminálás Haladó', 'Haladó szemöldök laminálás és formázás. Időtartam: 2 hét, heti 2 alkalom. Tananyag: haladó formázási technikák, festés, arcelemzés, vendégkezelés. Tanúsítvány biztosított.', 'Budapest', 'info@szepseg.hu', 'Kovács Dóra', 18, NULL, NULL, 45000),
 (41, 'gellakhalado.jpg', 'Géllakk Haladó Tanfolyam', 'Komplex minták és díszítések géllakkal. Időtartam: 3 hét, heti 2 alkalom. Tananyag: haladó díszítések, megerősítés, trend technikák, anyagismeret. Gyakorlati oktatás.', 'Budapest', 'info@szepseg.hu', 'Nagy Eszter', 18, NULL, NULL, 55000),
 (42, 'barber.jpg', 'Barber / Férfi Fodrász Tanfolyam', 'Borotválás, férfi hajvágás és styling. Időtartam: 6 hét, heti 2 alkalom. Tananyag: klasszikus és modern férfi frizurák, szakállápolás, borotválási technikák, higiénia. Záróvizsga.', 'Budapest', 'info@szepseg.hu', 'Kovács Péter', 18, NULL, NULL, 135000),
-(43, 'busniess.jpg', 'Szalonindítás Alapok', 'Szépségipari vállalkozás indítása online képzés. Időtartam: 3 hét, heti 2 élő online óra. Tananyag: üzleti terv, marketing, árképzés, jogi alapok, vendégszerzés.', 'Online', 'info@szepseg.hu', 'Vincze Péter', 18, NULL, NULL, 30000),
 (44, 'asztalossjpg.jpg', 'Asztalos Mesterkurzus', 'Alap- és haladó asztalos technikák. Időtartam: 10 hét, heti 2 gyakorlati nap. Tananyag: faanyagok, kézi és gépi megmunkálás, kötéselemek, felületkezelés. Tanúsítvány.', 'Budapest, Barkács utca 4.', 'info@asztalos.hu', 'Kovács László', 18, NULL, NULL, 250000),
 (45, 'autoszzerelo.jpg', 'Autószerelő Alapok', 'Gépjárművek karbantartása és javítása. Időtartam: 12 hét, heti 2 alkalom. Tananyag: motor alapok, fékrendszer, diagnosztika, biztonságos munkavégzés. Gyakorlati vizsga.', 'Győr, Szerviz út 12.', 'info@autoszerelo.hu', 'Nagy István', 17, NULL, NULL, 320000),
 (46, 'cukrasz.jpg', 'Cukrász Tanfolyam', 'Torták, sütemények és desszertek készítése online. Időtartam: 8 hét, heti 2 élő óra. Tananyag: alaptechnikák, krémek, díszítés, tálalás, higiénia.', 'Online', 'info@cukrasz.hu', 'Tóth Anna', 16, NULL, NULL, 180000),
@@ -124,9 +121,7 @@ INSERT INTO `kepzesek` (`id`, `kep`, `nev`, `leiras`, `helyileg`, `email`, `o_ne
 (116, 'ingatlanos.png', 'Ingatlanvagyon Értékelő és Közvetítő', 'Államilag elismert szakképesítés. Időtartam: 4 hónap, heti 2–3 alkalom online. Tananyag: ingatlanpiac, értékelés, riportkészítés, jogi alapismeretek. Tanúsítvány a végén.', 'Online', 'info@tanfolyam.hu', 'Tanfolyam.hu', 18, NULL, NULL, 139000),
 (117, 'Ingatlankezelő.png\r\n', 'Ingatlankezelő Szakképesítés', 'Ingatlankezelő képzés online vagy kontakt formában. Időtartam: 3 hónap, heti 2 alkalom. Tananyag: ingatlan adminisztráció, társasházkezelés, jogi alapok. Tanúsítvány a végén.', 'Több város', 'info@tanfolyam.hu', 'Tanfolyam.hu', 18, NULL, NULL, 79000),
 (118, 'dajka.png', 'Dajka Szakképesítés', 'Dajka (gyermekgondozó) képzés. Időtartam: 8–10 hét, heti online és kontakt órák. Tananyag: gyermekpszichológia, higiénia, elsősegély, gondozás. Tanúsítvány a végén.', 'Több város', 'info@tanfolyam.hu', 'Tanfolyam.hu', 16, NULL, NULL, 65000),
-(123, 'villanyszerelo.png', 'Villanyszerelő Alap', 'Elektromos rendszerek telepítése és karbantartás alapok. Időtartam: 4 hét, heti 2 alkalom.', 'Szeged', 'info@tanfolyam.hu', 'Tanfolyam.hu', 18, NULL, NULL, 240000),
-(126, 'szaloninditas.png\r\n', 'Szalonindítás Alapok', 'Szépségipari vállalkozás indítása. Időtartam: 2 hét, online vagy kontakt. Tananyag: marketing, ügyfélkezelés, pénzügy.', 'Online', 'info@tanfolyam.hu', 'Tanfolyam.hu', 18, NULL, NULL, 30000),
-(127, 'asztalos.png', 'Asztalos Mesterkurzus', 'Alap- és haladó asztalos technikák. Időtartam: 6 hét, gyakorlati órák. Tananyag: fa- és fémmegmunkálás, bútor készítés.', 'Budapest', 'info@tanfolyam.hu', 'Tanfolyam.hu', 18, NULL, NULL, 250000);
+(126, 'szaloninditas.png\r\n', 'Szalonindítás Alapok', 'Szépségipari vállalkozás indítása. Időtartam: 2 hét, online vagy kontakt. Tananyag: marketing, ügyfélkezelés, pénzügy.', 'Online', 'info@tanfolyam.hu', 'Tanfolyam.hu', 18, NULL, NULL, 30000);
 
 -- --------------------------------------------------------
 
