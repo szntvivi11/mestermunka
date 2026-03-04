@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Gép: 127.0.0.1
--- Létrehozás ideje: 2026. Feb 25. 19:16
--- Kiszolgáló verziója: 10.4.32-MariaDB
--- PHP verzió: 8.0.30
+-- Gép: 127.0.0.1:3307
+-- Létrehozás ideje: 2026. Már 04. 12:06
+-- Kiszolgáló verziója: 10.4.28-MariaDB
+-- PHP verzió: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Adatbázis: `mestermunka`
 --
-CREATE DATABASE IF NOT EXISTS `mestermunka` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci;
-USE `mestermunka`;
 
 -- --------------------------------------------------------
 
@@ -75,14 +73,14 @@ CREATE TABLE `kepzesek` (
   `heves_kortol` int(3) DEFAULT NULL,
   `uv_ID` int(11) DEFAULT NULL,
   `ua_ID` int(11) DEFAULT NULL,
-  `ár` int(9) NOT NULL
+  `ar` int(9) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
 -- A tábla adatainak kiíratása `kepzesek`
 --
 
-INSERT INTO `kepzesek` (`id`, `kep`, `nev`, `leiras`, `helyileg`, `email`, `o_nev`, `heves_kortol`, `uv_ID`, `ua_ID`, `ár`) VALUES
+INSERT INTO `kepzesek` (`id`, `kep`, `nev`, `leiras`, `helyileg`, `email`, `o_nev`, `heves_kortol`, `uv_ID`, `ua_ID`, `ar`) VALUES
 (27, 'körms.jpg', 'Körmös Tanfolyam', 'Műköröm építés alap és haladó technikákkal. Időtartam: 6 hét, heti 2 alkalommal 4 órában. Kezdés: minden hónap első hétfőjén. Tananyag: higiénia, előkészítés, zselés és porcelán építés, reszelési technikák, díszítések, töltés, vendégkezelés. Gyakorlati oktatás modelleken. A képzés végén tanúsítvány és gyakorlati vizsga.', 'Budapest', 'info@szepseg.hu', 'Kiss Anna', 16, NULL, NULL, 85000),
 (28, 'gellakk.jpg', 'Géllakk Tanfolyam', 'Tartós géllakk technikák kezdőknek. Időtartam: 3 hét, heti 2 alkalom 3 órában. Kezdés: folyamatos. Tananyag: köröm előkészítés, alapok, színfelvitel, megerősített géllakk, eltávolítás, alap díszítések, eszközhasználat. Gyakorlat modelleken, tanúsítvány a végén.', 'Budapest', 'info@szepseg.hu', 'Nagy Eszter', 16, NULL, NULL, 45000),
 (29, 'muszepillaepites.jpg', 'Műszempilla Építő Tanfolyam', '1D–2D szempilla építés gyakorlattal. Időtartam: 5 hét, heti 2 alkalom 4 órában. Tananyag: anatómia, ragasztók és anyagok, klasszikus építés, töltés, eltávolítás, higiénia, vendégkonzultáció. Minősítő vizsga és tanúsítvány.', 'Budapest', 'info@szepseg.hu', 'Szabó Lilla', 18, NULL, NULL, 95000),
