@@ -260,12 +260,18 @@ app.get("/api/profile", async (req, res) => {
         }
 
         const [rows] = await db.promise().query(sql, params);
-        
+    
         if (rows.length === 0) {
             return res.status(404).json({ success: false, message: "Felhasználó nem található" });
         }
-
-        res.json({ success: true, user: rows[0] });
+    
+        const user = rows[0];
+        // Ha van profilkép, hozzáadjuk az elérést
+        if (user.profilkep) {
+            user.profilkep = `/Tanfolyamok/kepek/${user.profilkep}`;
+        }
+    
+        res.json({ success: true, user: user });
     } catch (err) {
         console.error("❌ Profil lekérdezési hiba:", err);
         res.status(500).json({ success: false, message: "Szerver hiba" });

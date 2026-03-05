@@ -59,6 +59,12 @@
             <img src="./Tanfolyamok/kepek/logooo.png" alt="Logo" class="header-logo">
         </a>
     </div>
+
+    <a href="/profil" class="mini-profil-link" id="miniProfilLink" style="display: none;">
+        <img id="headerProfileImage" src="https://via.placeholder.com/50/242440/3399ff?text=P" alt="Profil">
+    </a>
+
+
     <div class="header-wave-container">
         <svg class="wave-svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
             <defs>
@@ -78,7 +84,6 @@
             <a id="nav-regisztracio" href="/regisztracio">Regisztráció</a>
             <a id="nav-kapcsolat" href="/kapcsolat">Kapcsolat</a>
             <a id="nav-rolunk" href="/rolunk">Rólunk</a>
-            <a id="nav-profil" href="/profil">Profil</a>
         </nav>
     </div>
 </header>
@@ -122,6 +127,50 @@
 </footer>
 
 <script>
+
+async function updateHeaderProfile() {
+            const storedUser = JSON.parse(localStorage.getItem('user'));
+            
+            if (storedUser && storedUser.id) {
+                try {
+                    const response = await fetch(`/api/profile?id=${storedUser.id}&role=${storedUser.role}`);
+                    const data = await response.json();
+        
+                    if (data.success) {
+                        const user = data.user;
+                        const miniProfilLink = document.getElementById('miniProfilLink');
+                        const headerImg = document.getElementById('headerProfileImage');
+        
+                        if (miniProfilLink) miniProfilLink.style.display = 'block';
+        
+                        if (user.profilkep && headerImg) {
+                            // OKOS ÚTVONAL KEZELÉS:
+                            // Ha a szerverről már a teljes útvonal jön (/Tanfolyamok/...), azt használjuk.
+                            // Ha csak a fájlnév (pl. 1700.jpg), akkor elé rakjuk az útvonalat.
+                            const finalSrc = user.profilkep.startsWith('/') 
+                                ? user.profilkep 
+                                : `/Tanfolyamok/kepek/${user.profilkep}`;
+                            
+                            headerImg.src = finalSrc;
+                        }
+        
+                        // Navigációs gombok elrejtése
+                        const loginBtn = document.getElementById('nav-bejelentkezes');
+                        const regBtn = document.getElementById('nav-regisztracio');
+                        if (loginBtn) loginBtn.style.display = 'none';
+                        if (regBtn) regBtn.style.display = 'none';
+                        
+                        const profilNav = document.getElementById('nav-profil');
+                        if (profilNav) profilNav.style.display = 'inline-block';
+                    }
+                } catch (err) {
+                    console.error("Hiba a fejléc profil frissítésekor:", err);
+                }
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', updateHeaderProfile);
+
 document.addEventListener('DOMContentLoaded', async () => {
     // 1. Alapvető referenciák
     const container = document.getElementById('tanfolyamokcards');

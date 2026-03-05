@@ -1,155 +1,182 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-<meta charset="UTF-8">
-<title>Profil</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="/style.css">
-<style>
-    :root {
-        --primary: #3399ff;
-        --primary-hover: #1a78d1;
-        --danger: #ff4d4d;
-        --danger-hover: #e63939;
-        --surface: #1a1a2e;
-        --card-bg: #242440;
-        --text: #ffffff;
-    }
+    <meta charset="UTF-8">
+    <title>Profil</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        :root {
+            --primary: #3399ff;
+            --primary-hover: #1a78d1;
+            --danger: #ff4d4d;
+            --danger-hover: #e63939;
+            --surface: #0f111a;
+            --card-bg: #1a1a2e;
+            --text: #ffffff;
+        }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(180deg, #0f111a, #1a2a4b);
-        color: var(--text);
-        min-height: 100vh;
-    }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(180deg, #0f111a, #1a2a4b);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-    header { position: relative; width: 100%; height: 240px; }
-    header svg { position: absolute; top: 0; left: 0; width: 100%; height: 220px; z-index: 1; }
+        /* --- HÁTTÉR ANIMÁCIÓ --- */
+        header { position: relative; width: 100%; height: 240px; }
+        header svg { position: absolute; top: 0; left: 0; width: 100%; height: 220px; z-index: 1; }
 
-    .profil-card {
-        background: var(--card-bg);
-        border-radius: 24px;
-        padding: 40px 30px;
-        width: 95%;
-        max-width: 450px;
-        margin: 0 auto;
-        position: relative;
-        top: -100px;
-        box-shadow: 0 15px 50px rgba(0,0,0,0.5);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        border: 1px solid rgba(255,255,255,0.05);
-        z-index: 2;
-    }
+        .bg-logo-animation {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70vh;
+            opacity: 0.15;
+            z-index: -1;
+            pointer-events: none;
+            mix-blend-mode: screen; 
+            animation: float 25s linear infinite;
+        }
 
-    .profil-avatar {
-        width: 160px;
-        height: 160px;
-        margin-bottom: 20px;
-        border-radius: 50%;
-        overflow: hidden;
-        box-shadow: 0 0 20px rgba(51, 153, 255, 0.2);
-        border: 2px solid rgba(51, 153, 255, 0.3);
-    }
-    .profil-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        @keyframes float {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
 
-    .profil-adatok { text-align: center; width: 100%; }
-    .profil-adatok h2 { font-size: 1.8em; margin-bottom: 5px; }
-    .profil-szerep { color: var(--primary); font-weight: bold; text-transform: uppercase; font-size: 0.85em; letter-spacing: 1.5px; margin-bottom: 12px; }
-    .profil-bio { font-style: italic; opacity: 0.7; margin-bottom: 30px; font-size: 0.95em; }
+        /* --- PROFIL KÁRTYA --- */
+        .profil-card {
+            background: rgba(36, 36, 64, 0.85);
+            backdrop-filter: blur(15px);
+            border-radius: 28px;
+            padding: 40px 30px;
+            width: 92%;
+            max-width: 480px;
+            margin: 0 auto;
+            position: relative;
+            top: -100px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.08);
+            z-index: 10;
+        }
 
-    /* --- GOMBOK: ALAPBÓL SÖTÉT, HOVERRE KÉK --- */
-    .profil-gomb {
-        width: 100%;
-        padding: 14px;
-        margin: 8px 0;
-        font-size: 0.95em;
-        font-weight: 600;
-        border-radius: 12px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        background: rgba(255, 255, 255, 0.03); 
-        color: rgba(255, 255, 255, 0.8);
-        border: 1px solid rgba(51, 153, 255, 0.2);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-    }
+        .profil-avatar {
+            width: 170px;
+            height: 170px;
+            margin-bottom: 25px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 0 25px rgba(51, 153, 255, 0.3);
+            border: 3px solid var(--primary);
+            background: #242440;
+        }
+        .profil-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-    .profil-gomb:hover { 
-        background: var(--primary); 
-        color: white;
-        border-color: var(--primary);
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(51, 153, 255, 0.3);
-    }
+        .profil-adatok { text-align: center; width: 100%; }
+        .profil-adatok h2 { font-size: 2em; margin-bottom: 5px; font-weight: 700; }
+        .profil-szerep { color: var(--primary); font-weight: bold; text-transform: uppercase; font-size: 0.9em; letter-spacing: 2px; margin-bottom: 15px; }
+        .profil-bio { font-style: italic; opacity: 0.8; margin-bottom: 30px; line-height: 1.5; font-size: 1.05em; }
 
-    #addCourseBtn { border-color: #00c6ff; color: #00c6ff; }
-    #addCourseBtn:hover { background: linear-gradient(135deg, #00c6ff, #0072ff); }
+        /* --- GOMBOK --- */
+        .profil-gomb {
+            width: 100%;
+            padding: 15px;
+            margin: 8px 0;
+            font-size: 1em;
+            font-weight: 600;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.05); 
+            color: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(51, 153, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
 
-    .veszely-gomb { border-color: rgba(244, 67, 54, 0.3); color: #f44336; }
-    .veszely-gomb:hover { background: #f44336 !important; border-color: #f44336; }
+        .profil-gomb:hover { 
+            background: var(--primary); 
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(51, 153, 255, 0.4);
+        }
 
-    .profil-vissza { margin-top: 20px; color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.9em; transition: 0.3s; font-weight: bold; }
-    .profil-vissza:hover { color: var(--primary); }
+        #addCourseBtn { border-color: #00c6ff; color: #00c6ff; display: none; }
+        #addCourseBtn:hover { background: linear-gradient(135deg, #00c6ff, #0072ff); color: white; }
 
-    /* MODAL STÍLUSOK */
-    .modal { 
-        display: none; position: fixed; inset: 0; background: rgba(10, 11, 20, 0.9); 
-        z-index: 10000; backdrop-filter: blur(8px); overflow-y: auto; padding: 20px;
-        justify-content: center; align-items: flex-start;
-    }
-    .modal-content {
-        background: #1a1a2e;
-        border: 1px solid rgba(51, 153, 255, 0.3);
-        border-radius: 20px;
-        padding: 30px;
-        width: 100%;
-        max-width: 450px;
-        margin-top: 50px;
-        text-align: center;
-    }
-    .modal-content input, .modal-content textarea {
-        width: 100%;
-        background: rgba(0, 0, 0, 0.3);
-        border: 1px solid rgba(51, 153, 255, 0.3);
-        color: white;
-        padding: 12px;
-        border-radius: 10px;
-        margin-bottom: 15px;
-    }
-    /* --- JAVÍTOTT ANIMÁLT HÁTTÉR --- */
-    .bg-logo-animation {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 70vh; /* Kicsit kisebb, hogy ne lógjon ki */
-        opacity: 0.2; /* Emeltem az átlátszóságon, hogy látszódjon */
-        z-index: -1; /* Most már biztosan a kártya MÖGÖTT van */
-        pointer-events: none;
-        /* Ha a képnek fehér a háttere, ez segít "beolvasztani": */
-        mix-blend-mode: screen; 
-        animation: float 20s linear infinite;
-    }
+        .veszely-gomb { border-color: rgba(244, 67, 54, 0.4); color: #f44336; }
+        .veszely-gomb:hover { background: #f44336 !important; border-color: #f44336; color: white; }
 
-    @keyframes float {
-        0% { transform: translate(-50%, -50%) rotate(0deg); }
-        100% { transform: translate(-50%, -50%) rotate(360deg); }
-    }
+        .profil-vissza { margin-top: 25px; color: rgba(255,255,255,0.4); text-decoration: none; font-size: 0.95em; font-weight: 600; transition: 0.3s; display: inline-block; }
+        .profil-vissza:hover { color: var(--primary); text-decoration: underline; }
 
-    /* Biztosítsuk, hogy a kártya látható maradjon */
-    .profil-card {
-        z-index: 10;
-        background: rgba(36, 36, 64, 0.9);
-        backdrop-filter: blur(15px);
-        /* ... a többi maradhat ... */
-    }
-</style>
+        /* --- MODAL RENDSZER --- */
+        .modal { 
+            display: none; 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(5, 6, 15, 0.92); 
+            z-index: 10000; 
+            backdrop-filter: blur(12px); 
+            overflow-y: auto; 
+            padding: 40px 20px;
+            justify-content: center; 
+            align-items: flex-start;
+        }
+        
+        /* Modal aktív állapota JS-hez */
+        .modal[style*="display: block"], .modal[style*="display: flex"] { display: flex !important; }
+
+        .modal-content {
+            background: #1a1a2e;
+            border: 1px solid rgba(51, 153, 255, 0.2);
+            border-radius: 24px;
+            padding: 35px;
+            width: 100%;
+            max-width: 550px;
+            text-align: center;
+            box-shadow: 0 30px 70px rgba(0,0,0,0.8);
+            margin-bottom: 40px;
+        }
+
+        .modal-content h2 { margin-bottom: 20px; color: var(--primary); font-size: 1.5em; }
+
+        .modal-content input, .modal-content textarea {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(51, 153, 255, 0.2);
+            color: white;
+            padding: 14px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            font-size: 1em;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .modal-content input:focus, .modal-content textarea:focus { border-color: var(--primary); background: rgba(0,0,0,0.6); }
+
+        .input-row { display: flex; gap: 15px; }
+
+        .close-link { background: none; border: none; color: #aaa; cursor: pointer; font-weight: bold; margin-top: 15px; font-size: 0.9em; }
+        .close-link:hover { color: white; }
+
+        @media(max-width: 480px) {
+            .input-row { flex-direction: column; gap: 0; }
+            .profil-card { top: -80px; padding: 30px 20px; }
+            .modal-content { padding: 25px 15px; }
+        }
+    </style>
 </head>
 <body>
 
@@ -162,12 +189,13 @@
                     <stop offset="100%" style="stop-color:#3399ff; stop-opacity:1" />
                 </linearGradient>
             </defs>
-            <path fill="rgba(51, 153, 255, 0.2)" d="M0,160L48,176C96,192,192,224,288,213.3C384,203,480,149,576,149.3C672,149,768,203,864,218.7C960,235,1056,213,1152,186.7C1248,160,1344,128,1392,112L1440,96L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
+            <path fill="rgba(51, 153, 255, 0.15)" d="M0,160L48,176C96,192,192,224,288,213.3C384,203,480,149,576,149.3C672,149,768,203,864,218.7C960,235,1056,213,1152,186.7C1248,160,1344,128,1392,112L1440,96L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
             <path fill="url(#wave-grad)" d="M0,128L48,138.7C96,149,192,171,288,165.3C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
         </svg>
     </div>
 </header>
-<img src="./Tanfolyamok/kepek/logooo.png" class="bg-logo-animation" onerror="this.style.display='none'; alert('A logooo.png nem található!')">
+
+<img src="./Tanfolyamok/kepek/logooo.png" class="bg-logo-animation" onerror="this.style.display='none';">
 
 <div class="profil-card">
     <div class="profil-avatar">
@@ -181,29 +209,69 @@
 
     <button class="profil-gomb" id="editBioBtn">📝 Bemutatkozás szerkesztése</button>
     <button class="profil-gomb" id="uploadPicBtn">📷 Profilkép feltöltése</button>
-    <button class="profil-gomb" id="addCourseBtn" style="display: none;">🚀 Új tanfolyam hirdetése</button>
+    <button class="profil-gomb" id="addCourseBtn">🚀 Új tanfolyam hirdetése</button>
     <button class="profil-gomb" id="changePasswordBtn">🔑 Jelszó módosítása</button>
     <button class="profil-gomb veszely-gomb" id="logout">🚪 Kijelentkezés</button>
+    
     <a href="/" class="profil-vissza">⬅ Vissza a főoldalra</a>
 </div>
 
-<div id="bioModal" class="modal"><div class="modal-content"><h2>📝 Bemutatkozás</h2><textarea id="bio-input" rows="4"></textarea><button id="saveBioBtn" class="profil-gomb">Mentés</button><button class="closeModal profil-vissza" style="background:none; border:none; cursor:pointer;">Mégse</button></div></div>
-<div id="uploadModal" class="modal"><div class="modal-content"><h2>📷 Új profilkép</h2><input type="file" id="profileFile" accept="image/*" style="display:none;"><label for="profileFile" style="cursor:pointer; display:block; padding:20px; border:2px dashed var(--primary); margin-bottom:15px; border-radius:12px;">Kép kiválasztása</label><button id="savePicBtn" class="profil-gomb">Feltöltés</button><button class="closeModal profil-vissza" style="background:none; border:none; cursor:pointer;">Mégse</button></div></div>
-<div id="passwordModal" class="modal"><div class="modal-content"><h2>🔑 Jelszó módosítása</h2><input type="password" id="newPassword" placeholder="Új jelszó"><button id="savePasswordBtn" class="profil-gomb">Frissítés</button><button class="closeModal profil-vissza" style="background:none; border:none; cursor:pointer;">Mégse</button></div></div>
+<div id="bioModal" class="modal">
+    <div class="modal-content">
+        <h2>📝 Bemutatkozás szerkesztése</h2>
+        <textarea id="bio-input" rows="5" placeholder="Mesélj magadról pár mondatban..."></textarea>
+        <button id="saveBioBtn" class="profil-gomb" style="background: var(--primary); color: white;">Mentés</button>
+        <button class="closeModal close-link">Mégse</button>
+    </div>
+</div>
+
+<div id="uploadModal" class="modal">
+    <div class="modal-content">
+        <h2>📷 Profilkép feltöltése</h2>
+        <input type="file" id="profileFile" accept="image/*" style="display:none;">
+        <label for="profileFile" style="cursor:pointer; display:block; padding:30px; border:2px dashed var(--primary); margin-bottom:20px; border-radius:16px; background: rgba(51,153,255,0.05);">
+            <span style="font-size: 2em; display: block; margin-bottom: 10px;">🖼️</span>
+            Kattints ide a kép kiválasztásához
+        </label>
+        <button id="savePicBtn" class="profil-gomb" style="background: var(--primary); color: white;">Feltöltés mentése</button>
+        <button class="closeModal close-link">Mégse</button>
+    </div>
+</div>
+
+<div id="passwordModal" class="modal">
+    <div class="modal-content">
+        <h2>🔑 Jelszó módosítása</h2>
+        <input type="password" id="newPassword" placeholder="Adja meg az új jelszót">
+        <button id="savePasswordBtn" class="profil-gomb" style="background: var(--primary); color: white;">Jelszó frissítése</button>
+        <button class="closeModal close-link">Mégse</button>
+    </div>
+</div>
 
 <div id="addCourseModal" class="modal">
-    <div class="modal-content" style="max-width:550px;">
-        <h2>🚀 Új tanfolyam</h2>
-        <div style="padding:10px; display:flex; flex-direction:column; gap:8px;">
-            <input type="text" id="courseName" placeholder="Tanfolyam neve">
-            <textarea id="courseDescription" placeholder="Leírás"></textarea>
-            <div style="display:flex; gap:10px;"><input type="text" id="courseLocation" placeholder="Helyszín"><input type="text" id="courseOwner" placeholder="Oktató"></div>
-            <div style="display:flex; gap:10px;"><input type="number" id="coursePrice" placeholder="Ár"><input type="number" id="courseAgeLimit" placeholder="Korhatár"></div>
-            <input type="email" id="courseEmail" placeholder="Email">
-            <input type="file" id="courseImageFile">
+    <div class="modal-content">
+        <h2>🚀 Új tanfolyam közzététele</h2>
+        <div style="text-align: left; display: flex; flex-direction: column;">
+            <input type="text" id="courseName" placeholder="Tanfolyam neve (pl. Haladó Java)">
+            <textarea id="courseDescription" rows="3" placeholder="Rövid leírás a képzésről..."></textarea>
+            
+            <div class="input-row">
+                <input type="text" id="courseLocation" placeholder="Helyszín vagy Online">
+                <input type="text" id="courseOwner" placeholder="Oktató / Szervező">
+            </div>
+            
+            <div class="input-row">
+                <input type="number" id="coursePrice" placeholder="Ár (Ft)">
+                <input type="number" id="courseAgeLimit" placeholder="Korhatár (pl. 18)">
+            </div>
+            
+            <input type="email" id="courseEmail" placeholder="Kapcsolattartó email címe">
+            
+            <label style="font-size: 0.85em; color: var(--primary); margin-bottom: 5px; font-weight: bold;">BORÍTÓKÉP KIVÁLASZTÁSA:</label>
+            <input type="file" id="courseImageFile" accept="image/*" style="padding: 10px; background: #2c2c3c;">
         </div>
-        <button id="saveCourseBtn" class="profil-gomb">✨ Közzététel</button>
-        <button class="closeModal profil-vissza" style="background:none; border:none; cursor:pointer;">Mégse</button>
+        
+        <button id="saveCourseBtn" class="profil-gomb" style="background: linear-gradient(135deg, #3399ff, #1a78d1); color: white; margin-top: 10px;">✨ Tanfolyam hirdetése</button>
+        <button class="closeModal close-link">Mégse, kilépés</button>
     </div>
 </div>
 

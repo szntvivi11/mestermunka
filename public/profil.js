@@ -9,80 +9,88 @@ if (!user) {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-    console.log("A DOM betöltődött, gombok inicializálása...");
 
-    // 1. ADATOK BETÖLTÉSE ADATBÁZISBÓL
-    try {
-        const userId = user.ua_id || user.uv_id || user.id;
-        const response = await fetch(`/api/profile?id=${userId}&role=${user.role}`);
-        const data = await response.json();
-        
-        if (data.success) {
-            // Frissítjük a localStorage-ban lévő adatokat is, de őrizzük a profilképet
-            const currentUserPic = user.profilkep; // Megmentjük a jelenlegi képet
-            const updatedUser = { ...user, ...data.user };
-            
-            // Ha az adatbázisban nincs profilkép, de a localStorage-ban van, megtartjuk
-            if (!updatedUser.profilkep && currentUserPic) {
-                updatedUser.profilkep = currentUserPic;
-            }
-            
-            localStorage.setItem("user", JSON.stringify(updatedUser));
-            user = updatedUser;
-            
-            // Megjelenítjük az adatokat
-            document.getElementById("nev-megjelenit").textContent = user.nev;
-            const roleMap = { student: "🎓 Diák", teacher: "📘 Tanár", admin: "👑 Admin" };
-            document.getElementById("szerep-megjelenit").textContent = roleMap[user.role] || "Felhasználó";
-            document.getElementById("bioDisplay").textContent = user.bemutatkozas || "Nincs bemutatkozás megadva.";
-            
-            // Profilkép beállítása
-            const profileImg = document.getElementById("profileImage");
-            if (user.profilkep) {
-                const imageUrl = `/Tanfolyamok/kepek/${user.profilkep}?t=${new Date().getTime()}`;
-                console.log("Kép URL:", imageUrl);
-                
-                // Először beállítjuk az src-t
-                profileImg.src = imageUrl;
-                
-                // Debug: ellenőrizzük, hogy létezik-e a kép
-                profileImg.onerror = function() {
-                    console.error("Hiba a kép betöltésekor:", imageUrl);
-                    console.log("Próbálkozás placeholderrel...");
-                    this.src = "https://via.placeholder.com/180/242440/3399ff?text=Hiba";
-                };
-                profileImg.onload = function() {
-                    console.log("Kép sikeresen betöltve:", this.src);
-                    console.log("Kép méretek:", this.naturalWidth + "x" + this.naturalHeight);
-                };
-                
-                // Kényszerített újratöltés cache-bustinggel
-                setTimeout(() => {
-                    if (profileImg.complete && profileImg.naturalHeight === 0) {
-                        console.log("Kép nem töltődött be, újrapróbálkozás...");
-                        profileImg.src = imageUrl + "&retry=1";
-                    }
-                }, 1000);
-            } else {
-                profileImg.src = "https://via.placeholder.com/180/242440/3399ff?text=Avatar";
-            }
-        } else {
-            console.error("Profil adatok lekérdezése sikertelen:", data.message);
-            // Fallback localStorage adatokkal
-            document.getElementById("nev-megjelenit").textContent = user.felhasznalonev || user.nev;
-            const roleMap = { student: "🎓 Diák", teacher: "📘 Tanár", admin: "👑 Admin" };
-            document.getElementById("szerep-megjelenit").textContent = roleMap[user.role] || "Felhasználó";
-            document.getElementById("bioDisplay").textContent = user.bemutatkozas || "Nincs bemutatkozás megadva.";
+    console.log("DOM betöltődött");
+
+    const profileImg = document.getElementById("profileImage");
+
+    function setProfileImage(pic) {
+
+        if (!pic) {
+            profileImg.src = "https://via.placeholder.com/180/242440/3399ff?text=Avatar";
+            return;
         }
-    } catch (error) {
-        console.error("Hiba a profil adatok lekérdezésekor:", error);
-        // Fallback localStorage adatokkal
-        document.getElementById("nev-megjelenit").textContent = user.felhasznalonev || user.nev;
-        const roleMap = { student: "🎓 Diák", teacher: "📘 Tanár", admin: "👑 Admin" };
-        document.getElementById("szerep-megjelenit").textContent = roleMap[user.role] || "Felhasználó";
-        document.getElementById("bioDisplay").textContent = user.bemutatkozas || "Nincs bemutatkozás megadva.";
+
+        const veglegesUtvonal = pic.startsWith("/Tanfolyamok/kepek/")
+            ? pic
+            : `/Tanfolyamok/kepek/${pic}`;
+
+        const url = `${veglegesUtvonal}?t=${new Date().getTime()}`;
+
+        profileImg.src = url;
+
+        profileImg.onerror = () => {
+            console.error("Kép betöltési hiba:", url);
+            profileImg.src = "https://via.placeholder.com/180/242440/3399ff?text=Hiba";
+        };
+
+        profileImg.onload = () => {
+            console.log("Kép betöltve:", profileImg.src);
+        };
+
     }
 
+    try {
+
+        const userId = user.ua_id || user.uv_id || user.id;
+
+        const response = await fetch(`/api/profile?id=${userId}&role=${user.role}`);
+        const data = await response.json();
+
+        if (data.success) {
+
+            const currentPic = user.profilkep;
+
+            const updatedUser = {
+                ...user,
+                ...data.user
+            };
+
+            if (!updatedUser.profilkep && currentPic) {
+                updatedUser.profilkep = currentPic;
+            }
+
+            localStorage.setItem("user", JSON.stringify(updatedUser));
+            user = updatedUser;
+
+            document.getElementById("nev-megjelenit").textContent = user.nev;
+
+            const roleMap = {
+                student: "🎓 Diák",
+                teacher: "📘 Tanár",
+                admin: "👑 Admin"
+            };
+
+            document.getElementById("szerep-megjelenit").textContent =
+                roleMap[user.role] || "Felhasználó";
+
+            document.getElementById("bioDisplay").textContent =
+                user.bemutatkozas || "Nincs bemutatkozás megadva.";
+
+            setProfileImage(user.profilkep);
+
+        }
+
+    } catch (error) {
+
+        console.error("Profil betöltési hiba:", error);
+
+        document.getElementById("nev-megjelenit").textContent =
+            user.felhasznalonev || user.nev;
+
+        setProfileImage(user.profilkep);
+
+    }
     // 2. MODÁL NYITÁS LOGIKA
     document.getElementById("editBioBtn").onclick = () => {
         document.getElementById("bio-input").value = user.bemutatkozas || "";

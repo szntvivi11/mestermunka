@@ -1,4 +1,7 @@
 
+
+
+
 window.onload = function() {
     const main = document.getElementById('main-content');
     const pages = {
