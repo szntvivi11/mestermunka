@@ -1058,6 +1058,145 @@ a {
     .profil-gomb { padding: 16px; font-size: 1.05em; }
 }
 
+/* ==========================================
+   DIÁK JELENTKEZÉSEK ÉS TANÁR TANFOLYAMOK
+   ========================================== */
+
+/* Diák jelentkezések kártya */
+.application-card {
+    background: rgba(36, 36, 64, 0.6);
+    border: 1px solid rgba(51, 153, 255, 0.3);
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.application-card:hover {
+    background: rgba(51, 153, 255, 0.15);
+    border-color: var(--primary);
+    transform: translateX(5px);
+}
+
+.application-card img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid var(--primary);
+}
+
+.application-info {
+    flex: 1;
+}
+
+.application-info h4 {
+    margin: 0 0 8px 0;
+    color: var(--primary);
+    font-size: 1.1em;
+}
+
+.application-info p {
+    margin: 4px 0;
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+
+.application-date {
+    font-size: 0.85em;
+    color: rgba(255, 255, 255, 0.5);
+    font-style: italic;
+}
+
+/* Tanár tanfolyam kártya */
+.teacher-course-card {
+    background: rgba(36, 36, 64, 0.6);
+    border: 1px solid rgba(123, 47, 242, 0.3);
+    border-radius: 15px;
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.teacher-course-card:hover {
+    background: rgba(123, 47, 242, 0.15);
+    border-color: #7b2ff2;
+    box-shadow: 0 8px 20px rgba(123, 47, 242, 0.3);
+}
+
+.course-header {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    align-items: center;
+}
+
+.course-header img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid #7b2ff2;
+}
+
+.course-header-info h4 {
+    margin: 0 0 8px 0;
+    color: #b185f5;
+    font-size: 1.2em;
+}
+
+.course-header-info p {
+    margin: 4px 0;
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+
+.applicants-section {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(177, 133, 245, 0.2);
+}
+
+.applicants-section h5 {
+    margin: 0 0 10px 0;
+    color: #b185f5;
+    font-size: 1em;
+}
+
+.applicant-item {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border-left: 3px solid var(--primary);
+}
+
+.applicant-item p {
+    margin: 3px 0;
+    font-size: 0.9em;
+}
+
+.applicant-name {
+    font-weight: bold;
+    color: var(--primary);
+}
+
+.no-applicants {
+    text-align: center;
+    padding: 20px;
+    opacity: 0.5;
+    font-style: italic;
+}
+
+.no-data {
+    text-align: center;
+    padding: 30px;
+    opacity: 0.6;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.5);
+}
+
 /*//////////////////////Kitti vege/////////////////////////*/
 
 /* ==========================================

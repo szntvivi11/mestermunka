@@ -47,7 +47,7 @@
             </div>
 
             <a href="/profil" class="mini-profil-link" id="miniProfilLink" style="display: none;">
-                <img id="headerProfileImage" src="https://via.placeholder.com/50/242440/3399ff?text=P" alt="Profil">
+                <img id="headerProfileImage" src="https://ui-avatars.com/api/?name=User&size=50&background=242440&color=3399ff&bold=true&font-size=0.4" alt="Profil">
             </a>
 
             <svg class="wave-svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
@@ -152,6 +152,16 @@
                                 : `/Tanfolyamok/kepek/${user.profilkep}`;
                             
                             headerImg.src = finalSrc;
+                            
+                            // Ha a kép betöltése sikertelen, visszaállítjuk a default avatarra
+                            headerImg.onerror = function() {
+                                const userName = user.nev || user.felhasznalonev || 'User';
+                                this.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&size=50&background=242440&color=3399ff&bold=true&font-size=0.4`;
+                            };
+                        } else if (headerImg) {
+                            // Nincs profilkép, használjuk az UI Avatars-t
+                            const userName = user.nev || user.felhasznalonev || 'User';
+                            headerImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&size=50&background=242440&color=3399ff&bold=true&font-size=0.4`;
                         }
         
                         // Navigációs gombok elrejtése

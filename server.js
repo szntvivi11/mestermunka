@@ -63,7 +63,7 @@ app.get("/tanfolyamok/:slug", (req, res) => {
 // ===== ADATBÁZIS =====
 const db = mysql.createConnection({
   host: "localhost",
-  port: 3307,
+  port: 3306,
   user: "root",
   password: '',
   database: "mestermunka"
@@ -497,6 +497,82 @@ app.get("/api/admin/osszes-tanar", async (req, res) => {
         const [rows] = await db.promise().query("SELECT ua_id, felhasznalonev, gmail, vegzettseg FROM user_ado");
         res.json(rows);
     } catch (err) { res.status(500).json({ success: false }); }
+});
+
+// ================= DIÁK JELENTKEZÉSEI =================
+// Lekérdezi, hogy egy diák milyen tanfolyamokra jelentkezett
+app.get("/api/diak/jelentkezesek/:userId", async (req, res) => {
+    try {
+        const { userId } = req.params;
+        
+        const sql = `
+            SELECT 
+                k.id as kepzes_id,
+                k.nev as tanfolyam_nev,
+                k.leiras,
+                k.kep,
+                k.email as oktato_email,
+                k.o_nev as oktato_nev,
+                j.jelentkezes_datum
+            FROM jelentkezesek j
+            JOIN kepzesek k ON j.kepzes_id = k.id
+            WHERE j.user_id = ?
+            ORDER BY j.jelentkezes_datum DESC
+        `;
+        
+        const [rows] = await db.promise().query(sql, [userId]);
+        res.json({ success: true, jelentkezesek: rows });
+    } catch (err) {
+        console.error("❌ Hiba a diák jelentkezéseinek lekérdezésekor:", err);
+        res.status(500).json({ success: false, message: "Szerver hiba" });
+    }
+});
+
+// ================= TANÁR TANFOLYAMAI ÉS JELENTKEZŐK =================
+// Lekérdezi egy tanár összes tanfolyamát és hogy kik jelentkeztek rájuk
+app.get("/api/tanar/tanfolyamok/:teacherId", async (req, res) => {
+    try {
+        const { teacherId } = req.params;
+        
+        console.log("🔍 Tanár ID:", teacherId);
+        
+        // Lekérdezzük a tanár tanfolyamait (ua_ID mező alapján)
+        const [tanfolyamok] = await db.promise().query(
+            `SELECT id, kep, nev, leiras, helyileg, email, ar, heves_kortol
+             FROM kepzesek 
+             WHERE ua_ID = ?
+             ORDER BY id DESC`,
+            [teacherId]
+        );
+        
+        console.log("📚 Talált tanfolyamok száma:", tanfolyamok.length);
+        if (tanfolyamok.length > 0) {
+            console.log("📋 Tanfolyamok:", tanfolyamok.map(t => `${t.nev} (ID: ${t.id})`));
+        }
+        
+        // Minden tanfolyamhoz lekérdezzük a jelentkezőket
+        for (let tanfolyam of tanfolyamok) {
+            const [jelentkezok] = await db.promise().query(
+                `SELECT 
+                    v.uv_id,
+                    v.nev,
+                    v.email,
+                    j.jelentkezes_datum
+                 FROM jelentkezesek j
+                 JOIN user_vevo v ON j.user_id = v.uv_id
+                 WHERE j.kepzes_id = ?
+                 ORDER BY j.jelentkezes_datum DESC`,
+                [tanfolyam.id]
+            );
+            
+            tanfolyam.jelentkezok = jelentkezok;
+        }
+        
+        res.json({ success: true, tanfolyamok: tanfolyamok });
+    } catch (err) {
+        console.error("❌ Hiba a tanár tanfolyamainak lekérdezésekor:", err);
+        res.status(500).json({ success: false, message: "Szerver hiba" });
+    }
 });
 
 

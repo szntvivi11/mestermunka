@@ -1,4 +1,4 @@
-console.log("A profil.js sikeresen betöltődött!");
+﻿console.log("A profil.js sikeresen betöltődött!");
 
 let user = JSON.parse(localStorage.getItem("user"));
 
@@ -17,7 +17,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     function setProfileImage(pic) {
 
         if (!pic) {
-            profileImg.src = "https://via.placeholder.com/180/242440/3399ff?text=Avatar";
+            // Default avatar: egyedi generált avatar minden felhasználónak
+            const userId = user.ua_id || user.uv_id || user.id || 'default';
+            const userName = user.nev || user.felhasznalonev || 'User';
+            profileImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&size=180&background=242440&color=3399ff&bold=true&font-size=0.4`;
             return;
         }
 
@@ -31,7 +34,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         profileImg.onerror = () => {
             console.error("Kép betöltési hiba:", url);
-            profileImg.src = "https://via.placeholder.com/180/242440/3399ff?text=Hiba";
+            // Ha a kép betöltése sikertelen, visszaállítjuk a default avatarra
+            const userName = user.nev || user.felhasznalonev || 'User';
+            profileImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&size=180&background=242440&color=3399ff&bold=true&font-size=0.4`;
         };
 
         profileImg.onload = () => {
@@ -66,9 +71,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.getElementById("nev-megjelenit").textContent = user.nev;
 
             const roleMap = {
-                student: "🎓 Diák",
-                teacher: "📘 Tanár",
-                admin: "👑 Admin"
+                student: "Diák",
+                teacher: "Tanár",
+                admin: "Admin"
             };
 
             document.getElementById("szerep-megjelenit").textContent =
@@ -113,7 +118,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (user.role === "teacher") {
         const btn = document.createElement("button");
         btn.className = "profil-gomb";
-        btn.textContent = "➕ Tanfolyam hozzáadása";
+        btn.textContent = "Tanfolyam hozzáadása";
         btn.onclick = () => document.getElementById("addCourseModal").style.display = "flex";
         card.insertBefore(btn, logoutBtn);
     }
@@ -129,8 +134,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         
         adminBox.innerHTML = `
             <h3 style='color:#7b2ff2; margin-bottom:10px; font-size: 1.1em;'>Adminisztrációs Vezérlő</h3>
-            <button class="profil-gomb" id="adminMessagesBtn" style="background:#7b2ff2; margin-bottom: 8px;">📧 Üzenetek Kezelése</button>
-            <button class="profil-gomb" id="adminFullBtn" style="background:linear-gradient(45deg, #7b2ff2, #3399ff)">🛠️ Rendszer Kezelése</button>
+            <button class="profil-gomb" id="adminMessagesBtn" style="background:#7b2ff2; margin-bottom: 8px;">Üzenetek Kezelése</button>
+            <button class="profil-gomb" id="adminFullBtn" style="background:linear-gradient(45deg, #7b2ff2, #3399ff)">Rendszer Kezelése</button>
         `;
         card.insertBefore(adminBox, logoutBtn);
 
@@ -195,7 +200,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         handleProfileUpdate(fileInput);
     };
 
-// --- 4. TANFOLYAM MENTÉSE JAVÍTVA ---
+// --- 4. TANFOLYAM MENTÉS JAVÍTVA ---
 const saveCourseBtn = document.getElementById("saveCourseBtn");
 if (saveCourseBtn) {
     saveCourseBtn.onclick = async () => {
@@ -240,7 +245,7 @@ if (saveCourseBtn) {
     };
 }
 
-    // 5. JELSZÓ MENTÉSE
+    // 5. JELSZÓ MENTÉS
     const savePasswordBtn = document.getElementById("savePasswordBtn");
     if (savePasswordBtn) {
         savePasswordBtn.onclick = async () => {
@@ -272,4 +277,106 @@ if (saveCourseBtn) {
         localStorage.removeItem("user");
         location.href = "/";
     };
+
+    // 7. DIÁK JELENTKEZÉSEINEK BETÖLTÉSE
+    if (user.role === "student") {
+        const userId = user.uv_id || user.id;
+        const studentSection = document.getElementById("studentApplicationsSection");
+        const applicationsContainer = document.getElementById("applicationsContainer");
+        
+        try {
+            const response = await fetch(`/api/diak/jelentkezesek/${userId}`);
+            const data = await response.json();
+            
+            if (data.success && data.jelentkezesek.length > 0) {
+                studentSection.style.display = "block";
+                
+                data.jelentkezesek.forEach(jelentkezes => {
+                    const card = document.createElement("div");
+                    card.className = "application-card";
+                    
+                    const kep = jelentkezes.kep ? `/Tanfolyamok/kepek/${jelentkezes.kep}` : "https://via.placeholder.com/80/242440/3399ff?text=Kép";
+                    const datum = new Date(jelentkezes.jelentkezes_datum).toLocaleDateString('hu-HU');
+                    
+                    card.innerHTML = `
+                        <img src="${kep}" alt="${jelentkezes.tanfolyam_nev}" onerror="this.src='https://via.placeholder.com/80/242440/3399ff?text=Kép'">
+                        <div class="application-info">
+                            <h4>${jelentkezes.tanfolyam_nev}</h4>
+                            <p> Oktató: ${jelentkezes.oktato_nev || "Nincs megadva"}</p>
+                            <p> Email: ${jelentkezes.oktato_email}</p>
+                            <p class="application-date"> Jelentkezés: ${datum}</p>
+                        </div>
+                    `;
+                    
+                    applicationsContainer.appendChild(card);
+                });
+            } else if (data.success) {
+                studentSection.style.display = "block";
+                applicationsContainer.innerHTML = '<div class="no-data">Még nem jelentkeztél egy tanfolyamra sem.</div>';
+            }
+        } catch (error) {
+            console.error("Hiba a jelentkezések betöltésekor:", error);
+        }
+    }
+
+    // 8. TANÁR TANFOLYAMAINAK ÉS JELENTKEZŐINEK BETÖLTÉSE
+    if (user.role === "teacher") {
+        const teacherId = user.ua_id || user.id;
+        const teacherSection = document.getElementById("teacherCoursesSection");
+        const coursesContainer = document.getElementById("teacherCoursesContainer");
+        
+        try {
+            const response = await fetch(`/api/tanar/tanfolyamok/${teacherId}`);
+            const data = await response.json();
+            
+            if (data.success && data.tanfolyamok.length > 0) {
+                teacherSection.style.display = "block";
+                
+                data.tanfolyamok.forEach(tanfolyam => {
+                    const card = document.createElement("div");
+                    card.className = "teacher-course-card";
+                    
+                    const kep = tanfolyam.kep ? `/Tanfolyamok/kepek/${tanfolyam.kep}` : "https://via.placeholder.com/100/242440/7b2ff2?text=Kép";
+                    
+                    let applicantsHTML = '<div class="applicants-section"><h5> Jelentkezők:</h5>';
+                    
+                    if (tanfolyam.jelentkezok && tanfolyam.jelentkezok.length > 0) {
+                        tanfolyam.jelentkezok.forEach(jelentkezo => {
+                            const datum = new Date(jelentkezo.jelentkezes_datum).toLocaleDateString('hu-HU');
+                            applicantsHTML += `
+                                <div class="applicant-item">
+                                    <p><span class="applicant-name"> ${jelentkezo.nev}</span></p>
+                                    <p> ${jelentkezo.email}</p>
+                                    <p style="font-size: 0.85em; opacity: 0.7;"> Jelentkezett: ${datum}</p>
+                                </div>
+                            `;
+                        });
+                    } else {
+                        applicantsHTML += '<p class="no-applicants">Még nincs jelentkező erre a tanfolyamra.</p>';
+                    }
+                    applicantsHTML += '</div>';
+                    
+                    card.innerHTML = `
+                        <div class="course-header">
+                            <img src="${kep}" alt="${tanfolyam.nev}" onerror="this.src='https://via.placeholder.com/100/242440/7b2ff2?text=Kép'">
+                            <div class="course-header-info">
+                                <h4>${tanfolyam.nev}</h4>
+                                <p> ${tanfolyam.helyileg}</p>
+                                <p> ${tanfolyam.ar.toLocaleString('hu-HU')} Ft</p>
+                                <p> Korhatár: ${tanfolyam.heves_kortol}+</p>
+                            </div>
+                        </div>
+                        ${applicantsHTML}
+                    `;
+                    
+                    coursesContainer.appendChild(card);
+                });
+            } else if (data.success) {
+                teacherSection.style.display = "block";
+                coursesContainer.innerHTML = '<div class="no-data">Még nem hirdettél meg tanfolyamot. Kattints a "Tanfolyam hozzáadása" gombra!</div>';
+            }
+        } catch (error) {
+            console.error("Hiba a tanfolyamok betöltésekor:", error);
+        }
+    }
 });
