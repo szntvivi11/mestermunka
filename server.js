@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const cors = require("cors");
 const multer = require("multer");
 const nodemailer = require("nodemailer");
+require("dotenv").config();
 
 
 const app = express();
@@ -77,6 +78,52 @@ db.connect(err => {
   console.log("✅ MySQL kapcsolat létrejött");
 });
 
+const MAIL_USER = process.env.MAIL_USER;
+const MAIL_APP_PASS = (process.env.MAIL_APP_PASS || "").replace(/\s+/g, "").trim();
+const MAIL_TO = process.env.MAIL_TO || MAIL_USER;
+
+if (MAIL_USER && MAIL_APP_PASS && MAIL_APP_PASS.length !== 16) {
+  console.warn(`⚠️ MAIL_APP_PASS hossza hibás (${MAIL_APP_PASS.length}). Gmail app jelszó pontosan 16 karakter.`);
+}
+
+function createMailTransporter() {
+  if (!MAIL_USER || !MAIL_APP_PASS) return null;
+  if (MAIL_APP_PASS.length !== 16) return null;
+
+  return nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: MAIL_USER,
+      pass: MAIL_APP_PASS,
+    },
+  });
+}
+
+async function sendMailSafe({ to, subject, text, html, replyTo }) {
+  const transporter = createMailTransporter();
+
+  if (!transporter) {
+    console.warn("⚠️ Email küldés kihagyva: MAIL_USER vagy MAIL_APP_PASS nincs beállítva.");
+    return { sent: false, skipped: true };
+  }
+
+  try {
+    await transporter.sendMail({
+      from: `Tanfolyamok <${MAIL_USER}>`,
+      to,
+      subject,
+      text,
+      html,
+      replyTo,
+    });
+    console.log(`✅ Email sikeresen elküldve: ${to}`);
+    return { sent: true, skipped: false };
+  } catch (error) {
+    console.error(`❌ Email küldési hiba (${to}):`, error.message);
+    return { sent: false, skipped: false, error: error.message };
+  }
+}
+
 
 // =====================================================
 // ================= REGISZTRÁCIÓ =======================
@@ -110,7 +157,21 @@ app.post("/api/register-user", async (req, res) => {
       [nev, email, nev, hash]
     );
 
-    res.json({ success: true });
+    // Email küldés - ne befolyásolja a sikeres választ ha hibázik
+    let emailSent = false;
+    try {
+      const emailResult = await sendMailSafe({
+        to: email,
+        subject: "Sikeres regisztráció",
+        text: `Szia ${nev}!\n\nSikeresen regisztráltál a Tanfolyamok oldalra.\n\nÜdv,\nTanfolyamok csapata`,
+        html: `<p>Szia <strong>${nev}</strong>!</p><p>Sikeresen regisztráltál a Tanfolyamok oldalra.</p><p>Üdv,<br>Tanfolyamok csapata</p>`,
+      });
+      emailSent = emailResult.sent;
+    } catch (mailErr) {
+      console.error("Email küldési hiba (nem blokkolja a regisztrációt):", mailErr);
+    }
+
+    res.json({ success: true, emailSent });
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: "Adatbázis hiba" });
@@ -145,7 +206,21 @@ app.post("/api/register-teacher", async (req, res) => {
       [felhasznalonev, email, hash, vegzettseg]
     );
 
-    res.json({ success: true });
+    // Email küldés - ne befolyásolja a sikeres választ ha hibázik
+    let emailSent = false;
+    try {
+      const emailResult = await sendMailSafe({
+        to: email,
+        subject: "Sikeres tanári regisztráció",
+        text: `Szia ${felhasznalonev}!\n\nSikeresen regisztráltál tanárként a Tanfolyamok oldalra.\n\nÜdv,\nTanfolyamok csapata`,
+        html: `<p>Szia <strong>${felhasznalonev}</strong>!</p><p>Sikeresen regisztráltál tanárként a Tanfolyamok oldalra.</p><p>Üdv,<br>Tanfolyamok csapata</p>`,
+      });
+      emailSent = emailResult.sent;
+    } catch (mailErr) {
+      console.error("Email küldési hiba (nem blokkolja a regisztrációt):", mailErr);
+    }
+
+    res.json({ success: true, emailSent });
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: "Adatbázis hiba" });
@@ -383,7 +458,32 @@ app.post("/api/jelentkezes", async (req, res) => {
       "INSERT INTO jelentkezesek (user_id, kepzes_id) VALUES (?, ?)",
       [userId, kepzesId]
     );
-    res.json({ success: true, message: "Sikeres jelentkezés" });
+
+    const [[jelentkezesAdat]] = await db.promise().query(
+      `SELECT v.nev as diak_nev, v.email as diak_email, k.nev as tanfolyam_nev
+       FROM user_vevo v
+       JOIN kepzesek k ON k.id = ?
+       WHERE v.uv_id = ?
+       LIMIT 1`,
+      [kepzesId, userId]
+    );
+
+    let emailSent = false;
+    if (jelentkezesAdat?.diak_email) {
+      try {
+        const emailResult = await sendMailSafe({
+          to: jelentkezesAdat.diak_email,
+          subject: "Sikeres tanfolyam jelentkezés",
+          text: `Szia ${jelentkezesAdat.diak_nev}!\n\nSikeresen jelentkeztél erre a tanfolyamra: ${jelentkezesAdat.tanfolyam_nev}.\n\nÜdv,\nTanfolyamok csapata`,
+          html: `<p>Szia <strong>${jelentkezesAdat.diak_nev}</strong>!</p><p>Sikeresen jelentkeztél erre a tanfolyamra: <strong>${jelentkezesAdat.tanfolyam_nev}</strong>.</p><p>Üdv,<br>Tanfolyamok csapata</p>`,
+        });
+        emailSent = emailResult.sent;
+      } catch (mailErr) {
+        console.error("Email küldési hiba (nem blokkolja a jelentkezést):", mailErr);
+      }
+    }
+
+    res.json({ success: true, message: "Sikeres jelentkezés", emailSent });
   } catch (err) {
     console.error(err);
 
@@ -403,21 +503,42 @@ app.post("/api/kapcsolat", async (req, res) => {
 
     try {
         await db.promise().query("INSERT INTO uzenetek (nev, email, uzenet) VALUES (?, ?, ?)", [nev, email, uzenet]);
-        
-        // Ezt csak akkor aktiváld, ha a user/pass adatokat kitöltötted!
-        /*
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: { user: 'SajatEmail@gmail.com', pass: '16jegyukod' }
+
+        // Email küldés - ne befolyásolja a sikeres választ ha hibázik
+        let emailSentToAdmin = false;
+        let confirmationEmailSent = false;
+
+        try {
+          const adminMailResult = await sendMailSafe({
+            to: MAIL_TO,
+            subject: "Új üzenet a kapcsolat oldalról",
+            text: `${nev} (${email}) küldte:\n\n${uzenet}`,
+            html: `<p><strong>${nev}</strong> (${email}) küldte:</p><p>${String(uzenet).replace(/\n/g, "<br>")}</p>`,
+            replyTo: email,
+          });
+          emailSentToAdmin = adminMailResult.sent;
+        } catch (mailErr) {
+          console.error("Admin email küldési hiba:", mailErr);
+        }
+
+        try {
+          const senderMailResult = await sendMailSafe({
+            to: email,
+            subject: "Megkaptuk az üzeneted",
+            text: `Szia ${nev}!\n\nKöszönjük az üzeneted, hamarosan válaszolunk.\n\nÜdv,\nTanfolyamok csapata`,
+            html: `<p>Szia <strong>${nev}</strong>!</p><p>Köszönjük az üzeneted, hamarosan válaszolunk.</p><p>Üdv,<br>Tanfolyamok csapata</p>`,
+          });
+          confirmationEmailSent = senderMailResult.sent;
+        } catch (mailErr) {
+          console.error("Visszaigazoló email küldési hiba:", mailErr);
+        }
+
+        res.json({
+          success: true,
+          message: "Üzenet elmentve!",
+          emailSentToAdmin,
+          confirmationEmailSent,
         });
-        await transporter.sendMail({
-            from: 'SajatEmail@gmail.com',
-            to: 'info@tanfolyamok.hu',
-            subject: 'Új üzenet az oldalról',
-            text: `${nev} (${email}) küldte: ${uzenet}`
-        });
-        */
-        res.json({ success: true, message: "Üzenet elmentve!" });
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, message: "Szerver hiba történt." });

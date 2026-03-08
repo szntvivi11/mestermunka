@@ -142,16 +142,23 @@ async function updateHeaderProfile() {
                         const headerImg = document.getElementById('headerProfileImage');
         
                         if (miniProfilLink) miniProfilLink.style.display = 'block';
-        
-                        if (user.profilkep && headerImg) {
-                            // OKOS ÚTVONAL KEZELÉS:
-                            // Ha a szerverről már a teljes útvonal jön (/Tanfolyamok/...), azt használjuk.
-                            // Ha csak a fájlnév (pl. 1700.jpg), akkor elé rakjuk az útvonalat.
-                            const finalSrc = user.profilkep.startsWith('/') 
-                                ? user.profilkep 
-                                : `/Tanfolyamok/kepek/${user.profilkep}`;
-                            
-                            headerImg.src = finalSrc;
+
+                        if (headerImg) {
+                            const displayName = user.nev || user.felhasznalonev || 'Felhasználó';
+                            const defaultAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=242440&color=ffffff&bold=true`;
+
+                            headerImg.onerror = () => {
+                                headerImg.src = defaultAvatar;
+                            };
+
+                            if (user.profilkep) {
+                                const finalSrc = user.profilkep.startsWith('/')
+                                    ? user.profilkep
+                                    : `/Tanfolyamok/kepek/${user.profilkep}`;
+                                headerImg.src = finalSrc;
+                            } else {
+                                headerImg.src = defaultAvatar;
+                            }
                         }
         
                         // Navigációs gombok elrejtése
