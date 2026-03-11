@@ -58,28 +58,35 @@
 
 /* ================= profil ikon ================= */
 /* Mini profil stílusa a főoldalon is */
+/* PROFILKÉP POZICIONÁLÁSA */
 .mini-profil-link {
     position: absolute;
     top: 25px;
     right: 35px;
     z-index: 1000;
-    transition: transform 0.3s ease;
 }
 
 .mini-profil-link img {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    border: 2px solid #3399ff; /* Az általad használt kék */
+    border: 2px solid #3399ff;
     object-fit: cover;
     background: #1a1a2e;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    transition: 0.3s;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
 }
 
-.mini-profil-link:hover {
+.mini-profil-link:hover img {
     transform: scale(1.1);
+    border-color: white;
 }
 
+/* Navigáció z-index fix, hogy ne csússzon a hullám alá */
+#navigacio {
+    position: relative;
+    z-index: 100;
+}
 /* Hogy mobilone is jó legyen */
 @media (max-width: 480px) {
     .mini-profil-link {

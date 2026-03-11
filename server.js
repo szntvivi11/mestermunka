@@ -26,29 +26,29 @@ app.use (express.static(path.join(__dirname, 'rolunk')));
 app.get("/", (req, res) =>
   res.sendFile(path.join(__dirname, "index.html"))
 );
-
 app.get("/bejelentkezes", (req, res) =>
   res.sendFile(path.join(__dirname, "bejelentkezes", "bejelentkezes.html"))
 );
-
 app.get("/regisztracio", (req, res) =>
   res.sendFile(path.join(__dirname, "regisztracio", "regisztracio.html"))
 );
-
 app.get("/kapcsolat", (req, res) =>
   res.sendFile(path.join(__dirname, "kapcsolat", "kapcsolat.html"))
 );
-
 app.get("/tanfolyamok", (req, res) =>
   res.sendFile(path.join(__dirname, "Tanfolyamok", "tanfolyamok.html"))
 );
-
 app.get("/profil", (req, res) => {
   res.sendFile(path.join(__dirname, "profil.html"));
 });
-
 app.get("/rolunk", (req, res) => {
   res.sendFile(path.join(__dirname, "rolunk.html"));
+});
+app.get("/admin", (req, res) => {
+  res.sendFile(path.join(__dirname, "admin.html"));
+});
+app.get("/admin_full.html", (req, res) => {
+  res.sendFile(path.join(__dirname, "admin_full.html"));
 });
 
 // Dinamikus tanfolyam oldalak
@@ -61,10 +61,11 @@ app.get("/tanfolyamok/:slug", (req, res) => {
   });
 });
 
+
 // ===== ADATBÁZIS =====
 const db = mysql.createConnection({
   host: "localhost",
-  port: 3306,
+  port: 3307,
   user: "root",
   password: '',
   database: "mestermunka"
@@ -78,6 +79,8 @@ db.connect(err => {
   console.log("✅ MySQL kapcsolat létrejött");
 });
 
+
+// ===== EMAIL KÜLDÉS (Nodemailer) =====
 const MAIL_USER = process.env.MAIL_USER;
 const MAIL_APP_PASS = (process.env.MAIL_APP_PASS || "").replace(/\s+/g, "").trim();
 const MAIL_TO = process.env.MAIL_TO || MAIL_USER;
@@ -137,7 +140,6 @@ app.post("/api/register-user", async (req, res) => {
     return res.status(400).json({ success: false, message: "Hiányzó adatok" });
 
   try {
-    // Ellenőrizzük, hogy létezik-e már az email a user_vevo táblában
     const [exists] = await db.promise().query(
       "SELECT uv_id FROM user_vevo WHERE email = ?",
       [email]
@@ -146,10 +148,8 @@ app.post("/api/register-user", async (req, res) => {
     if (exists.length)
       return res.status(400).json({ success: false, message: "Email már létezik" });
 
-    // Jelszó hash-elése
     const hash = await bcrypt.hash(jelszo, 10);
 
-    // Felhasználó beszúrása a user_vevo táblába
     await db.promise().query(
       `INSERT INTO user_vevo
        (nev, email, felhasznalonev, jelszo, regisztracio_datum)
@@ -157,7 +157,6 @@ app.post("/api/register-user", async (req, res) => {
       [nev, email, nev, hash]
     );
 
-    // Email küldés - ne befolyásolja a sikeres választ ha hibázik
     let emailSent = false;
     try {
       const emailResult = await sendMailSafe({
@@ -178,6 +177,7 @@ app.post("/api/register-user", async (req, res) => {
   }
 });
 
+
 // ---- TEACHER (user_ado) ----
 app.post("/api/register-teacher", async (req, res) => {
   const { felhasznalonev, email, jelszo, vegzettseg } = req.body;
@@ -186,7 +186,6 @@ app.post("/api/register-teacher", async (req, res) => {
     return res.status(400).json({ success: false, message: "Hiányzó adatok" });
 
   try {
-    // Ellenőrizzük, hogy létezik-e már az email a user_ado táblában
     const [exists] = await db.promise().query(
       "SELECT ua_id FROM user_ado WHERE gmail = ?",
       [email]
@@ -195,10 +194,8 @@ app.post("/api/register-teacher", async (req, res) => {
     if (exists.length)
       return res.status(400).json({ success: false, message: "Email már létezik" });
 
-    // Jelszó hash-elése
     const hash = await bcrypt.hash(jelszo, 10);
 
-    // Tanár beszúrása a user_ado táblába
     await db.promise().query(
       `INSERT INTO user_ado
        (felhasznalonev, gmail, jelszo, vegzettseg)
@@ -206,7 +203,6 @@ app.post("/api/register-teacher", async (req, res) => {
       [felhasznalonev, email, hash, vegzettseg]
     );
 
-    // Email küldés - ne befolyásolja a sikeres választ ha hibázik
     let emailSent = false;
     try {
       const emailResult = await sendMailSafe({
@@ -231,7 +227,6 @@ app.post("/api/register-teacher", async (req, res) => {
 // =====================================================
 // ================== BEJELENTKEZÉS =====================
 // =====================================================
-// Refined login endpoint to ensure proper role validation
 app.post("/api/login", async (req, res) => {
   const { email, jelszo, role } = req.body;
 
@@ -240,7 +235,6 @@ app.post("/api/login", async (req, res) => {
 
   try {
     if (role === "student") {
-      // Check if the user is a student
       const [students] = await db.promise().query(
         "SELECT uv_id, nev, email, jelszo FROM user_vevo WHERE email = ?",
         [email]
@@ -258,7 +252,6 @@ app.post("/api/login", async (req, res) => {
         });
       }
     } else if (role === "teacher") {
-      // Check if the user is a teacher
       const [teachers] = await db.promise().query(
         "SELECT ua_id, felhasznalonev, gmail, jelszo FROM user_ado WHERE gmail = ?",
         [email]
@@ -276,7 +269,6 @@ app.post("/api/login", async (req, res) => {
         });
       }
     } else if (!role || role === "admin") {
-      // Admin login logic with fixed credentials
       const adminUsername = "ADMIN1234";
       const adminPassword = "admin4321";
 
@@ -288,7 +280,7 @@ app.post("/api/login", async (req, res) => {
             id: 0, 
             nev: "Adminisztrátor", 
             email: adminUsername,
-            role: "admin" // Ez biztosítja, hogy a frontend lássa a jogosultságot
+            role: "admin"
           }
         });
       } else {
@@ -302,8 +294,11 @@ app.post("/api/login", async (req, res) => {
     res.status(500).json({ success: false, message: "Szerver hiba" });
   }
 });
-//multer
-// Meghatározzuk, hova kerüljenek a képek és mi legyen a nevük
+
+
+// =====================================================
+// ================== multer kepek=====================
+// =====================================================
 const storage = multer.diskStorage({
     destination: './Tanfolyamok/kepek/', 
     filename: function(req, file, cb) {
@@ -313,7 +308,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 const uploadCourseImg = multer({ storage: storage }); 
-// Profil adatok lekérdezése adatbázisból
 app.get("/api/profile", async (req, res) => {
     try {
         const { id, role } = req.query;
@@ -341,7 +335,6 @@ app.get("/api/profile", async (req, res) => {
         }
     
         const user = rows[0];
-        // Ha van profilkép, hozzáadjuk az elérést
         if (user.profilkep) {
             user.profilkep = `/Tanfolyamok/kepek/${user.profilkep}`;
         }
@@ -354,13 +347,11 @@ app.get("/api/profile", async (req, res) => {
 });
 
 // Profil frissítése (Kép és Bio)
-// Használjuk ugyanazt az uploadCourseImg-t, hogy ugyanoda mentse a képet!
 app.post("/api/update-profile", upload.single('profilePicture'), async (req, res) => {
     try {
         const { id, role, bemutatkozas } = req.body;
         const profilkep = req.file ? req.file.filename : null;
 
-        // Ellenőrizzük, hogy megérkeztek-e az adatok (debug)
         console.log("Frissítés adatai:", { id, role, bemutatkozas, profilkep });
 
         if (!id || !role) {
@@ -383,12 +374,11 @@ app.post("/api/update-profile", upload.single('profilePicture'), async (req, res
 
         console.log("SQL:", sql, "Params:", params);
 
-        // FONTOS: .promise() hozzáadása, ha sima connectiont használsz!
         await db.promise().query(sql, params);
 
         res.json({ success: true, newPic: profilkep });
     } catch (err) {
-        console.error("❌ Profil frissítési hiba:", err); // Ez fog megjelenni a VS Code konzolban!
+        console.error("❌ Profil frissítési hiba:", err);
         res.status(500).json({ error: "Szerver hiba történt a mentéskor." });
     }
 });
@@ -396,9 +386,8 @@ app.post("/api/update-profile", upload.single('profilePicture'), async (req, res
 // ===== TANFOLYAMOK API =====
 app.get("/api/kepzesek", async (req, res) => {
   try {
-    // Ez a lekérdezés akkor is működik, ha az adatbázisban 'ár' vagy 'ar' van
     const [courses] = await db.promise().query("SELECT * FROM kepzesek");
-    console.log("Küldött tanfolyamok száma:", courses.length); // Ezt nézd a terminálban!
+    console.log("Küldött tanfolyamok száma:", courses.length); 
     res.json(courses);
   } catch (err) {
     console.error("❌ MySQL Hiba a lekéréskor:", err.message);
@@ -406,21 +395,17 @@ app.get("/api/kepzesek", async (req, res) => {
   }
 });
 
-// --- KÉPFELTÖLTÉS BEÁLLÍTÁSA ---
-// --- MULTER BEÁLLÍTÁS (ha még nincs bent) ---
-
-
-// --- A JAVÍTOTT POST ÚTVONAL ---
+//============================================
+//======= TANFOLYAM HOZZÁADÁSA (KÉPPEL) =======
+//==========================================
 app.post("/api/courses", uploadCourseImg.single('kep'), async (req, res) => {
   try {
-    // Az oszlopnevek pontosan a te CREATE TABLE parancsodból:
     const { nev, leiras, helyileg, email, o_nev, heves_kortol, ua_ID, ar } = req.body;
     
    if (!req.file) {
     return res.status(400).json({ success: false, message: "Kép feltöltése kötelező!" });
 }
 
-// CSAK a fájl nevét mentjük el, az útvonalat nem!
 const kepNev = req.file.filename; 
 
 const sql = `INSERT INTO kepzesek 
@@ -428,7 +413,7 @@ const sql = `INSERT INTO kepzesek
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
 await db.promise().query(sql, [
-    kepNev, // Itt most már csak pl. "1708612345-kep.jpg" megy be
+    kepNev,
     nev,
     leiras,
     helyileg,
@@ -446,7 +431,10 @@ await db.promise().query(sql, [
   }
 });
 
+
+// =====================================================
 // ===== JELENTKEZÉS MENTÉSE =====
+//===============================================
 app.post("/api/jelentkezes", async (req, res) => {
   const { userId, kepzesId } = req.body;
 
@@ -487,7 +475,6 @@ app.post("/api/jelentkezes", async (req, res) => {
   } catch (err) {
     console.error(err);
 
-    // ha már jelentkezett
     if (err.code === "ER_DUP_ENTRY")
       return res.status(409).json({ success: false, message: "Már jelentkeztél erre a képzésre" });
 
@@ -495,8 +482,9 @@ app.post("/api/jelentkezes", async (req, res) => {
   }
 });
 
-
-// ===== KAPCSOLATI ÜZENET MENTÉSE ÉS EMAIL =====
+// =====================================================
+// ===== KAPCSOLATI ÜZENET MENTÉSE adatbazisba =====
+// =====================================================
 app.post("/api/kapcsolat", async (req, res) => {
     const { nev, email, uzenet } = req.body;
     if (!nev || !email || !uzenet) return res.status(400).json({ success: false, message: "Minden mező kitöltése kötelező!" });
@@ -504,7 +492,6 @@ app.post("/api/kapcsolat", async (req, res) => {
     try {
         await db.promise().query("INSERT INTO uzenetek (nev, email, uzenet) VALUES (?, ?, ?)", [nev, email, uzenet]);
 
-        // Email küldés - ne befolyásolja a sikeres választ ha hibázik
         let emailSentToAdmin = false;
         let confirmationEmailSent = false;
 
@@ -545,18 +532,10 @@ app.post("/api/kapcsolat", async (req, res) => {
     }
 });
 
-// Üzenetek kezelése oldal (admin.html)
-app.get("/admin", (req, res) => {
-    res.sendFile(path.join(__dirname, "admin.html"));
-});
 
-// Teljes rendszerkezelés oldal (admin-full.html)
-// Fontos: a profil oldaladról /admin-full.html-re hivatkozol, így itt is az legyen!
-app.get("/admin_full.html", (req, res) => {
-    res.sendFile(path.join(__dirname, "admin_full.html"));
-});
-
+// =====================================================
 // ================= ADMIN FUNKCIÓK =================
+// =====================================================
 app.get("/api/admin/uzenetek", async (req, res) => {
     try {
         const [rows] = await db.promise().query("SELECT * FROM uzenetek ORDER BY datum DESC");
@@ -578,13 +557,11 @@ app.delete("/api/admin/uzenetek/:id", async (req, res) => {
 app.post("/api/admin/valasz", async (req, res) => {
     const { email, uzenet } = req.body;
     console.log(`Válasz küldése ide: ${email} -> ${uzenet}`);
-    // Ide jöhet majd a nodemailer sendMail része a válaszhoz
     res.json({ success: true });
 });
 
 
 // --- ADMIN EXTRA API-K ---
-// Tanfolyam törlése
 app.delete("/api/admin/kepzesek/:id", async (req, res) => {
     try {
         await db.promise().query("DELETE FROM kepzesek WHERE id = ?", [req.params.id]);
@@ -612,7 +589,7 @@ app.get("/api/admin/osszes-jelentkezes", async (req, res) => {
         res.json(rows);
     } catch (err) { res.status(500).json({ success: false }); }
 });
-
+// Összes tanár lekérése
 app.get("/api/admin/osszes-tanar", async (req, res) => {
     try {
         const [rows] = await db.promise().query("SELECT ua_id, felhasznalonev, gmail, vegzettseg FROM user_ado");
@@ -650,14 +627,12 @@ app.get("/api/diak/jelentkezesek/:userId", async (req, res) => {
 });
 
 // ================= TANÁR TANFOLYAMAI ÉS JELENTKEZŐK =================
-// Lekérdezi egy tanár összes tanfolyamát és hogy kik jelentkeztek rájuk
 app.get("/api/tanar/tanfolyamok/:teacherId", async (req, res) => {
     try {
         const { teacherId } = req.params;
         
         console.log("🔍 Tanár ID:", teacherId);
         
-        // Lekérdezzük a tanár tanfolyamait (ua_ID mező alapján)
         const [tanfolyamok] = await db.promise().query(
             `SELECT id, kep, nev, leiras, helyileg, email, ar, heves_kortol
              FROM kepzesek 
@@ -670,8 +645,7 @@ app.get("/api/tanar/tanfolyamok/:teacherId", async (req, res) => {
         if (tanfolyamok.length > 0) {
             console.log("📋 Tanfolyamok:", tanfolyamok.map(t => `${t.nev} (ID: ${t.id})`));
         }
-        
-        // Minden tanfolyamhoz lekérdezzük a jelentkezőket
+
         for (let tanfolyam of tanfolyamok) {
             const [jelentkezok] = await db.promise().query(
                 `SELECT 

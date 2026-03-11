@@ -1,0 +1,198 @@
+:root {
+    --primary: #3399ff;
+    --primary-hover: #1a78d1;
+    --danger: #ff4d4d;
+    --danger-hover: #e63939;
+    --surface: #0f111a;
+    --card-bg: #1a1a2e;
+    --text: #ffffff;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(180deg, #0f111a, #1a2a4b);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* --- HATTER ANIMACIO --- */
+header { position: relative; width: 100%; height: 240px; }
+header svg { position: absolute; top: 0; left: 0; width: 100%; height: 220px; z-index: 1; }
+
+.bg-logo-animation {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70vh;
+    opacity: 0.15;
+    z-index: -1;
+    pointer-events: none;
+    mix-blend-mode: screen; 
+    animation: float 25s linear infinite;
+}
+
+@keyframes float {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* --- PROFIL KARTYA --- */
+.profil-card {
+    background: rgba(36, 36, 64, 0.85);
+    backdrop-filter: blur(15px);
+    border-radius: 28px;
+    padding: 40px 30px;
+    width: 92%;
+    max-width: 480px;
+    margin: 0 auto;
+    position: relative;
+    top: -100px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid rgba(255,255,255,0.08);
+    z-index: 10;
+}
+
+.profil-avatar {
+    width: 170px;
+    height: 170px;
+    margin-bottom: 25px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 0 25px rgba(51, 153, 255, 0.3);
+    border: 3px solid var(--primary);
+    background: #242440;
+}
+.profil-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.profil-adatok { text-align: center; width: 100%; }
+.profil-adatok h2 { font-size: 2em; margin-bottom: 5px; font-weight: 700; }
+.profil-szerep { color: var(--primary); font-weight: bold; text-transform: uppercase; font-size: 0.9em; letter-spacing: 2px; margin-bottom: 15px; }
+.profil-bio { font-style: italic; opacity: 0.8; margin-bottom: 30px; line-height: 1.5; font-size: 1.05em; }
+
+/* --- GOMBOK --- */
+.profil-gomb {
+    width: 100%;
+    padding: 15px;
+    margin: 8px 0;
+    font-size: 1em;
+    font-weight: 600;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(255, 255, 255, 0.05); 
+    color: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(51, 153, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.profil-gomb:hover { 
+    background: var(--primary); 
+    color: white;
+    border-color: var(--primary);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(51, 153, 255, 0.4);
+}
+
+#addCourseBtn { border-color: #00c6ff; color: #00c6ff; display: none; }
+#addCourseBtn:hover { background: linear-gradient(135deg, #00c6ff, #0072ff); color: white; }
+
+.veszely-gomb { border-color: rgba(244, 67, 54, 0.4); color: #f44336; }
+.veszely-gomb:hover { background: #f44336 !important; border-color: #f44336; color: white; }
+
+.profil-vissza { 
+    position: fixed; 
+    top: 25px; 
+    left: 25px; 
+    color: rgba(255,255,255,0.9); 
+    background: rgba(36, 36, 64, 0.85);
+    backdrop-filter: blur(10px);
+    text-decoration: none; 
+    font-size: 0.95em; 
+    font-weight: 600; 
+    padding: 12px 24px;
+    border-radius: 12px;
+    transition: 0.3s; 
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 1000;
+    border: 1px solid rgba(51, 153, 255, 0.2);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+.profil-vissza:hover { 
+    color: var(--primary); 
+    background: rgba(51, 153, 255, 0.15);
+    border-color: var(--primary);
+    transform: translateX(-3px);
+}
+.profil-vissza::before {
+    content: '←';
+    font-size: 1.2em;
+}
+
+/* --- MODAL RENDSZER --- */
+.modal { 
+    display: none; 
+    position: fixed; 
+    inset: 0; 
+    background: rgba(5, 6, 15, 0.92); 
+    z-index: 10000; 
+    backdrop-filter: blur(12px); 
+    overflow-y: auto; 
+    padding: 40px 20px;
+    justify-content: center; 
+    align-items: flex-start;
+}
+
+/* Modal aktív állapota JS-hez */
+.modal[style*="display: block"], .modal[style*="display: flex"] { display: flex !important; }
+
+.modal-content {
+    background: #1a1a2e;
+    border: 1px solid rgba(51, 153, 255, 0.2);
+    border-radius: 24px;
+    padding: 35px;
+    width: 100%;
+    max-width: 550px;
+    text-align: center;
+    box-shadow: 0 30px 70px rgba(0,0,0,0.8);
+    margin-bottom: 40px;
+}
+
+.modal-content h2 { margin-bottom: 20px; color: var(--primary); font-size: 1.5em; }
+
+.modal-content input, .modal-content textarea {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(51, 153, 255, 0.2);
+    color: white;
+    padding: 14px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    font-size: 1em;
+    outline: none;
+    transition: 0.3s;
+}
+
+.modal-content input:focus, .modal-content textarea:focus { border-color: var(--primary); background: rgba(0,0,0,0.6); }
+
+.input-row { display: flex; gap: 15px; }
+
+.close-link { background: none; border: none; color: #aaa; cursor: pointer; font-weight: bold; margin-top: 15px; font-size: 0.9em; }
+.close-link:hover { color: white; }
+
+@media(max-width: 480px) {
+    .input-row { flex-direction: column; gap: 0; }
+    .profil-card { top: -80px; padding: 30px 20px; }
+    .modal-content { padding: 25px 15px; }
+}
