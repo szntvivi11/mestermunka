@@ -6,126 +6,60 @@
     <title>Admin - Üzenetek</title>
     <link rel="stylesheet" href="/style.css">
     <style>
-        /* ADMIN SPECIFIKUS STÍLUSOK */
-        .admin-container {
-            padding: 40px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+        /*- Admin oldal konténer stílusai*/
+        .admin-container { padding: 40px; max-width: 1200px; margin: 0 auto; }
 
-        .admin-table-wrapper {
-            background: rgba(40, 40, 90, 0.3);
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-            border: 1px solid rgba(177, 133, 245, 0.2);
-            overflow-x: auto;
-        }
+        /*- Táblázat wrapper stílusai*/
+        .admin-table-wrapper { background: rgba(40, 40, 90, 0.3); border-radius: 15px; padding: 50px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); border: 1px solid rgba(177, 133, 245, 0.2); overflow-x: auto; }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            color: #fff;
-        }
+        /*- Táblázat alapstílusok*/
+        table { width: 100%; border-collapse: collapse; color: #fff; }
+        th { background: rgba(123, 47, 242, 0.6); padding: 30px; text-align: left; border-bottom: 2px solid #7b2ff2; font-weight: bold; }
+        td { padding: 30px; border-bottom: 1px solid rgba(177, 133, 245, 0.3); vertical-align: middle; text-align: left; }
+        tr:hover { background: rgba(255, 255, 255, 0.05); }
 
-        th {
-            background: rgba(123, 47, 242, 0.4);
-            padding: 15px;
-            text-align: left;
-            border-bottom: 2px solid #7b2ff2;
-        }
+        /*- Gombok konténer stílusai*/
+        .btn-container { display: flex; justify-content: flex-start; gap: 10px; flex-wrap: wrap; }
 
-        td {
-            padding: 12px 15px;
-            border-bottom: 1px solid rgba(177, 133, 245, 0.1);
-            vertical-align: middle;
-        }
+        /*- Általános gomb stílusok*/
+        .btn { padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; color: white; transition: all 0.2s ease; text-decoration: none; display: inline-flex; align-items: center; font-size: 14px; }
 
-        tr:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        /* GOMBOK */
-        .btn { 
-    padding: 12px 24px; 
-    border: none; 
-    border-radius: 6px; 
-    cursor: pointer; 
-    font-weight: 600; 
-    color: white; 
-    transition: all 0.2s ease; 
-    text-decoration: none; 
-    display: inline-flex;
-    align-items: center;
-    font-size: 14px;
-}
-
+        /*- Válasz gomb stílusai*/
         .reply-btn { background: #4CAF50; color: white; margin-right: 5px; }
         .reply-btn:hover { background: #45a049; }
 
+        /*- Törlés gomb stílusai*/
         .delete-btn { background: #f22f2f; color: white; }
         .delete-btn:hover { background: #d32f2f; }
 
-        /* MODAL (VÁLASZ ABLAK) */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0; top: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
-        }
-
-        .modal-content {
-            background: #1a1a2e;
-            margin: 10% auto;
-            padding: 30px;
-            border: 1px solid #7b2ff2;
-            width: 500px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(123, 47, 242, 0.5);
-        }
-
+        /*- Modal (felugró ablak) stílusai*/
+        .modal { display: none; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); }
+        .modal-content { background: #1a1a2e; margin: 10% auto; padding: 30px; border: 1px solid #7b2ff2; width: 500px; border-radius: 15px; box-shadow: 0 0 20px rgba(123, 47, 242, 0.5); }
         .modal-content h2 { color: #b185f5; margin-top: 0; }
+        .modal-content textarea { width: 100%; height: 150px; background: #28285a; color: white; border: 1px solid #b185f5; padding: 12px; border-radius: 8px; margin: 15px 0; resize: vertical; }
 
-        .modal-content textarea {
-            width: 100%;
-            height: 150px;
-            background: #28285a;
-            color: white;
-            border: 1px solid #b185f5;
-            padding: 12px;
-            border-radius: 8px;
-            margin: 15px 0;
-            resize: vertical;
+        /*- Navigációs gombok stílusai*/
+        .nav-buttons { margin-bottom: 30px; display: flex; gap: 15px; align-items: center; }
+        .btn-back { background: #2a2d3e; border: 1px solid #444; }
+        .btn-back:hover { background: #363a50; border-color: #666; }
+        .btn-messages { background: var(--purple); box-shadow: 0 4px 12px rgba(123, 47, 242, 0.3); }
+        .btn-messages:hover { background: #8a46f5; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(123, 47, 242, 0.4); }
+
+        /*- Reszponzív stílusok mobil nézethez*/
+        @media (max-width: 768px) {
+            .admin-table-wrapper { overflow-x: visible; }
+            table { display: block; width: 100%; }
+            thead { display: none; }
+            tbody tr { display: block; margin-bottom: 15px; border: 1px solid rgba(177, 133, 245, 0.2); border-radius: 10px; padding: 10px; background: rgba(40, 40, 90, 0.3); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+            tbody tr td { display: flex; justify-content: space-between; padding: 10px; border: none; border-bottom: 1px solid rgba(177, 133, 245, 0.1); }
+            tbody tr td:last-child { border-bottom: none; }
+            tbody tr td::before { content: attr(data-label); font-weight: bold; color: #b185f5; margin-right: 10px; }
+            .btn.reply-btn, .btn.delete-btn { margin: 5px 0; width: 100%; padding: 10px; font-size: 0.9em; border-radius: 5px; }
+            .btn.reply-btn { background: #4CAF50; color: white; }
+            .btn.reply-btn:hover { background: #45a049; }
+            .btn.delete-btn { background: #f22f2f; color: white; }
+            .btn.delete-btn:hover { background: #d32f2f; }
         }
-        .nav-buttons { 
-    margin-bottom: 30px; 
-    display: flex; 
-    gap: 15px; 
-    align-items: center;
-}
-       
-.btn-back { 
-    background: #2a2d3e; 
-    border: 1px solid #444;
-}
-.btn-back:hover { 
-    background: #363a50; 
-    border-color: #666;
-}
-.btn-messages {
-    background: var(--purple);
-    box-shadow: 0 4px 12px rgba(123, 47, 242, 0.3);
-}
-.btn-messages:hover {
-    background: #8a46f5;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(123, 47, 242, 0.4);
-}
-        
-        
-
     </style>
 </head>
 <body>
@@ -186,11 +120,11 @@
                     const datum = new Date(u.datum).toLocaleString('hu-HU');
                     table.innerHTML += `
                         <tr>
-                            <td style="font-size: 0.8em; color: #b185f5;">${datum}</td>
-                            <td><b>${u.nev}</b></td>
-                            <td><a href="mailto:${u.email}" style="color: #fff;">${u.email}</a></td>
-                            <td style="max-width: 300px;">${u.uzenet}</td>
-                            <td>
+                            <td style="font-size: 0.8em; color: #b185f5;" data-label="Dátum">${datum}</td>
+                            <td data-label="Név"><b>${u.nev}</b></td>
+                            <td data-label="Email"><a href="mailto:${u.email}" style="color: #fff;">${u.email}</a></td>
+                            <td data-label="Üzenet" style="max-width: 300px;">${u.uzenet}</td>
+                            <td data-label="Műveletek">
                                 <button class="btn reply-btn" onclick="valaszAblak('${u.email}', '${u.nev}')">Válasz</button>
                                 <button class="btn delete-btn" onclick="torles(${u.id})">Törlés</button>
                             </td>
