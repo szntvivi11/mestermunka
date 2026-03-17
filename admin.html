@@ -123,6 +123,43 @@
     transform: translateY(-2px);
     box-shadow: 0 6px 15px rgba(123, 47, 242, 0.4);
 }
+
+/* Add styles for the hamburger menu */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.hamburger div {
+    width: 25px;
+    height: 3px;
+    background-color: #fff;
+    margin: 3px 0;
+    transition: 0.4s;
+}
+
+@media (max-width: 768px) {
+    #navigacio {
+        display: none;
+        flex-direction: column;
+        background-color: #242440;
+        position: absolute;
+        top: 60px;
+        right: 10px;
+        width: 200px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    #navigacio.active {
+        display: flex;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+}
         
         
 
@@ -233,7 +270,16 @@
             if (res.ok) uzenetekBetoltese();
         }
 
+        // Add functionality for the hamburger menu
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.getElementById('navigacio');
+
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
         uzenetekBetoltese();
     </script>
 </body>
 </html>
+``` 
