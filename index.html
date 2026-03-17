@@ -5,6 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Főoldal</title>
     <link rel="stylesheet" href="/style.css">
+    <style>
+    /* Add styles for the hamburger menu */
+    .hamburger {
+        display: none;
+        flex-direction: column;
+        cursor: pointer;
+    }
+
+    .hamburger div {
+        width: 25px;
+        height: 3px;
+        background-color: #fff;
+        margin: 3px 0;
+        transition: 0.4s;
+    }
+
+    @media (max-width: 768px) {
+        #navigacio {
+            display: none;
+            flex-direction: column;
+            background-color: #242440;
+            position: absolute;
+            top: 60px;
+            right: 10px;
+            width: 200px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #navigacio.active {
+            display: flex;
+        }
+
+        .hamburger {
+            display: flex;
+        }
+    }
+    </style>
 </head>
 <body>
     <header id="fejlec">
@@ -30,6 +68,11 @@
                 <path fill="url(#wave-grad)" d="M0,128L48,138.7C96,149,192,171,288,165.3C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
             </svg>
 
+            <div class="hamburger">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
 
             <nav id="navigacio">
                 <a id="nav-fo" href="/">Főoldal</a>
@@ -149,6 +192,14 @@
         }
         
         document.addEventListener('DOMContentLoaded', updateHeaderProfile);
-        </script>
+
+        // Add functionality for the hamburger menu
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.getElementById('navigacio');
+
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+    </script>
 </body>
 </html>

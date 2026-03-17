@@ -60,6 +60,73 @@
             .btn.delete-btn { background: #f22f2f; color: white; }
             .btn.delete-btn:hover { background: #d32f2f; }
         }
+<<<<<<< HEAD
+=======
+        .nav-buttons { 
+    margin-bottom: 30px; 
+    display: flex; 
+    gap: 15px; 
+    align-items: center;
+}
+       
+.btn-back { 
+    background: #2a2d3e; 
+    border: 1px solid #444;
+}
+.btn-back:hover { 
+    background: #363a50; 
+    border-color: #666;
+}
+.btn-messages {
+    background: var(--purple);
+    box-shadow: 0 4px 12px rgba(123, 47, 242, 0.3);
+}
+.btn-messages:hover {
+    background: #8a46f5;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(123, 47, 242, 0.4);
+}
+
+/* Add styles for the hamburger menu */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.hamburger div {
+    width: 25px;
+    height: 3px;
+    background-color: #fff;
+    margin: 3px 0;
+    transition: 0.4s;
+}
+
+@media (max-width: 768px) {
+    #navigacio {
+        display: none;
+        flex-direction: column;
+        background-color: #242440;
+        position: absolute;
+        top: 60px;
+        right: 10px;
+        width: 200px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    #navigacio.active {
+        display: flex;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+}
+        
+        
+
+>>>>>>> b7b15ddedc3f26da73443af11dd474f9ef6a53fe
     </style>
 </head>
 <body>
@@ -167,7 +234,16 @@
             if (res.ok) uzenetekBetoltese();
         }
 
+        // Add functionality for the hamburger menu
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.getElementById('navigacio');
+
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
         uzenetekBetoltese();
     </script>
 </body>
 </html>
+``` 
