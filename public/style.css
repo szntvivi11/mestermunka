@@ -57,13 +57,12 @@
 
 
 /* ================= profil ikon ================= */
-/* Mini profil stílusa a főoldalon is */
-/* PROFILKÉP POZICIONÁLÁSA */
 .mini-profil-link {
     position: absolute;
-    top: 25px;
-    right: 35px;
+    top: 20px;
+    right: 30px;
     z-index: 1000;
+    display: none; /* alapból rejtve, JS mutatja meg */
 }
 
 .mini-profil-link img {
@@ -80,6 +79,13 @@
 .mini-profil-link:hover img {
     transform: scale(1.1);
     border-color: white;
+}
+
+/* Mobilon a desktop profil ikon NE látsszon */
+@media (max-width: 768px) {
+    .mini-profil-link:not(.mobile-profil) {
+        display: none !important;
+    }
 }
 
 /* Navigáció z-index fix, hogy ne csússzon a hullám alá */
@@ -1221,8 +1227,45 @@ a {
     #modal-content h2 {
         font-size: 1.5em;
     }
+
+    #modal-content button#applyButton {
+        padding: 10px 20px;
+        font-size: 1em;
+    }
 }
 
+/* Profil ikon - jobb oldal */
+.mobile-jobb {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mobile-profil {
+    display: none;
+    width: 42px;
+    height: 42px;
+    align-items: center;
+    justify-content: center;
+}
+
+.mobile-profil img {
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 50% !important;
+    border: 2px solid rgba(255,255,255,0.85) !important;
+    object-fit: cover !important;
+}
+
+/* Ha nincs profil, helyfoglaló a szimmetriáért */
+.mobile-profil-placeholder {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+}
 
 
   /* ==========================================
@@ -1834,8 +1877,9 @@ a {
     }
 
     /* rolunk container */
-    .rolunk-container {
-        margin-top: 20px !important;
+    main.rolunk-container {
+        margin-top: 0 !important;
+        padding-top: 15px !important;
     }
 
     /* hero ne csússzon a hullám alá mobilon */
@@ -1890,4 +1934,35 @@ a {
 
 #modal.open, #modal[style*="flex"] {
     display: flex !important;
+}
+
+/* ==========================================
+   BEJELENTKEZÉS / REGISZTRÁCIÓ / KAPCSOLAT OLDAL
+   ========================================== */
+.auth-page {
+    position: relative;
+    z-index: 3;
+    margin-top: -40px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+    min-height: calc(100vh - 220px);
+}
+
+@media (max-width: 768px) {
+    .auth-page {
+        margin-top: 0 !important;
+        padding: 20px 16px !important;
+        min-height: calc(100vh - 64px);
+        align-items: flex-start;
+    }
+
+    .aloldal-container {
+        margin: 0 auto !important;
+        width: 100% !important;
+        max-width: 420px !important;
+        box-sizing: border-box !important;
+        padding: 20px !important;
+    }
 }

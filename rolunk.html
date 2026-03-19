@@ -7,56 +7,74 @@
     <link rel="stylesheet" href="/style.css">
     <style>
         .rolunk-container {
-    max-width: 1000px;
-    margin: -50px auto 50px; /* Felhúzzuk a hullám alá */
-    padding: 20px;
-    color: white;
-    text-align: center;
-}
+            max-width: 1000px;
+            margin: -50px auto 50px;
+            padding: 20px;
+            color: white;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
 
-.about-hero h1 {
-    font-size: 3rem;
-    color: #3399ff;
-    margin-bottom: 10px;
-}
+        .about-hero {
+            margin-top: 0;
+            padding-top: 0;
+        }
 
-.about-text {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 40px;
-    border-radius: 20px;
-    margin-bottom: 40px;
-    line-height: 1.6;
-}
+        .about-hero h1 {
+            font-size: 3rem;
+            color: #3399ff;
+            margin-top: 0 !important;
+            margin-bottom: 10px;
+        }
 
-.values-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    margin-bottom: 50px;
-}
+        @media (max-width: 768px) {
+            main.rolunk-container {
+                margin: 0 auto 50px !important;
+                padding-top: 15px !important;
+            }
+            .about-hero h1 {
+                font-size: 2rem;
+            }
+        }
 
-.value-card {
-    background: rgba(123, 47, 242, 0.1);
-    border: 1px solid #7b2ff2;
-    padding: 30px;
-    border-radius: 15px;
-    transition: transform 0.3s;
-}
+        .about-text {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
 
-.value-card:hover {
-    transform: translateY(-10px);
-    background: rgba(123, 47, 242, 0.2);
-}
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 50px;
+        }
 
-.email-list {
-    margin-top: 20px;
-    font-weight: bold;
-    color: #b185f5;
-}
+        .value-card {
+            background: rgba(123, 47, 242, 0.1);
+            border: 1px solid #7b2ff2;
+            padding: 30px;
+            border-radius: 15px;
+            transition: transform 0.3s;
+        }
 
-.email-list p {
-    margin: 10px 0;
-}
+        .value-card:hover {
+            transform: translateY(-10px);
+            background: rgba(123, 47, 242, 0.2);
+        }
+
+        .email-list {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #b185f5;
+        }
+
+        .email-list p {
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
@@ -95,12 +113,13 @@
                 <span></span><span></span><span></span>
             </button>
             <a href="/" class="mobile-logo">
-                <img src="./Tanfolyamok/kepek/logooo.png" alt="Logo">
+                <img src="/Tanfolyamok/kepek/logooo.png" alt="Logo">
             </a>
-            <a href="/profil" class="mini-profil-link mobile-profil" id="miniProfilLinkMobile" style="display:none;">
-                <img id="headerProfileImageMobile" src="https://ui-avatars.com/api/?name=User&size=50&background=242440&color=3399ff&bold=true" alt="Profil">
-            </a>
-            <div class="mobile-profil-placeholder" id="mobileProfilPlaceholder"></div>
+            <div class="mobile-jobb">
+                <a href="/profil" class="mobile-profil" id="miniProfilLinkMobile" style="display:none;">
+                    <img id="headerProfileImageMobile" src="" alt="Profil">
+                </a>
+            </div>
         </div>
 
         <!-- MOBIL: lenyíló menü -->
