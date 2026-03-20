@@ -1966,3 +1966,250 @@ a {
         padding: 20px !important;
     }
 }
+
+/* ==========================================
+   TABLET RESZPONZIVITÁS
+   iPad Air (820px), Asus ZenBook Fold (853px),
+   Surface Pro 7 (912px), iPad Pro (1024px),
+   Nest Hub (1024px), Nest Hub Max (1280px)
+   ========================================== */
+
+/* --- MINDEN TABLET: 769px – 1280px --- */
+@media (min-width: 769px) and (max-width: 1280px) {
+
+    /* Mobil fejléc elrejtve, desktop hullám látható */
+    .mobile-header { display: none !important; }
+    .mobile-nav-drawer { display: none !important; }
+    .desktop-wave { display: block !important; }
+
+    /* Hullám magassága kisebb */
+    .header-wave-container {
+        height: 170px;
+    }
+
+    /* Navigáció: kisebb gombok, kevesebb gap, középen */
+    #navigacio {
+        top: 18px;
+        gap: 5px;
+        /* Helyet hagy a logónak bal oldalt és profil ikonnak jobb oldalt */
+        padding-left: 150px;
+        padding-right: 80px;
+        flex-wrap: wrap;
+        box-sizing: border-box;
+    }
+
+    #navigacio a {
+        padding: 7px 11px;
+        font-size: 0.73rem;
+        letter-spacing: 0.6px;
+        border-radius: 40px;
+    }
+
+    /* Logó kisebb */
+    .header-logo {
+        height: 90px;
+    }
+
+    /* Profil ikon pozíció */
+    .mini-profil-link {
+        top: 14px;
+        right: 16px;
+    }
+    .mini-profil-link img {
+        width: 42px;
+        height: 42px;
+    }
+
+    /* Hero: sor => oszlop, kisebb méret */
+    .hero {
+        flex-direction: column !important;
+        text-align: center !important;
+        padding: 40px 6% 60px !important;
+        margin-top: 0 !important;
+        gap: 28px;
+    }
+
+    .hero-content {
+        max-width: 100%;
+    }
+
+    .hero-content h1 {
+        font-size: 2.2em !important;
+        text-align: center !important;
+    }
+
+    .hero-content p {
+        font-size: 1em;
+        margin-bottom: 24px;
+    }
+
+    .hero-image {
+        width: 280px !important;
+        height: 280px !important;
+        margin: 0 auto !important;
+    }
+
+    .hero-image img {
+        width: 100% !important;
+        height: 100% !important;
+        border-radius: 50% !important;
+        object-fit: cover !important;
+    }
+
+    .hero-circle {
+        width: 115% !important;
+        height: 115% !important;
+        top: -7.5% !important;
+        left: -7.5% !important;
+    }
+
+    /* Legújabb tanfolyamok: 2 oszlop */
+    .latest-courses {
+        padding: 50px 5%;
+    }
+
+    .latest-courses h2 {
+        font-size: 2em;
+        margin-bottom: 30px;
+    }
+
+    .latest-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 22px;
+    }
+
+    .latest-card {
+        height: auto !important;
+    }
+
+    .latest-card img {
+        height: 200px;
+    }
+
+    .latest-card h3 {
+        font-size: 1.15em;
+        margin: 14px 0 8px;
+    }
+
+    .latest-card p {
+        font-size: 0.9em;
+        padding: 0 14px;
+    }
+
+    .card-btn {
+        margin: 14px;
+        padding: 10px 16px;
+        font-size: 0.9em;
+    }
+
+    /* Tanfolyam kártyák */
+    .tanfolyamkartya {
+        width: 200px;
+        height: 380px;
+    }
+
+    .tanfolyamkartya img {
+        height: 280px;
+    }
+
+    /* #tanfolyamokmain: ne csússzon a hullám alá */
+    #tanfolyamokmain {
+        margin-top: 0 !important;
+        padding-top: 20px !important;
+    }
+
+    /* Slider */
+    .tanfolyam-slider {
+        max-width: 80%;
+    }
+
+    .slide img {
+        height: 300px;
+    }
+
+    /* auth-page */
+    .auth-page {
+        margin-top: 0 !important;
+        padding-top: 30px !important;
+    }
+
+    /* Profil konténer */
+    .profil-container {
+        max-width: 600px;
+    }
+
+    /* rolunk */
+    main.rolunk-container {
+        padding-top: 20px !important;
+    }
+}
+
+/* --- NAGYOBB TABLETEK: 901px – 1280px ---
+   (Surface Pro 7, iPad Pro, Nest Hub, Nest Hub Max)
+   Ezeken 3 oszlop is elfér egymás mellett
+*/
+@media (min-width: 901px) and (max-width: 1280px) {
+
+    #navigacio {
+        gap: 6px;
+        padding-left: 160px;
+        padding-right: 90px;
+    }
+
+    #navigacio a {
+        padding: 8px 13px;
+        font-size: 0.76rem;
+    }
+
+    .header-logo {
+        height: 105px;
+    }
+
+    /* Hero: elég hely van sorban maradni */
+    .hero {
+        flex-direction: row !important;
+        text-align: left !important;
+        padding: 40px 5% 60px !important;
+        margin-top: -30px !important;
+        gap: 0;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .hero-content h1 {
+        font-size: 2.3em !important;
+        text-align: left !important;
+    }
+
+    .hero-image {
+        width: 310px !important;
+        height: 310px !important;
+        flex-shrink: 0;
+    }
+
+    /* 3 oszlop */
+    .latest-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 18px;
+    }
+
+    .latest-card img {
+        height: 160px;
+    }
+
+    .latest-card h3 {
+        font-size: 1em;
+        margin: 10px 0 6px;
+    }
+
+    .latest-card p {
+        font-size: 0.82em;
+        padding: 0 10px;
+    }
+
+    .card-btn {
+        margin: 10px;
+        padding: 8px 12px;
+        font-size: 0.85em;
+    }
+}
