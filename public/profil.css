@@ -19,10 +19,8 @@ body {
 }
 
 /* --- HATTER ANIMACIO --- */
-header { position: relative; width: 100%; height: 160px; display: flex; align-items: flex-start; }
-header svg { position: absolute; top: 0; left: 0; width: 100%; height: 160px; z-index: 1; }
-
-.header-wave-container { position: relative; width: 100%; height: 160px; }
+header { position: relative; width: 100%; height: 240px; }
+header svg { position: absolute; top: 0; left: 0; width: 100%; height: 220px; z-index: 1; }
 
 .bg-logo-animation {
     position: fixed;
@@ -50,9 +48,9 @@ header svg { position: absolute; top: 0; left: 0; width: 100%; height: 160px; z-
     padding: 40px 30px;
     width: 92%;
     max-width: 480px;
-    margin: -40px auto 50px auto;
+    margin: 0 auto;
     position: relative;
-    top: 0;
+    top: -100px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.6);
     display: flex;
     flex-direction: column;
@@ -112,23 +110,23 @@ header svg { position: absolute; top: 0; left: 0; width: 100%; height: 160px; z-
 .veszely-gomb:hover { background: #f44336 !important; border-color: #f44336; color: white; }
 
 .profil-vissza { 
-    position: absolute;
-    top: 20px; 
+    position: fixed; 
+    top: 25px; 
     left: 25px; 
     color: rgba(255,255,255,0.9); 
-    background: rgba(36, 36, 64, 0.7);
+    background: rgba(36, 36, 64, 0.85);
     backdrop-filter: blur(10px);
     text-decoration: none; 
     font-size: 0.95em; 
     font-weight: 600; 
-    padding: 10px 20px;
+    padding: 12px 24px;
     border-radius: 12px;
     transition: 0.3s; 
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    z-index: 10;
-    border: 1px solid rgba(51, 153, 255, 0.3);
+    z-index: 1000;
+    border: 1px solid rgba(51, 153, 255, 0.2);
     box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 .profil-vissza:hover { 
@@ -195,6 +193,6 @@ header svg { position: absolute; top: 0; left: 0; width: 100%; height: 160px; z-
 
 @media(max-width: 480px) {
     .input-row { flex-direction: column; gap: 0; }
-    .profil-card { top: 0; margin-top: 40px; padding: 30px 20px; }
+    .profil-card { top: -80px; padding: 30px 20px; }
     .modal-content { padding: 25px 15px; }
 }
