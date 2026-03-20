@@ -112,7 +112,7 @@ async function sendMailSafe({ to, subject, text, html, replyTo }) {
 
   try {
     await transporter.sendMail({
-      from: `Tanfolyamok <${MAIL_USER}>`,
+      from: `Mentora <${MAIL_USER}>`,
       to,
       subject,
       text,
@@ -162,8 +162,8 @@ app.post("/api/register-user", async (req, res) => {
       const emailResult = await sendMailSafe({
         to: email,
         subject: "Sikeres regisztráció",
-        text: `Szia ${nev}!\n\nSikeresen regisztráltál a Tanfolyamok oldalra.\n\nÜdv,\nTanfolyamok csapata`,
-        html: `<p>Szia <strong>${nev}</strong>!</p><p>Sikeresen regisztráltál a Tanfolyamok oldalra.</p><p>Üdv,<br>Tanfolyamok csapata</p>`,
+        text: `Szia ${nev}!\n\nSikeresen regisztráltál a Mentora oldalra.\n\nÜdv,\nMentora csapata`,
+        html: `<p>Szia <strong>${nev}</strong>!</p><p>Sikeresen regisztráltál a Mentora oldalra.</p><p>Üdv,<br>Mentora csapata</p>`,
       });
       emailSent = emailResult.sent;
     } catch (mailErr) {
@@ -208,8 +208,8 @@ app.post("/api/register-teacher", async (req, res) => {
       const emailResult = await sendMailSafe({
         to: email,
         subject: "Sikeres tanári regisztráció",
-        text: `Szia ${felhasznalonev}!\n\nSikeresen regisztráltál tanárként a Tanfolyamok oldalra.\n\nÜdv,\nTanfolyamok csapata`,
-        html: `<p>Szia <strong>${felhasznalonev}</strong>!</p><p>Sikeresen regisztráltál tanárként a Tanfolyamok oldalra.</p><p>Üdv,<br>Tanfolyamok csapata</p>`,
+        text: `Szia ${felhasznalonev}!\n\nSikeresen regisztráltál tanárként a Mentora oldalra.\n\nÜdv,\nMentora csapata`,
+        html: `<p>Szia <strong>${felhasznalonev}</strong>!</p><p>Sikeresen regisztráltál tanárként a Mentora oldalra.</p><p>Üdv,<br>Mentora csapata</p>`,
       });
       emailSent = emailResult.sent;
     } catch (mailErr) {
@@ -462,8 +462,8 @@ app.post("/api/jelentkezes", async (req, res) => {
         const emailResult = await sendMailSafe({
           to: jelentkezesAdat.diak_email,
           subject: "Sikeres tanfolyam jelentkezés",
-          text: `Szia ${jelentkezesAdat.diak_nev}!\n\nSikeresen jelentkeztél erre a tanfolyamra: ${jelentkezesAdat.tanfolyam_nev}.\n\nÜdv,\nTanfolyamok csapata`,
-          html: `<p>Szia <strong>${jelentkezesAdat.diak_nev}</strong>!</p><p>Sikeresen jelentkeztél erre a tanfolyamra: <strong>${jelentkezesAdat.tanfolyam_nev}</strong>.</p><p>Üdv,<br>Tanfolyamok csapata</p>`,
+          text: `Szia ${jelentkezesAdat.diak_nev}!\n\nSikeresen jelentkeztél erre a tanfolyamra: ${jelentkezesAdat.tanfolyam_nev}.\n\nÜdv,\nMentora csapata`,
+          html: `<p>Szia <strong>${jelentkezesAdat.diak_nev}</strong>!</p><p>Sikeresen jelentkeztél erre a tanfolyamra: <strong>${jelentkezesAdat.tanfolyam_nev}</strong>.</p><p>Üdv,<br>Mentora csapata</p>`,
         });
         emailSent = emailResult.sent;
       } catch (mailErr) {
@@ -512,8 +512,8 @@ app.post("/api/kapcsolat", async (req, res) => {
           const senderMailResult = await sendMailSafe({
             to: email,
             subject: "Megkaptuk az üzeneted",
-            text: `Szia ${nev}!\n\nKöszönjük az üzeneted, hamarosan válaszolunk.\n\nÜdv,\nTanfolyamok csapata`,
-            html: `<p>Szia <strong>${nev}</strong>!</p><p>Köszönjük az üzeneted, hamarosan válaszolunk.</p><p>Üdv,<br>Tanfolyamok csapata</p>`,
+            text: `Szia ${nev}!\n\nKöszönjük az üzeneted, hamarosan válaszolunk.\n\nÜdv,\nMentora csapata`,
+            html: `<p>Szia <strong>${nev}</strong>!</p><p>Köszönjük az üzeneted, hamarosan válaszolunk.</p><p>Üdv,<br>Mentora csapata</p>`,
           });
           confirmationEmailSent = senderMailResult.sent;
         } catch (mailErr) {
@@ -555,9 +555,44 @@ app.delete("/api/admin/uzenetek/:id", async (req, res) => {
 });
 
 app.post("/api/admin/valasz", async (req, res) => {
-    const { email, uzenet } = req.body;
-    console.log(`Válasz küldése ide: ${email} -> ${uzenet}`);
-    res.json({ success: true });
+    const { email, nev, uzenet } = req.body;
+
+    if (!email || !uzenet) {
+        return res.status(400).json({ success: false, message: "Hiányzó email vagy üzenet!" });
+    }
+
+    try {
+        const result = await sendMailSafe({
+            to: email,
+            subject: "Válasz az üzenetedre – Mentora",
+            text: `${nev ? `Szia ${nev}!` : "Szia!"}\n\n${uzenet}\n\nÜdv,\nMentora csapata`,
+            html: `
+                <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h2 style="color: #3399ff;">Válasz az üzenetedre</h2>
+                    <p>${nev ? `Szia <strong>${nev}</strong>!` : "Szia!"}</p>
+                    <div style="background: #f5f5f5; padding: 16px; border-left: 4px solid #3399ff; border-radius: 4px; margin: 16px 0;">
+                        ${String(uzenet).replace(/\n/g, "<br>")}
+                    </div>
+                    <p>Üdv,<br><strong>Mentora csapata</strong></p>
+                </div>
+            `,
+            replyTo: process.env.MAIL_USER,
+        });
+
+        if (result.skipped) {
+            return res.status(500).json({ success: false, message: "Email küldés nincs beállítva a szerveren (MAIL_USER / MAIL_APP_PASS hiányzik)." });
+        }
+
+        if (!result.sent) {
+            return res.status(500).json({ success: false, message: "Email küldési hiba: " + (result.error || "ismeretlen hiba") });
+        }
+
+        console.log(`✅ Admin válasz elküldve: ${email}`);
+        res.json({ success: true, message: "Válasz sikeresen elküldve!" });
+    } catch (err) {
+        console.error("❌ Admin válasz küldési hiba:", err);
+        res.status(500).json({ success: false, message: "Szerver hiba: " + err.message });
+    }
 });
 
 
