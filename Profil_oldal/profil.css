@@ -19,8 +19,15 @@ body {
 }
 
 /* --- HATTER ANIMACIO --- */
-header { position: relative; width: 100%; height: 240px; }
-header svg { position: absolute; top: 0; left: 0; width: 100%; height: 220px; z-index: 1; }
+header {
+     position: relative; 
+     width: 100%; height: 240px; }
+header svg { 
+    position: absolute;
+     top: 0; left: 0;
+      width: 100%; 
+      height: 220px;
+       z-index: 1; }
 
 .bg-logo-animation {
     position: fixed;
@@ -69,12 +76,31 @@ header svg { position: absolute; top: 0; left: 0; width: 100%; height: 220px; z-
     border: 3px solid var(--primary);
     background: #242440;
 }
-.profil-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.profil-avatar img {
+     width: 100%; 
+     height: 100%; 
+     object-fit: cover; 
+     display: block; }
 
-.profil-adatok { text-align: center; width: 100%; }
-.profil-adatok h2 { font-size: 2em; margin-bottom: 5px; font-weight: 700; }
-.profil-szerep { color: var(--primary); font-weight: bold; text-transform: uppercase; font-size: 0.9em; letter-spacing: 2px; margin-bottom: 15px; }
-.profil-bio { font-style: italic; opacity: 0.8; margin-bottom: 30px; line-height: 1.5; font-size: 1.05em; }
+.profil-adatok {
+     text-align: center;
+      width: 100%; }
+.profil-adatok h2 {
+     font-size: 2em;
+      margin-bottom: 5px; 
+      font-weight: 700; }
+.profil-szerep {
+     color: var(--primary);
+      font-weight: bold;
+       text-transform: uppercase;
+        font-size: 0.9em; letter-spacing: 2px;
+         margin-bottom: 15px; }
+.profil-bio {
+     font-style: italic;
+      opacity: 0.8;
+       margin-bottom: 30px;
+        line-height: 1.5;
+         font-size: 1.05em; }
 
 /* --- GOMBOK --- */
 .profil-gomb {
@@ -82,29 +108,27 @@ header svg { position: absolute; top: 0; left: 0; width: 100%; height: 220px; z-
     padding: 15px;
     margin: 8px 0;
     font-size: 1em;
-    font-weight: 600;
-    border-radius: 14px;
+    font-weight: 700;
+    border-radius: 12px;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    background: rgba(255, 255, 255, 0.05); 
-    color: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(51, 153, 255, 0.3);
+    transition: 0.3s;
+    background: var(--primary);
+    color: #fff;
+    border: none;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 12px;
+    box-shadow: 0 10px 30px rgba(51, 153, 255, 0.3);
 }
 
 .profil-gomb:hover { 
-    background: var(--primary); 
-    color: white;
-    border-color: var(--primary);
-    transform: translateY(-4px);
-    box-shadow: 0 10px 25px rgba(51, 153, 255, 0.4);
+    background: var(--primary-hover);
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(51, 153, 255, 0.45);
 }
 
-#addCourseBtn { border-color: #00c6ff; color: #00c6ff; display: none; }
-#addCourseBtn:hover { background: linear-gradient(135deg, #00c6ff, #0072ff); color: white; }
+#addCourseBtn { display: none; }
 
 .veszely-gomb { border-color: rgba(244, 67, 54, 0.4); color: #f44336; }
 .veszely-gomb:hover { background: #f44336 !important; border-color: #f44336; color: white; }

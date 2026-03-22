@@ -39,7 +39,7 @@ window.onload = function() {
     });
 };
 
-// User állapot kezelése
+// Felhasználói állapot kezelése
         const user = JSON.parse(localStorage.getItem('user')) || null;
         if (!user) {
             const navProfil = document.getElementById('nav-profil');
@@ -51,7 +51,7 @@ window.onload = function() {
             if (registerNav) registerNav.style.display = 'none';
         }
 
-        // Form beküldése a szervernek
+        // Űrlap beküldése a szervernek
         document.getElementById('contactForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const nev = document.getElementById('kapcsolat-nev').value;

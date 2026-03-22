@@ -5,77 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rólunk</title>
     <link rel="stylesheet" href="/style.css">
-    <style>
-        .rolunk-container {
-            max-width: 1000px;
-            margin: -50px auto 50px;
-            padding: 20px;
-            color: white;
-            text-align: center;
-            position: relative;
-            z-index: 10;
-        }
-
-        .about-hero {
-            margin-top: 0;
-            padding-top: 0;
-        }
-
-        .about-hero h1 {
-            font-size: 3rem;
-            color: #3399ff;
-            margin-top: 0 !important;
-            margin-bottom: 10px;
-        }
-
-        @media (max-width: 768px) {
-            main.rolunk-container {
-                margin: 0 auto 50px !important;
-                padding-top: 15px !important;
-            }
-            .about-hero h1 {
-                font-size: 2rem;
-            }
-        }
-
-        .about-text {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 40px;
-            border-radius: 20px;
-            margin-bottom: 40px;
-            line-height: 1.6;
-        }
-
-        .values-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 50px;
-        }
-
-        .value-card {
-            background: rgba(123, 47, 242, 0.1);
-            border: 1px solid #7b2ff2;
-            padding: 30px;
-            border-radius: 15px;
-            transition: transform 0.3s;
-        }
-
-        .value-card:hover {
-            transform: translateY(-10px);
-            background: rgba(123, 47, 242, 0.2);
-        }
-
-        .email-list {
-            margin-top: 20px;
-            font-weight: bold;
-            color: #b185f5;
-        }
-
-        .email-list p {
-            margin: 10px 0;
-        }
-    </style>
+    <link rel="stylesheet" href="/rolunk/rolunk.css">
 </head>
 <body>
         <header id="fejlec">
@@ -179,68 +109,20 @@
             <p><i class="fas fa-envelope"></i> kisben840@hengersor.hu</p>
         </div>
     </section>
-    
 </main>
-<script>
-    // Hamburger menü
-    const hamburgerBtn = document.getElementById('hamburgerBtn');
-    const mobileNavDrawer = document.getElementById('mobileNavDrawer');
-    hamburgerBtn.addEventListener('click', () => {
-        hamburgerBtn.classList.toggle('open');
-        mobileNavDrawer.classList.toggle('open');
-    });
-    mobileNavDrawer.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            hamburgerBtn.classList.remove('open');
-            mobileNavDrawer.classList.remove('open');
-        });
-    });
 
-    async function updateHeaderProfile() {
-        const storedUser = JSON.parse(localStorage.getItem('user'));
-        if (storedUser && storedUser.id) {
-            try {
-                const response = await fetch(`/api/profile?id=${storedUser.id}&role=${storedUser.role}`);
-                const data = await response.json();
-                if (data.success) {
-                    const user = data.user;
-                    const getImgSrc = (profilkep, nev, felhasznalonev) => {
-                        if (profilkep) return profilkep.startsWith('/') ? profilkep : `/Tanfolyamok/kepek/${profilkep}`;
-                        return `https://ui-avatars.com/api/?name=${encodeURIComponent(nev || felhasznalonev || 'User')}&size=50&background=242440&color=3399ff&bold=true&font-size=0.4`;
-                    };
-                    const imgSrc = getImgSrc(user.profilkep, user.nev, user.felhasznalonev);
+<footer id="footer">
+    <div class="footer-container">
+        <p>&copy; BGSZC Pestszentlőrinci Technikum | Mestermunka 2026</p>
+        <nav class="footer-nav">
+            <a href="/">Főoldal</a>
+            <a href="/tanfolyamok">Tanfolyamok</a>
+            <a href="/kapcsolat">Kapcsolat</a>
+            <a href="/bejelentkezes">Bejelentkezés</a>
+        </nav>
+    </div>
+</footer>
 
-                    const miniProfilLink = document.getElementById('miniProfilLink');
-                    const headerImg = document.getElementById('headerProfileImage');
-                    if (miniProfilLink) miniProfilLink.style.display = 'block';
-                    if (headerImg) {
-                        headerImg.src = imgSrc;
-                        headerImg.onerror = function() {
-                            this.src = `https://ui-avatars.com/api/?name=User&size=50&background=242440&color=3399ff&bold=true`;
-                        };
-                    }
-
-                    const miniProfilLinkMobile = document.getElementById('miniProfilLinkMobile');
-                    const headerImgMobile = document.getElementById('headerProfileImageMobile');
-                    const placeholder = document.getElementById('mobileProfilPlaceholder');
-                    if (miniProfilLinkMobile) miniProfilLinkMobile.style.display = 'flex';
-                    if (headerImgMobile) {
-                        headerImgMobile.src = imgSrc;
-                        headerImgMobile.onerror = function() {
-                            this.src = `https://ui-avatars.com/api/?name=User&size=50&background=242440&color=3399ff&bold=true`;
-                        };
-                    }
-                    if (placeholder) placeholder.style.display = 'none';
-
-                    ['nav-bejelentkezes','nav-regisztracio','nav-bejelentkezes-m','nav-regisztracio-m'].forEach(id => {
-                        const el = document.getElementById(id);
-                        if (el) el.style.display = 'none';
-                    });
-                }
-            } catch (err) { console.error(err); }
-        }
-    }
-    document.addEventListener('DOMContentLoaded', updateHeaderProfile);
-</script>
+<script src="/rolunk/rolunk.js"></script>
 </body>
 </html>

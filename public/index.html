@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="hu" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Főoldal</title>
-    <link rel="stylesheet" href="./bootsrap/bootstrap.min.css">
+    <link rel="stylesheet" href="/bootsrap/bootstrap.min.css">
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
@@ -12,7 +12,7 @@
         <!-- DESKTOP: hullám -->
         <div class="header-wave-container desktop-wave">
             <div class="logo-container">
-                <a href="/"><img src="./Tanfolyamok/kepek/logooo.png" alt="Logo" class="header-logo"></a>
+                <a href="/"><img src="/Tanfolyamok/kepek/logooo.png" alt="Logo" class="header-logo"></a>
             </div>
             <a href="/profil" class="mini-profil-link" id="miniProfilLink" style="display:none;">
                 <img id="headerProfileImage" src="https://ui-avatars.com/api/?name=User&size=50&background=242440&color=3399ff&bold=true" alt="Profil">
@@ -36,7 +36,6 @@
                 <a id="nav-rolunk" href="/rolunk">Rólunk</a>
             </nav>
         </div>
-
         <!-- MOBIL: gradient csík -->
         <div class="mobile-header">
             <button class="hamburger" id="hamburgerBtn" aria-label="Menü">
@@ -73,7 +72,7 @@
             <div class="hero-image">
                 <div class="hero-circle"></div>
                 <a href="/rolunk">
-                    <img src="./Tanfolyamok/kepek/rolunk.png" alt="Rólunk">
+                    <img src="/Tanfolyamok/kepek/rolunk.png" alt="Rólunk">
                 </a>
             </div>
         </section>
@@ -82,21 +81,21 @@
             <h2>Legújabb tanfolyamok</h2>
             <div class="latest-grid">
                 <div class="latest-card">
-                    <img src="./Tanfolyamok/kepek/gellakhalado.jpg" alt="Géllakk Tanfolyam">
+                    <img src="/Tanfolyamok/kepek/gellakhalado.jpg" alt="Géllakk Tanfolyam">
                     <h3>Géllakk Tanfolyam</h3>
                     <p>Fedezd fel a tartós géllakk készítés technikáit!</p>
                     <a href="/tanfolyamok" class="card-btn">Megnézem</a>
                 </div>
 
                 <div class="latest-card">
-                    <img src="./Tanfolyamok/kepek/cukrasz.jpg" alt="Cukrász Tanfolyam">
+                    <img src="/Tanfolyamok/kepek/cukrasz.jpg" alt="Cukrász Tanfolyam">
                     <h3>Cukrász Tanfolyam</h3>
                     <p>Édes élmények készítése profi technikákkal.</p>
                     <a href="/tanfolyamok" class="card-btn">Megnézem</a>
                 </div>
 
                 <div class="latest-card">
-                    <img src="./Tanfolyamok/kepek/fodrasz.jpg" alt="Fodrász Tanfolyam">
+                    <img src="/Tanfolyamok/kepek/fodrasz.jpg" alt="Fodrász Tanfolyam">
                     <h3>Fodrász Tanfolyam</h3>
                     <p>Modern hajvágás és styling lépésről lépésre.</p>
                     <a href="/tanfolyamok" class="card-btn">Megnézem</a>
@@ -117,91 +116,6 @@
         </div>
     </footer>
 
-    <script>
-        async function updateHeaderProfile() {
-            const storedUser = JSON.parse(localStorage.getItem('user'));
-            
-            if (storedUser && storedUser.id) {
-                try {
-                    const response = await fetch(`/api/profile?id=${storedUser.id}&role=${storedUser.role}`);
-                    const data = await response.json();
-        
-                    if (data.success) {
-                        const user = data.user;
-
-                        // Desktop profil
-                        const miniProfilLink = document.getElementById('miniProfilLink');
-                        const headerImg = document.getElementById('headerProfileImage');
-                        // Mobil profil
-                        const miniProfilLinkMobile = document.getElementById('miniProfilLinkMobile');
-                        const headerImgMobile = document.getElementById('headerProfileImageMobile');
-                        const placeholder = document.getElementById('mobileProfilPlaceholder');
-
-                        const getImgSrc = (profilkep, nev, felhasznalonev) => {
-                            if (profilkep) {
-                                return profilkep.startsWith('/') ? profilkep : `/Tanfolyamok/kepek/${profilkep}`;
-                            }
-                            const name = nev || felhasznalonev || 'User';
-                            return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&size=50&background=242440&color=3399ff&bold=true&font-size=0.4`;
-                        };
-
-                        const imgSrc = getImgSrc(user.profilkep, user.nev, user.felhasznalonev);
-
-                        if (miniProfilLink) miniProfilLink.style.display = 'block';
-                        if (headerImg) {
-                            headerImg.src = imgSrc;
-                            headerImg.onerror = function() {
-                                this.src = `https://ui-avatars.com/api/?name=User&size=50&background=242440&color=3399ff&bold=true&font-size=0.4`;
-                            };
-                        }
-
-                        if (miniProfilLinkMobile) miniProfilLinkMobile.style.display = 'flex';
-                        if (headerImgMobile) {
-                            headerImgMobile.src = imgSrc;
-                            headerImgMobile.onerror = function() {
-                                this.src = `https://ui-avatars.com/api/?name=User&size=50&background=242440&color=3399ff&bold=true&font-size=0.4`;
-                            };
-                        }
-                        if (placeholder) placeholder.style.display = 'none';
-        
-                        // Navigációs gombok elrejtése
-                        ['nav-bejelentkezes', 'nav-regisztracio'].forEach(id => {
-                            const el = document.getElementById(id);
-                            if (el) el.style.display = 'none';
-                        });
-                        ['nav-bejelentkezes-m', 'nav-regisztracio-m'].forEach(id => {
-                            const el = document.getElementById(id);
-                            if (el) el.style.display = 'none';
-                        });
-
-                        const profilNav = document.getElementById('nav-profil');
-                        if (profilNav) profilNav.style.display = 'inline-block';
-                    }
-                } catch (err) {
-                    console.error("Hiba a fejléc profil frissítésekor:", err);
-                }
-            }
-        }
-        
-        document.addEventListener('DOMContentLoaded', updateHeaderProfile);
-
-        // Hamburger menü
-        const hamburgerBtn = document.getElementById('hamburgerBtn');
-        const mobileNavDrawer = document.getElementById('mobileNavDrawer');
-
-        hamburgerBtn.addEventListener('click', () => {
-            hamburgerBtn.classList.toggle('open');
-            mobileNavDrawer.classList.toggle('open');
-        });
-
-        // Kattintásra zárd be a menüt
-        mobileNavDrawer.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                hamburgerBtn.classList.remove('open');
-                mobileNavDrawer.classList.remove('open');
-            });
-        });
-    </script>
+    <script src="/index.js"></script>
 </body>
 </html>
-``` 

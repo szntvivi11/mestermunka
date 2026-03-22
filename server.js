@@ -14,17 +14,23 @@ app.use(cors());
 
 // ===== STATIKUS FÁJLOK =====
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/bootsrap", express.static(path.join(__dirname, "bootsrap")));
 app.use("/bejelentkezes", express.static(path.join(__dirname, "bejelentkezes")));
 app.use("/regisztracio", express.static(path.join(__dirname, "regisztracio")));
 app.use("/kapcsolat", express.static(path.join(__dirname, "kapcsolat")));
+app.use("/tanfolyamok", express.static(path.join(__dirname, "Tanfolyamok")));
+app.use("/profil", express.static(path.join(__dirname, "profil_oldal")));
+app.use("/rolunk", express.static(path.join(__dirname, "rolunk_oldal")));
+app.use("/admin", express.static(path.join(__dirname, "admin_uzenetek")));
+app.use("/admin_rendszer", express.static(path.join(__dirname, "admin_rendszer")));
 app.use("/tanfolyamok/oldalak", express.static(path.join(__dirname, "Tanfolyamok", "oldalak")));
 app.use('/Tanfolyamok/kepek', express.static(path.join(__dirname, 'Tanfolyamok', 'kepek')));
 app.use('/tanfolyamok/kepek', express.static(path.join(__dirname, 'Tanfolyamok', 'kepek')));
-app.use (express.static(path.join(__dirname, 'rolunk')));
+app.use(express.static(path.join(__dirname, "profil_oldal")));
 
 // ===== HTML OLDALAK =====
 app.get("/", (req, res) =>
-  res.sendFile(path.join(__dirname, "index.html"))
+  res.sendFile(path.join(__dirname, "public", "index.html"))
 );
 app.get("/bejelentkezes", (req, res) =>
   res.sendFile(path.join(__dirname, "bejelentkezes", "bejelentkezes.html"))
@@ -39,16 +45,16 @@ app.get("/tanfolyamok", (req, res) =>
   res.sendFile(path.join(__dirname, "Tanfolyamok", "tanfolyamok.html"))
 );
 app.get("/profil", (req, res) => {
-  res.sendFile(path.join(__dirname, "profil.html"));
+  res.sendFile(path.join(__dirname, "profil_oldal", "profil.html"));
 });
 app.get("/rolunk", (req, res) => {
-  res.sendFile(path.join(__dirname, "rolunk.html"));
+  res.sendFile(path.join(__dirname, "rolunk_oldal", "rolunk.html"));
 });
 app.get("/admin", (req, res) => {
-  res.sendFile(path.join(__dirname, "admin.html"));
+  res.sendFile(path.join(__dirname, "admin_uzenetek", "admin.html"));
 });
 app.get("/admin_full.html", (req, res) => {
-  res.sendFile(path.join(__dirname, "admin_full.html"));
+  res.sendFile(path.join(__dirname, "admin_rendszer", "admin_full.html"));
 });
 
 // Dinamikus tanfolyam oldalak
@@ -65,7 +71,7 @@ app.get("/tanfolyamok/:slug", (req, res) => {
 // ===== ADATBÁZIS =====
 const db = mysql.createConnection({
   host: "localhost",
-  port: 3307,
+  port: 3306,
   user: "root",
   password: '',
   database: "mestermunka"
@@ -73,10 +79,10 @@ const db = mysql.createConnection({
 
 db.connect(err => {
   if (err) {
-    console.error("❌ MySQL hiba:", err);
+    console.error(" MySQL hiba:", err);
     process.exit(1);
   }
-  console.log("✅ MySQL kapcsolat létrejött");
+  console.log(" MySQL kapcsolat létrejött");
 });
 
 
@@ -86,7 +92,7 @@ const MAIL_APP_PASS = (process.env.MAIL_APP_PASS || "").replace(/\s+/g, "").trim
 const MAIL_TO = process.env.MAIL_TO || MAIL_USER;
 
 if (MAIL_USER && MAIL_APP_PASS && MAIL_APP_PASS.length !== 16) {
-  console.warn(`⚠️ MAIL_APP_PASS hossza hibás (${MAIL_APP_PASS.length}). Gmail app jelszó pontosan 16 karakter.`);
+  console.warn(`FIGYELEM: MAIL_APP_PASS hossza hibás (${MAIL_APP_PASS.length}). Gmail app jelszó pontosan 16 karakter.`);
 }
 
 function createMailTransporter() {
@@ -106,7 +112,7 @@ async function sendMailSafe({ to, subject, text, html, replyTo }) {
   const transporter = createMailTransporter();
 
   if (!transporter) {
-    console.warn("⚠️ Email küldés kihagyva: MAIL_USER vagy MAIL_APP_PASS nincs beállítva.");
+    console.warn("FIGYELEM: Email küldés kihagyva: MAIL_USER vagy MAIL_APP_PASS nincs beállítva.");
     return { sent: false, skipped: true };
   }
 
@@ -119,10 +125,10 @@ async function sendMailSafe({ to, subject, text, html, replyTo }) {
       html,
       replyTo,
     });
-    console.log(`✅ Email sikeresen elküldve: ${to}`);
+    console.log(`Email sikeresen elküldve: ${to}`);
     return { sent: true, skipped: false };
   } catch (error) {
-    console.error(`❌ Email küldési hiba (${to}):`, error.message);
+    console.error(`Email küldési hiba (${to}):`, error.message);
     return { sent: false, skipped: false, error: error.message };
   }
 }
@@ -178,7 +184,7 @@ app.post("/api/register-user", async (req, res) => {
 });
 
 
-// ---- TEACHER (user_ado) ----
+// ---- TANÁR (user_ado) ----
 app.post("/api/register-teacher", async (req, res) => {
   const { felhasznalonev, email, jelszo, vegzettseg } = req.body;
 
@@ -227,6 +233,19 @@ app.post("/api/register-teacher", async (req, res) => {
 // =====================================================
 // ================== BEJELENTKEZÉS =====================
 // =====================================================
+async function isPasswordValid(inputPassword, storedPassword) {
+  if (!storedPassword) return false;
+
+  try {
+    const bcryptOk = await bcrypt.compare(inputPassword, storedPassword);
+    if (bcryptOk) return true;
+  } catch (err) {
+    // Régi vagy érvénytelen hash formátum; ilyenkor sima összehasonlításra váltunk.
+  }
+
+  return inputPassword === storedPassword;
+}
+
 app.post("/api/login", async (req, res) => {
   const { email, jelszo, role } = req.body;
 
@@ -242,7 +261,7 @@ app.post("/api/login", async (req, res) => {
 
       if (students.length) {
         const student = students[0];
-        const ok = await bcrypt.compare(jelszo, student.jelszo);
+        const ok = await isPasswordValid(jelszo, student.jelszo);
         if (!ok) return res.status(401).json({ success: false, message: "Hibás jelszó" });
 
         return res.json({
@@ -259,7 +278,7 @@ app.post("/api/login", async (req, res) => {
 
       if (teachers.length) {
         const teacher = teachers[0];
-        const ok = await bcrypt.compare(jelszo, teacher.jelszo);
+        const ok = await isPasswordValid(jelszo, teacher.jelszo);
         if (!ok) return res.status(401).json({ success: false, message: "Hibás jelszó" });
 
         return res.json({
@@ -341,12 +360,12 @@ app.get("/api/profile", async (req, res) => {
     
         res.json({ success: true, user: user });
     } catch (err) {
-        console.error("❌ Profil lekérdezési hiba:", err);
+        console.error("Profil lekérdezési hiba:", err);
         res.status(500).json({ success: false, message: "Szerver hiba" });
     }
 });
 
-// Profil frissítése (Kép és Bio)
+// Profil frissítése (Kép és bemutatkozás)
 app.post("/api/update-profile", upload.single('profilePicture'), async (req, res) => {
     try {
         const { id, role, bemutatkozas } = req.body;
@@ -378,7 +397,7 @@ app.post("/api/update-profile", upload.single('profilePicture'), async (req, res
 
         res.json({ success: true, newPic: profilkep });
     } catch (err) {
-        console.error("❌ Profil frissítési hiba:", err);
+        console.error("Profil frissítési hiba:", err);
         res.status(500).json({ error: "Szerver hiba történt a mentéskor." });
     }
 });
@@ -390,7 +409,7 @@ app.get("/api/kepzesek", async (req, res) => {
     console.log("Küldött tanfolyamok száma:", courses.length); 
     res.json(courses);
   } catch (err) {
-    console.error("❌ MySQL Hiba a lekéréskor:", err.message);
+    console.error("MySQL hiba a lekéréskor:", err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 });
@@ -426,7 +445,7 @@ await db.promise().query(sql, [
 
     res.json({ success: true, message: "Tanfolyam sikeresen mentve!" });
   } catch (err) {
-    console.error("❌ MySQL Hiba:", err);
+    console.error("MySQL hiba:", err);
     res.status(500).json({ success: false, message: "Adatbázis hiba: " + err.sqlMessage });
   }
 });
@@ -483,7 +502,7 @@ app.post("/api/jelentkezes", async (req, res) => {
 });
 
 // =====================================================
-// ===== KAPCSOLATI ÜZENET MENTÉSE adatbazisba =====
+// ===== KAPCSOLATI ÜZENET MENTÉSE adatbázisba =====
 // =====================================================
 app.post("/api/kapcsolat", async (req, res) => {
     const { nev, email, uzenet } = req.body;
@@ -587,10 +606,10 @@ app.post("/api/admin/valasz", async (req, res) => {
             return res.status(500).json({ success: false, message: "Email küldési hiba: " + (result.error || "ismeretlen hiba") });
         }
 
-        console.log(`✅ Admin válasz elküldve: ${email}`);
+        console.log(`Admin válasz elküldve: ${email}`);
         res.json({ success: true, message: "Válasz sikeresen elküldve!" });
     } catch (err) {
-        console.error("❌ Admin válasz küldési hiba:", err);
+        console.error("Admin válasz küldési hiba:", err);
         res.status(500).json({ success: false, message: "Szerver hiba: " + err.message });
     }
 });
@@ -656,7 +675,7 @@ app.get("/api/diak/jelentkezesek/:userId", async (req, res) => {
         const [rows] = await db.promise().query(sql, [userId]);
         res.json({ success: true, jelentkezesek: rows });
     } catch (err) {
-        console.error("❌ Hiba a diák jelentkezéseinek lekérdezésekor:", err);
+        console.error("Hiba a diák jelentkezéseinek lekérdezésekor:", err);
         res.status(500).json({ success: false, message: "Szerver hiba" });
     }
 });
@@ -666,7 +685,7 @@ app.get("/api/tanar/tanfolyamok/:teacherId", async (req, res) => {
     try {
         const { teacherId } = req.params;
         
-        console.log("🔍 Tanár ID:", teacherId);
+        console.log("Tanár ID:", teacherId);
         
         const [tanfolyamok] = await db.promise().query(
             `SELECT id, kep, nev, leiras, helyileg, email, ar, heves_kortol
@@ -676,9 +695,9 @@ app.get("/api/tanar/tanfolyamok/:teacherId", async (req, res) => {
             [teacherId]
         );
         
-        console.log("📚 Talált tanfolyamok száma:", tanfolyamok.length);
+        console.log("Talált tanfolyamok száma:", tanfolyamok.length);
         if (tanfolyamok.length > 0) {
-            console.log("📋 Tanfolyamok:", tanfolyamok.map(t => `${t.nev} (ID: ${t.id})`));
+            console.log("Tanfolyamok:", tanfolyamok.map(t => `${t.nev} (ID: ${t.id})`));
         }
 
         for (let tanfolyam of tanfolyamok) {
@@ -700,7 +719,7 @@ app.get("/api/tanar/tanfolyamok/:teacherId", async (req, res) => {
         
         res.json({ success: true, tanfolyamok: tanfolyamok });
     } catch (err) {
-        console.error("❌ Hiba a tanár tanfolyamainak lekérdezésekor:", err);
+        console.error("Hiba a tanár tanfolyamainak lekérdezésekor:", err);
         res.status(500).json({ success: false, message: "Szerver hiba" });
     }
 });
@@ -732,8 +751,8 @@ app.use((req, res) => {
 });
 
 
-// ===== SERVER START =====
-const PORT = process.env.PORT || 3000;
+// ===== SZERVER INDÍTÁSA =====
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () =>
-  console.log(`🚀 Szerver fut: http://localhost:${PORT}`)
+  console.log(`Szerver fut: http://localhost:${PORT}`)
 );

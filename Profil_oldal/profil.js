@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     function setProfileImage(pic) {
 
         if (!pic) {
-            // Default avatar: egyedi generált avatar minden felhasználónak
+            // Alapértelmezett avatar: egyedileg generált avatar minden felhasználónak
             const userId = user.ua_id || user.uv_id || user.id || 'default';
             const userName = user.nev || user.felhasznalonev || 'User';
             profileImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&size=180&background=242440&color=3399ff&bold=true&font-size=0.4`;
@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         profileImg.onerror = () => {
             console.error("Kép betöltési hiba:", url);
-            // Ha a kép betöltése sikertelen, visszaállítjuk a default avatarra
+            // Ha a kép betöltése sikertelen, visszaállítjuk az alapértelmezett avatarra
             const userName = user.nev || user.felhasznalonev || 'User';
             profileImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&size=180&background=242440&color=3399ff&bold=true&font-size=0.4`;
         };
@@ -95,6 +95,27 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     }
 
+    function renderProfileFromLocal() {
+        document.getElementById("nev-megjelenit").textContent =
+            user.nev || user.felhasznalonev || "Felhasználó";
+
+        const roleMap = {
+            student: "Diák",
+            teacher: "Tanár",
+            admin: "Admin"
+        };
+
+        document.getElementById("szerep-megjelenit").textContent =
+            roleMap[user.role] || "Felhasználó";
+
+        document.getElementById("bioDisplay").textContent =
+            user.bemutatkozas || "Nincs bemutatkozás megadva.";
+
+        setProfileImage(user.profilkep);
+    }
+
+    renderProfileFromLocal();
+
     try {
 
         const userId = user.ua_id || user.uv_id || user.id;
@@ -103,47 +124,29 @@ document.addEventListener("DOMContentLoaded", async () => {
         const data = await response.json();
 
         if (data.success) {
-
-            const currentPic = user.profilkep;
-
             const updatedUser = {
+                ...data.user,
                 ...user,
-                ...data.user
+                role: user.role || data.user.role,
+                id: user.id || data.user.id
             };
 
-            if (!updatedUser.profilkep && currentPic) {
-                updatedUser.profilkep = currentPic;
-            }
+            if (!updatedUser.nev && data.user.nev) updatedUser.nev = data.user.nev;
+            if (!updatedUser.profilkep && data.user.profilkep) updatedUser.profilkep = data.user.profilkep;
+            if (!updatedUser.bemutatkozas && data.user.bemutatkozas) updatedUser.bemutatkozas = data.user.bemutatkozas;
 
             localStorage.setItem("user", JSON.stringify(updatedUser));
             user = updatedUser;
-
-            document.getElementById("nev-megjelenit").textContent = user.nev;
-
-            const roleMap = {
-                student: "Diák",
-                teacher: "Tanár",
-                admin: "Admin"
-            };
-
-            document.getElementById("szerep-megjelenit").textContent =
-                roleMap[user.role] || "Felhasználó";
-
-            document.getElementById("bioDisplay").textContent =
-                user.bemutatkozas || "Nincs bemutatkozás megadva.";
-
-            setProfileImage(user.profilkep);
-
+            renderProfileFromLocal();
+        } else {
+            renderProfileFromLocal();
         }
 
     } catch (error) {
 
         console.error("Profil betöltési hiba:", error);
 
-        document.getElementById("nev-megjelenit").textContent =
-            user.felhasznalonev || user.nev;
-
-        setProfileImage(user.profilkep);
+        renderProfileFromLocal();
 
     }
     // 2. MODÁL NYITÁS LOGIKA
@@ -181,6 +184,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         adminBox.style.border = "2px dashed #7b2ff2";
         adminBox.style.borderRadius = "15px";
         adminBox.style.marginBottom = "10px";
+        adminBox.style.width = "100%";
+        adminBox.style.maxWidth = "380px";
+        adminBox.style.display = "flex";
+        adminBox.style.flexDirection = "column";
+        adminBox.style.alignItems = "center";
+        adminBox.style.textAlign = "center";
         
         adminBox.innerHTML = `
             <h3 style='color:#7b2ff2; margin-bottom:10px; font-size: 1.1em;'>Adminisztrációs Vezérlő</h3>
@@ -200,7 +209,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
     });
 
-    // 3. MENTÉSI FUNKCIÓ (Bio és Kép frissítése)
+    // 3. MENTÉSI FUNKCIÓ (Bemutatkozás és kép frissítése)
     const handleProfileUpdate = async (fileInput = null) => {
         const userId = user.ua_id || user.uv_id || user.id; 
         const bioText = document.getElementById("bio-input").value;
@@ -257,7 +266,7 @@ if (saveCourseBtn) {
         const userId = user.ua_id || user.uv_id || user.id; // Megkeressük a tanár ID-ját
         const formData = new FormData();
         
-        // Fontos: Olyan neveket használunk, amiket a server.js vár!
+        // Fontos: Olyan neveket használunk, amiket a szerver vár!
         formData.append("nev", document.getElementById("courseName").value);
         formData.append("leiras", document.getElementById("courseDescription").value);
         formData.append("helyileg", document.getElementById("courseLocation").value);

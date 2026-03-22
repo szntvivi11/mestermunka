@@ -1,11 +1,129 @@
-// Clean login handler for DB-based login
+// Tiszta bejelentkezéskezelő adatbázis-alapú bejelentkezéshez
 const loginForm = document.getElementById('login-form');
+
+function getStoredUserSafe() {
+  try {
+    return JSON.parse(localStorage.getItem('user'));
+  } catch (err) {
+    return null;
+  }
+}
+
+function initHamburgerMenu() {
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mobileNavDrawer = document.getElementById('mobileNavDrawer');
+  if (!hamburgerBtn || !mobileNavDrawer) return;
+
+  hamburgerBtn.addEventListener('click', () => {
+    hamburgerBtn.classList.toggle('open');
+    mobileNavDrawer.classList.toggle('open');
+  });
+
+  mobileNavDrawer.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      hamburgerBtn.classList.remove('open');
+      mobileNavDrawer.classList.remove('open');
+    });
+  });
+}
+
+async function updateHeaderProfile() {
+  const storedUser = getStoredUserSafe();
+  if (!storedUser || !storedUser.id) return;
+
+  try {
+    const response = await fetch(`/api/profile?id=${storedUser.id}&role=${storedUser.role}`);
+    const data = await response.json();
+    if (!data.success) return;
+
+    const user = data.user;
+    const getImgSrc = (profilkep, nev, felhasznalonev) => {
+      if (profilkep) return profilkep.startsWith('/') ? profilkep : `/Tanfolyamok/kepek/${profilkep}`;
+      return `https://ui-avatars.com/api/?name=${encodeURIComponent(nev || felhasznalonev || 'User')}&size=50&background=242440&color=3399ff&bold=true&font-size=0.4`;
+    };
+    const imgSrc = getImgSrc(user.profilkep, user.nev, user.felhasznalonev);
+
+    const miniProfilLink = document.getElementById('miniProfilLink');
+    const headerImg = document.getElementById('headerProfileImage');
+    if (miniProfilLink) miniProfilLink.style.display = 'block';
+    if (headerImg) {
+      headerImg.src = imgSrc;
+      headerImg.onerror = function () {
+        this.src = 'https://ui-avatars.com/api/?name=User&size=50&background=242440&color=3399ff&bold=true';
+      };
+    }
+
+    const miniProfilLinkMobile = document.getElementById('miniProfilLinkMobile');
+    const headerImgMobile = document.getElementById('headerProfileImageMobile');
+    if (miniProfilLinkMobile) miniProfilLinkMobile.style.display = 'flex';
+    if (headerImgMobile) {
+      headerImgMobile.src = imgSrc;
+      headerImgMobile.onerror = function () {
+        this.src = 'https://ui-avatars.com/api/?name=User&size=50&background=242440&color=3399ff&bold=true';
+      };
+    }
+
+    ['nav-bejelentkezes', 'nav-regisztracio', 'nav-bejelentkezes-m', 'nav-regisztracio-m'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+function initLoginPageUI() {
+  initHamburgerMenu();
+  updateHeaderProfile();
+}
+
+function initPasswordToggle() {
+  const passwordInput = document.getElementById('login-password');
+  const toggleBtn = document.getElementById('toggle-login-password');
+  if (!passwordInput || !toggleBtn) return;
+
+  toggleBtn.addEventListener('click', () => {
+    const isHidden = passwordInput.type === 'password';
+    passwordInput.type = isHidden ? 'text' : 'password';
+    toggleBtn.setAttribute('aria-label', isHidden ? 'Jelszó elrejtése' : 'Jelszó megjelenítése');
+    toggleBtn.setAttribute('title', isHidden ? 'Jelszó elrejtése' : 'Jelszó megjelenítése');
+    toggleBtn.classList.toggle('active', isHidden);
+  });
+}
+
+initPasswordToggle();
+initLoginPageUI();
+
+function mergeUserWithLocal(loginUser) {
+  try {
+    const cached = JSON.parse(localStorage.getItem('user'));
+    if (!cached || !loginUser) return loginUser;
+
+    const cachedId = cached.id ?? cached.ua_id ?? cached.uv_id;
+    const loginId = loginUser.id ?? loginUser.ua_id ?? loginUser.uv_id;
+    const sameRole = cached.role === loginUser.role;
+    const sameIdentity = String(cachedId) === String(loginId);
+
+    if (!sameRole || (!sameIdentity && loginUser.role !== 'admin')) {
+      return loginUser;
+    }
+
+    return {
+      ...loginUser,
+      nev: cached.nev || loginUser.nev,
+      profilkep: cached.profilkep || loginUser.profilkep,
+      bemutatkozas: cached.bemutatkozas || loginUser.bemutatkozas
+    };
+  } catch (err) {
+    return loginUser;
+  }
+}
 
 loginForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const email = document.getElementById('login-username').value.trim();
-  const jelszo = document.getElementById('login-password').value.trim();
+  const jelszo = document.getElementById('login-password').value;
 
   const container = document.querySelector('.aloldal-container');
   const existing = document.querySelector('.login-message');
@@ -14,13 +132,13 @@ loginForm.addEventListener('submit', async (e) => {
   if (!email || !jelszo) {
     const msg = document.createElement('div');
     msg.className = 'login-message login-error';
-    msg.textContent = '❌ Kérlek, tölts ki minden mezőt!';
+    msg.textContent = 'Kérlek, tölts ki minden mezőt!';
     container.appendChild(msg);
     return;
   }
 
   try {
-    // Skip role selection for admin login
+    // Admin bejelentkezésnél kihagyjuk a szerepkörválasztást
     const isAdminLogin = email === 'ADMIN1234' && jelszo === 'admin4321';
     if (isAdminLogin) {
         const res = await fetch('/api/login', {
@@ -32,141 +150,82 @@ loginForm.addEventListener('submit', async (e) => {
         const data = await res.json();
         const msg = document.createElement('div');
         msg.className = `login-message ${data.success ? 'login-success' : 'login-error'}`;
-        msg.textContent = data.message || (data.success ? '✅ Sikeres bejelentkezés' : '❌ Hiba');
+        msg.textContent = data.message || (data.success ? 'Sikeres bejelentkezés' : 'Hiba');
         container.appendChild(msg);
 
         if (data.success) {
-            localStorage.setItem('user', JSON.stringify(data.user));
+          const mergedUser = mergeUserWithLocal(data.user);
+          localStorage.setItem('user', JSON.stringify(mergedUser));
             setTimeout(() => window.location.href = '/profil', 800);
         }
         return;
     }
 
-    // Include the selected role in the login request
+    // A kiválasztott szerepkört is elküldjük a bejelentkezési kérésben
     const selectedRole = document.querySelector('input[name="role"]:checked');
     if (!selectedRole) {
         const msg = document.createElement('div');
         msg.className = 'login-message login-error';
-        msg.textContent = '❌ Kérlek, válassz szerepkört!';
+      msg.textContent = 'Kérlek, válassz szerepkört!';
         container.appendChild(msg);
         return;
     }
 
-    // Add the role to the request body
-    const res = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, jelszo, role: selectedRole.value })
+    let effectiveRole = selectedRole.value;
+    let res = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, jelszo, role: effectiveRole })
     });
 
-    const data = await res.json();
+    let data = await res.json();
+
+    // Ha rossz szerepkör lett kiválasztva, próbáljuk meg automatikusan a másikat.
+    if (!data.success && res.status === 401 && (effectiveRole === 'student' || effectiveRole === 'teacher')) {
+      const fallbackRole = effectiveRole === 'student' ? 'teacher' : 'student';
+      const retryRes = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, jelszo, role: fallbackRole })
+      });
+      const retryData = await retryRes.json();
+
+      if (retryData.success) {
+        res = retryRes;
+        data = retryData;
+        effectiveRole = fallbackRole;
+      }
+    }
 
     const msg = document.createElement('div');
     msg.className = `login-message ${data.success ? 'login-success' : 'login-error'}`;
-    msg.textContent = data.message || (data.success ? '✅ Sikeres bejelentkezés' : '❌ Hiba');
+    msg.textContent = data.message || (data.success ? 'Sikeres bejelentkezés' : 'Hiba');
 
     container.appendChild(msg);
 
-    // Ensure the role matches the profile type
-    if (data.success && data.role !== selectedRole.value) {
-        const msg = document.createElement('div');
-        msg.className = 'login-message login-error';
-        msg.textContent = '❌ A kiválasztott szerepkör nem egyezik a fiók szerepével!';
-        container.appendChild(msg);
-        return;
-    }
-
     if (data.success) {
-      // Include the selected role in the user data
-      if (selectedRole) {
-          data.user.role = selectedRole.value;
-      }
+      data.user.role = data.role || effectiveRole;
 
-      // Ensure users can only log in to profiles matching their role
-      if (selectedRole && selectedRole.value !== data.user.role) {
-          const msg = document.createElement('div');
-          msg.className = 'login-message login-error';
-          msg.textContent = '❌ A kiválasztott szerep nem egyezik a fiók szerepével!';
-          container.appendChild(msg);
-          return;
-      }
+      // Felhasználói adatok mentése localStorage-ba a helyi profil testreszabások megőrzésével.
+      const mergedUser = mergeUserWithLocal(data.user);
+      localStorage.setItem('user', JSON.stringify(mergedUser));
 
-      // Ensure only students can log in to student profiles
-      if (selectedRole && selectedRole.value === 'student' && data.user.role !== 'student') {
-          const msg = document.createElement('div');
-          msg.className = 'login-message login-error';
-          msg.textContent = '❌ Csak diákok léphetnek be diák profilba!';
-          container.appendChild(msg);
-          return;
-      }
-
-      // Ensure only teachers can log in to teacher profiles
-      if (selectedRole && selectedRole.value === 'teacher' && data.user.role !== 'teacher') {
-          const msg = document.createElement('div');
-          msg.className = 'login-message login-error';
-          msg.textContent = '❌ Csak tanárok léphetnek be tanári profilba!';
-          container.appendChild(msg);
-          return;
-      }
-
-      // Strictly enforce role-based login
-      if (data.user.role === 'student' && selectedRole.value !== 'student') {
-          const msg = document.createElement('div');
-          msg.className = 'login-message login-error';
-          msg.textContent = '❌ Diákként nem léphetsz be tanári profilba!';
-          container.appendChild(msg);
-          return;
-      }
-
-      if (data.user.role === 'teacher' && selectedRole.value !== 'teacher') {
-          const msg = document.createElement('div');
-          msg.className = 'login-message login-error';
-          msg.textContent = '❌ Tanárként nem léphetsz be diák profilba!';
-          container.appendChild(msg);
-          return;
-      }
-
-      // Explicitly block students from accessing teacher profiles
-      if (data.user.role === 'student' && selectedRole.value === 'teacher') {
-          const msg = document.createElement('div');
-          msg.className = 'login-message login-error';
-          msg.textContent = '❌ Diákként nem léphetsz be tanári profilba!';
-          container.appendChild(msg);
-          return;
-      }
-
-      // Explicitly block teachers from accessing student profiles
-      if (data.user.role === 'teacher' && selectedRole.value === 'student') {
-          const msg = document.createElement('div');
-          msg.className = 'login-message login-error';
-          msg.textContent = '❌ Tanárként nem léphetsz be diák profilba!';
-          container.appendChild(msg);
-          return;
-      }
-
-      // Store user data in localStorage
-      localStorage.setItem('user', JSON.stringify(data.user));
-
-      // Hide 'Bejelentkezés' and 'Regisztráció' from the navbar
+      // A 'Bejelentkezés' és a 'Regisztráció' elemek elrejtése a navigációból
       const loginNav = document.querySelector('#nav-bejelentkezes');
       const registerNav = document.querySelector('#nav-regisztracio');
       if (loginNav) loginNav.style.display = 'none';
-      if (registerNav) loginNav.style.display = 'none';
+      if (registerNav) registerNav.style.display = 'none';
 
-      // Redirect based on role
+      // Átirányítás szerepkör alapján
       setTimeout(() => {
-        if (data.role === 'teacher') {
-          window.location.href = '/tanfolyamok'; // pl. oktató landing
-        } else {
-          window.location.href = '/'; // felhasználó landing
-        }
+        window.location.href = '/profil';
       }, 800);
     }
 
   } catch (err) {
     const msg = document.createElement('div');
     msg.className = 'login-message login-error';
-    msg.textContent = '❌ Hálózati hiba';
+    msg.textContent = 'Hálózati hiba';
     container.appendChild(msg);
     console.error('Login fetch error', err);
   }

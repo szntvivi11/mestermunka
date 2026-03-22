@@ -5,20 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Regisztráció</title>
   <link rel="stylesheet" href="/style.css">
-  <style>
-    /* Üzenetek */
-    .login-message {
-      padding: 12px 20px;
-      border-radius: 6px;
-      margin-bottom: 16px;
-      font-weight: bold;
-    }
-    .login-success { background-color: #4caf50; color: white; }
-    .login-error { background-color: #f44336; color: white; }
-
-    /* Tanfolyamadó mezők elrejtése alapból */
-    .teacher-fields { display: none; }
-  </style>
+  <link rel="stylesheet" href="/regisztracio/regisztracio.css">
 </head>
 <body>
  <header id="fejlec">
@@ -109,7 +96,16 @@
 
       <div class="input-group">
         <label for="reg-password">Jelszó</label>
-        <input id="reg-password" type="password" placeholder="••••••••" required>
+        <div class="password-field-wrap">
+          <input id="reg-password" type="password" placeholder="••••••••" required>
+          <button
+            type="button"
+            class="password-toggle"
+            id="toggle-reg-password"
+            aria-label="Jelszó megjelenítése"
+            title="Jelszó megjelenítése"
+          ></button>
+        </div>
       </div>
 
       <div class="teacher-fields input-group" id="teacher-section">
@@ -149,161 +145,7 @@
       </nav>
   </div>
 </footer>
-<script>
-  // ==== Hamburger menü ====
-  const hamburgerBtn = document.getElementById('hamburgerBtn');
-  const mobileNavDrawer = document.getElementById('mobileNavDrawer');
-  hamburgerBtn.addEventListener('click', () => {
-    hamburgerBtn.classList.toggle('open');
-    mobileNavDrawer.classList.toggle('open');
-  });
-  mobileNavDrawer.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-      hamburgerBtn.classList.remove('open');
-      mobileNavDrawer.classList.remove('open');
-    });
-  });
-
-  // ==== Profil + nav kezelés ====
-  async function updateHeaderProfile() {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-    if (storedUser && storedUser.id) {
-      try {
-        const response = await fetch(`/api/profile?id=${storedUser.id}&role=${storedUser.role}`);
-        const data = await response.json();
-        if (data.success) {
-          const user = data.user;
-          const getImgSrc = (profilkep, nev, felhasznalonev) => {
-            if (profilkep) return profilkep.startsWith('/') ? profilkep : `/Tanfolyamok/kepek/${profilkep}`;
-            return `https://ui-avatars.com/api/?name=${encodeURIComponent(nev || felhasznalonev || 'User')}&size=50&background=242440&color=3399ff&bold=true&font-size=0.4`;
-          };
-          const imgSrc = getImgSrc(user.profilkep, user.nev, user.felhasznalonev);
-
-          const miniProfilLink = document.getElementById('miniProfilLink');
-          const headerImg = document.getElementById('headerProfileImage');
-          if (miniProfilLink) miniProfilLink.style.display = 'block';
-          if (headerImg) {
-            headerImg.src = imgSrc;
-            headerImg.onerror = function() {
-              this.src = `https://ui-avatars.com/api/?name=User&size=50&background=242440&color=3399ff&bold=true`;
-            };
-          }
-
-          const miniProfilLinkMobile = document.getElementById('miniProfilLinkMobile');
-          const headerImgMobile = document.getElementById('headerProfileImageMobile');
-          const placeholder = document.getElementById('mobileProfilPlaceholder');
-          if (miniProfilLinkMobile) miniProfilLinkMobile.style.display = 'flex';
-          if (headerImgMobile) {
-            headerImgMobile.src = imgSrc;
-            headerImgMobile.onerror = function() {
-              this.src = `https://ui-avatars.com/api/?name=User&size=50&background=242440&color=3399ff&bold=true`;
-            };
-          }
-          if (placeholder) placeholder.style.display = 'none';
-
-          ['nav-bejelentkezes','nav-regisztracio','nav-bejelentkezes-m','nav-regisztracio-m'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.style.display = 'none';
-          });
-        }
-      } catch (err) { console.error(err); }
-    }
-  }
-  document.addEventListener('DOMContentLoaded', updateHeaderProfile);
-
-  // ==== Választás: user / teacher ====
-  const roleRadios = document.querySelectorAll('input[name="role"]');
-  const teacherFields = document.querySelector('.teacher-fields');
-
-  roleRadios.forEach(radio => {
-    radio.addEventListener('change', () => {
-      teacherFields.style.display = radio.value === 'teacher' ? 'block' : 'none';
-    });
-  });
-
-  // ==== SHOW MESSAGE ====
-  function showMessage(msg, type = "success") {
-    const container = document.querySelector(".aloldal-container");
-    const existing = document.querySelector(".login-message");
-    if (existing) existing.remove();
-
-    const message = document.createElement("div");
-    message.className = `login-message ${type === "error" ? "login-error" : "login-success"}`;
-    message.textContent = msg;
-    container.prepend(message);
-  }
-
-  // ==== REGISZTRÁCIÓ ====
-  const form = document.getElementById('register-form');
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const role = document.querySelector('input[name="role"]:checked').value;
-    const nev = document.getElementById("reg-username").value.trim();
-    const email = document.getElementById("reg-email").value.trim();
-    const jelszo = document.getElementById("reg-password").value.trim();
-    const vegzettseg = document.getElementById("teacher-course").value.trim();
-
-    if (!nev || !email || !jelszo) {
-      showMessage("❌ Kérlek, tölts ki minden kötelező mezőt!", "error");
-      return;
-    }
-
-    if (role === 'teacher' && !vegzettseg) {
-      showMessage("❌ Kérlek, add meg a végzettséged!", "error");
-      return;
-    }
-
-    try {
-      const res = await fetch(role === 'user' ? '/api/register-user' : '/api/register-teacher', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          nev, 
-          felhasznalonev: nev,
-          email, 
-          jelszo, 
-          vegzettseg, 
-        })
-      });
-
-      const data = await res.json();
-      if (data.success) {
-        showMessage("✅ Sikeres regisztráció!", "success");
-        form.reset();
-        teacherFields.style.display = 'none';
-        setTimeout(() => window.location.href = "/bejelentkezes", 1500);
-      } else {
-        showMessage(data.message || "❌ Hiba a regisztráció során", "error");
-      }
-    } catch (err) {
-      console.error(err);
-      showMessage("❌ Szerverhiba", "error");
-    }
-  });
-
-  // ==== Hide 'Profil' link if user is not logged in ====
-  const user = JSON.parse(localStorage.getItem('user'));
-  if (!user) {
-    const profileLink = document.querySelector('a[href="/profil"]');
-    if (profileLink) profileLink.style.display = 'none';
-    const miniProfileLink = document.getElementById('miniProfilLink');
-    if (miniProfileLink) miniProfileLink.style.display = 'none';
-    const miniProfileLinkMobile = document.getElementById('miniProfilLinkMobile');
-    if (miniProfileLinkMobile) miniProfileLinkMobile.style.display = 'none';
-  }
-
-  // Check if the user is logged in and hide the login/register links
-  if (user) {
-    const loginNav = document.getElementById('nav-bejelentkezes');
-    const registerNav = document.getElementById('nav-regisztracio');
-    const loginNavMobile = document.getElementById('nav-bejelentkezes-m');
-    const registerNavMobile = document.getElementById('nav-regisztracio-m');
-    if (loginNav) loginNav.style.display = 'none';
-    if (registerNav) registerNav.style.display = 'none';
-    if (loginNavMobile) loginNavMobile.style.display = 'none';
-    if (registerNavMobile) registerNavMobile.style.display = 'none';
-  }
-</script>
+<script src="/regisztracio/regisztracio.js"></script>
 </body>
 </html>
+
