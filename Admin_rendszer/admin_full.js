@@ -1,4 +1,4 @@
-    // Jogosultság ellenőrzés
+// Jogosultság ellenőrzés
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user || user.role !== 'admin') {
         alert("Nincs jogosultságod!");
@@ -22,7 +22,7 @@
                         <td><b>${k.nev}</b></td>
                         <td>${k.email}</td>
                         <td>${k.ar} Ft</td>
-                        <td><button class="btn btn-danger" onclick="deleteCourse(${k.id})">Törlés</button></td>
+                        <td><button class="btn delete-btn" onclick="deleteCourse(${k.id})">Törlés</button></td>
                     </tr>`).join('')
                 : '<tr><td colspan="5" style="text-align:center;color:#aaa;padding:20px;">Nincs tanfolyam.</td></tr>';
         } catch (err) {

@@ -1,4 +1,4 @@
-        async function updateHeaderProfile() {
+async function updateHeaderProfile() {
             const storedUser = JSON.parse(localStorage.getItem('user'));
             
             if (storedUser && storedUser.id) {
@@ -81,3 +81,47 @@
                 mobileNavDrawer.classList.remove('open');
             });
         });
+
+async function loadLegujabbTanfolyamok() {
+    const container = document.getElementById('legujabb-tanfolyamok');
+    if (!container) return;
+
+    try {
+        const res = await fetch('/api/kepzesek');
+        const kepzesek = await res.json();
+
+        // Az utolsó 3 tanfolyam (legújabbak: legnagyobb id-k)
+        const legujabb = kepzesek
+            .sort((a, b) => b.id - a.id)
+            .slice(0, 3);
+
+        if (legujabb.length === 0) {
+            container.innerHTML = '<p style="color:#aaa;text-align:center;">Még nincsenek tanfolyamok.</p>';
+            return;
+        }
+
+        container.innerHTML = legujabb.map(k => {
+            const kepSrc = k.kep
+                ? `/Tanfolyamok/kepek/${k.kep}`
+                : 'https://via.placeholder.com/300x180?text=Nincs+kép';
+
+            const leiras = k.leiras
+                ? (k.leiras.length > 80 ? k.leiras.substring(0, 80) + '…' : k.leiras)
+                : 'Részletek a tanfolyamok oldalán.';
+
+            return `
+                <div class="latest-card">
+                    <img src="${kepSrc}" alt="${k.nev}" onerror="this.src='https://via.placeholder.com/300x180?text=Nincs+kép'">
+                    <h3>${k.nev}</h3>
+                    <p>${leiras}</p>
+                    <a href="/tanfolyamok" class="card-btn">Megnézem</a>
+                </div>`;
+        }).join('');
+
+    } catch (err) {
+        console.error('Legújabb tanfolyamok betöltési hiba:', err);
+        container.innerHTML = '<p style="color:#aaa;text-align:center;">Nem sikerült betölteni a tanfolyamokat.</p>';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadLegujabbTanfolyamok);
