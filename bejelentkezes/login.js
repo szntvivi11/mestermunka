@@ -91,8 +91,132 @@ function initPasswordToggle() {
   });
 }
 
+function initForgotPassword() {
+  const link = document.getElementById('forgot-password-link');
+  if (!link) return;
+
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    // Modal létrehozása
+    const overlay = document.createElement('div');
+    overlay.id = 'forgot-modal-overlay';
+    overlay.style.cssText = `
+      position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:9999;
+      display:flex;align-items:center;justify-content:center;padding:16px;
+    `;
+
+    overlay.innerHTML = `
+      <div style="background:#11172a;border:1px solid rgba(51,153,255,0.3);border-radius:20px;
+                  padding:30px;max-width:380px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,0.5);">
+        <h2 style="color:#66b3ff;margin:0 0 8px;text-align:center;font-size:1.4em;">Elfelejtett jelszó</h2>
+        <p style="color:rgba(255,255,255,0.6);text-align:center;font-size:0.9rem;margin:0 0 20px;">
+          Add meg az email címed és küldünk egy visszaállítási linket.
+        </p>
+
+        <div style="margin-bottom:14px;">
+          <label style="display:block;color:#66b3ff;font-size:0.82rem;font-weight:bold;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Szerepkör</label>
+          <div style="display:flex;gap:10px;">
+            <label style="flex:1;cursor:pointer;">
+              <input type="radio" name="forgot-role" value="student" checked style="display:none;">
+              <span id="forgot-role-student" style="display:block;text-align:center;padding:9px;background:rgba(51,153,255,0.9);color:#000;font-weight:bold;border-radius:10px;border:1px solid rgba(51,153,255,0.3);transition:0.2s;font-size:0.9rem;">Tanuló</span>
+            </label>
+            <label style="flex:1;cursor:pointer;">
+              <input type="radio" name="forgot-role" value="teacher" style="display:none;">
+              <span id="forgot-role-teacher" style="display:block;text-align:center;padding:9px;background:rgba(255,255,255,0.05);color:#fff;border-radius:10px;border:1px solid rgba(51,153,255,0.3);transition:0.2s;font-size:0.9rem;">Oktató</span>
+            </label>
+          </div>
+        </div>
+
+        <div style="margin-bottom:18px;">
+          <label style="display:block;color:#66b3ff;font-size:0.82rem;font-weight:bold;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Email cím</label>
+          <input id="forgot-email-input" type="email" placeholder="pelda@email.hu"
+            style="width:100%;box-sizing:border-box;padding:11px 14px;background:rgba(15,17,26,0.95);
+                   color:#fff;border:2px solid rgba(51,153,255,0.4);border-radius:12px;font-size:1em;outline:none;">
+        </div>
+
+        <div id="forgot-msg" style="margin-bottom:12px;min-height:20px;text-align:center;font-size:0.9rem;"></div>
+
+        <div style="display:flex;gap:10px;">
+          <button id="forgot-cancel-btn" style="flex:1;padding:12px;background:rgba(255,255,255,0.08);color:#fff;
+            border:1px solid rgba(255,255,255,0.2);border-radius:10px;cursor:pointer;font-size:0.95rem;">
+            Mégse
+          </button>
+          <button id="forgot-send-btn" style="flex:2;padding:12px;background:#3399ff;color:#fff;
+            border:none;border-radius:10px;cursor:pointer;font-weight:bold;font-size:0.95rem;">
+            Link küldése
+          </button>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    // Szerepkör váltó vizuális visszajelzés
+    overlay.querySelectorAll('input[name="forgot-role"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        const studentSpan = document.getElementById('forgot-role-student');
+        const teacherSpan = document.getElementById('forgot-role-teacher');
+        if (radio.value === 'student' && radio.checked) {
+          studentSpan.style.background = 'rgba(51,153,255,0.9)';
+          studentSpan.style.color = '#000';
+          teacherSpan.style.background = 'rgba(255,255,255,0.05)';
+          teacherSpan.style.color = '#fff';
+        } else if (radio.value === 'teacher' && radio.checked) {
+          teacherSpan.style.background = 'rgba(51,153,255,0.9)';
+          teacherSpan.style.color = '#000';
+          studentSpan.style.background = 'rgba(255,255,255,0.05)';
+          studentSpan.style.color = '#fff';
+        }
+      });
+    });
+
+    // Bezárás
+    document.getElementById('forgot-cancel-btn').addEventListener('click', () => overlay.remove());
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+
+    // Küldés
+    document.getElementById('forgot-send-btn').addEventListener('click', async () => {
+      const email = document.getElementById('forgot-email-input').value.trim();
+      const role = overlay.querySelector('input[name="forgot-role"]:checked').value;
+      const msgEl = document.getElementById('forgot-msg');
+      const sendBtn = document.getElementById('forgot-send-btn');
+
+      if (!email) {
+        msgEl.textContent = 'Kérlek, add meg az email címed!';
+        msgEl.style.color = '#ff6b6b';
+        return;
+      }
+
+      sendBtn.textContent = 'Küldés...';
+      sendBtn.disabled = true;
+
+      try {
+        const res = await fetch('/api/forgot-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, role })
+        });
+        const data = await res.json();
+
+        msgEl.textContent = 'Ha létezik a fiók, elküldtük a visszaállítási linket!';
+        msgEl.style.color = '#4caf50';
+        sendBtn.textContent = 'Elküldve ✓';
+
+        setTimeout(() => overlay.remove(), 3000);
+      } catch (err) {
+        msgEl.textContent = 'Hiba történt, próbáld újra!';
+        msgEl.style.color = '#ff6b6b';
+        sendBtn.textContent = 'Link küldése';
+        sendBtn.disabled = false;
+      }
+    });
+  });
+}
+
 initPasswordToggle();
 initLoginPageUI();
+initForgotPassword();
 
 function mergeUserWithLocal(loginUser) {
   try {

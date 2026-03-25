@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const cors = require("cors");
 const multer = require("multer");
 const nodemailer = require("nodemailer");
+const crypto = require("crypto");
 require("dotenv").config();
 
 
@@ -27,6 +28,7 @@ app.use("/tanfolyamok/oldalak", express.static(path.join(__dirname, "Tanfolyamok
 app.use('/Tanfolyamok/kepek', express.static(path.join(__dirname, 'Tanfolyamok', 'kepek')));
 app.use('/tanfolyamok/kepek', express.static(path.join(__dirname, 'Tanfolyamok', 'kepek')));
 app.use(express.static(path.join(__dirname, "profil_oldal")));
+app.use("/jelszo-reset", express.static(path.join(__dirname, "jelszo-reset")));
 
 // ===== HTML OLDALAK =====
 app.get("/", (req, res) =>
@@ -56,6 +58,9 @@ app.get("/admin", (req, res) => {
 app.get("/admin_full.html", (req, res) => {
   res.sendFile(path.join(__dirname, "admin_rendszer", "admin_full.html"));
 });
+app.get("/jelszo-reset", (req, res) =>
+  res.sendFile(path.join(__dirname, "jelszo-reset", "jelszo-reset.html"))
+);
 
 // Dinamikus tanfolyam oldalak
 app.get("/tanfolyamok/:slug", (req, res) => {
@@ -467,36 +472,81 @@ app.post("/api/jelentkezes", async (req, res) => {
     );
 
     const [[jelentkezesAdat]] = await db.promise().query(
-      `SELECT v.nev as diak_nev, v.email as diak_email, k.nev as tanfolyam_nev
+      `SELECT 
+        v.nev as diak_nev, 
+        v.email as diak_email, 
+        k.nev as tanfolyam_nev,
+        k.helyileg as helyszin,
+        k.o_nev as oktato_nev,
+        COALESCE(ua.gmail, k.email) as oktato_email
        FROM user_vevo v
        JOIN kepzesek k ON k.id = ?
+       LEFT JOIN user_ado ua ON ua.ua_id = k.ua_ID
        WHERE v.uv_id = ?
        LIMIT 1`,
       [kepzesId, userId]
     );
 
-    let emailSent = false;
+    // 1. Email a DIÁKNAK - sikeres jelentkezés visszaigazolása
     if (jelentkezesAdat?.diak_email) {
       try {
-        const emailResult = await sendMailSafe({
+        await sendMailSafe({
           to: jelentkezesAdat.diak_email,
-          subject: "Sikeres tanfolyam jelentkezés",
-          text: `Szia ${jelentkezesAdat.diak_nev}!\n\nSikeresen jelentkeztél erre a tanfolyamra: ${jelentkezesAdat.tanfolyam_nev}.\n\nÜdv,\nMentora csapata`,
-          html: `<p>Szia <strong>${jelentkezesAdat.diak_nev}</strong>!</p><p>Sikeresen jelentkeztél erre a tanfolyamra: <strong>${jelentkezesAdat.tanfolyam_nev}</strong>.</p><p>Üdv,<br>Mentora csapata</p>`,
+          subject: "Sikeres tanfolyam jelentkezés – Mentora",
+          html: `
+            <div style="font-family:sans-serif;max-width:600px;margin:0 auto;">
+              <h2 style="color:#3399ff;">Sikeres jelentkezés! 🎉</h2>
+              <p>Szia <strong>${jelentkezesAdat.diak_nev}</strong>!</p>
+              <p>Sikeresen jelentkeztél az alábbi tanfolyamra:</p>
+              <div style="background:#f0f4ff;padding:16px;border-left:4px solid #3399ff;border-radius:6px;margin:16px 0;">
+                <p style="margin:4px 0;"><strong>Tanfolyam:</strong> ${jelentkezesAdat.tanfolyam_nev}</p>
+                <p style="margin:4px 0;"><strong>Helyszín:</strong> ${jelentkezesAdat.helyszin || 'Nincs megadva'}</p>
+                <p style="margin:4px 0;"><strong>Oktató:</strong> ${jelentkezesAdat.oktato_nev || 'Nincs megadva'}</p>
+              </div>
+              <p>Hamarosan felvesszük veled a kapcsolatot az oktató részéről.</p>
+              <p>Üdv,<br><strong>Mentora csapata</strong></p>
+            </div>
+          `,
+          text: `Szia ${jelentkezesAdat.diak_nev}!\n\nSikeresen jelentkeztél: ${jelentkezesAdat.tanfolyam_nev}\nHelyszín: ${jelentkezesAdat.helyszin || 'Nincs megadva'}\nOktató: ${jelentkezesAdat.oktato_nev || 'Nincs megadva'}\n\nÜdv,\nMentora csapata`,
         });
-        emailSent = emailResult.sent;
       } catch (mailErr) {
-        console.error("Email küldési hiba (nem blokkolja a jelentkezést):", mailErr);
+        console.error("Diák email küldési hiba:", mailErr);
       }
     }
 
-    res.json({ success: true, message: "Sikeres jelentkezés", emailSent });
+    // 2. Email az OKTATÓNAK - új jelentkező értesítés
+    if (jelentkezesAdat?.oktato_email) {
+      try {
+        await sendMailSafe({
+          to: jelentkezesAdat.oktato_email,
+          subject: `Új jelentkező – ${jelentkezesAdat.tanfolyam_nev}`,
+          html: `
+            <div style="font-family:sans-serif;max-width:600px;margin:0 auto;">
+              <h2 style="color:#3399ff;">Új jelentkező érkezett! 📋</h2>
+              <p>Szia <strong>${jelentkezesAdat.oktato_nev}</strong>!</p>
+              <p>Valaki jelentkezett az egyik tanfolyamodra:</p>
+              <div style="background:#f0f4ff;padding:16px;border-left:4px solid #3399ff;border-radius:6px;margin:16px 0;">
+                <p style="margin:4px 0;"><strong>Tanfolyam:</strong> ${jelentkezesAdat.tanfolyam_nev}</p>
+                <p style="margin:4px 0;"><strong>Jelentkező neve:</strong> ${jelentkezesAdat.diak_nev}</p>
+                <p style="margin:4px 0;"><strong>Jelentkező emailje:</strong> ${jelentkezesAdat.diak_email}</p>
+              </div>
+              <p>A jelentkező adatait a profilodban, a tanfolyamaid között is megtekintheted.</p>
+              <p>Üdv,<br><strong>Mentora csapata</strong></p>
+            </div>
+          `,
+          text: `Új jelentkező: ${jelentkezesAdat.diak_nev} (${jelentkezesAdat.diak_email})\nTanfolyam: ${jelentkezesAdat.tanfolyam_nev}\n\nÜdv,\nMentora csapata`,
+          replyTo: jelentkezesAdat.diak_email,
+        });
+      } catch (mailErr) {
+        console.error("Oktató email küldési hiba:", mailErr);
+      }
+    }
+
+    res.json({ success: true, message: "Sikeres jelentkezés" });
   } catch (err) {
     console.error(err);
-
     if (err.code === "ER_DUP_ENTRY")
       return res.status(409).json({ success: false, message: "Már jelentkeztél erre a képzésre" });
-
     res.status(500).json({ success: false, message: "Szerverhiba" });
   }
 });
@@ -744,6 +794,102 @@ app.post("/api/update-password", async (req, res) => {
     }
 });
 
+// =====================================================
+// =========== ELFELEJTETT JELSZÓ ====================
+// =====================================================
+
+// In-memory token tárolás (egyszerű megoldás, szerver újraindítás törli)
+const resetTokens = new Map();
+
+// 1. Token generálás + email küldés
+app.post("/api/forgot-password", async (req, res) => {
+  const { email, role } = req.body;
+  if (!email || !role) return res.status(400).json({ success: false, message: "Hiányzó adatok" });
+
+  try {
+    let user = null;
+
+    if (role === "student") {
+      const [rows] = await db.promise().query(
+        "SELECT uv_id as id, nev FROM user_vevo WHERE email = ?", [email]
+      );
+      if (rows.length) user = rows[0];
+    } else if (role === "teacher") {
+      const [rows] = await db.promise().query(
+        "SELECT ua_id as id, felhasznalonev as nev FROM user_ado WHERE gmail = ?", [email]
+      );
+      if (rows.length) user = rows[0];
+    }
+
+    // Biztonsági okokból mindig sikert jelzünk, még ha nem létezik az email se
+    if (!user) {
+      return res.json({ success: true, message: "Ha létezik a fiók, elküldtük a levelet." });
+    }
+
+    const token = crypto.randomBytes(32).toString("hex");
+    const expires = Date.now() + 30 * 60 * 1000; // 30 perc
+    resetTokens.set(token, { userId: user.id, role, expires });
+
+    const resetLink = `${process.env.BASE_URL || "http://localhost:3001"}/jelszo-reset?token=${token}&role=${role}`;
+
+    await sendMailSafe({
+      to: email,
+      subject: "Jelszó visszaállítás – Mentora",
+      html: `
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #3399ff;">Jelszó visszaállítás</h2>
+          <p>Szia <strong>${user.nev}</strong>!</p>
+          <p>Kaptunk egy jelszó visszaállítási kérést a fiókoddal kapcsolatban.</p>
+          <p>Kattints az alábbi gombra a jelszó megváltoztatásához:</p>
+          <a href="${resetLink}" style="display:inline-block;padding:12px 24px;background:#3399ff;color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;margin:16px 0;">Jelszó visszaállítása</a>
+          <p style="color:#888;font-size:0.9em;">A link 30 percig érvényes. Ha nem te kérted, hagyd figyelmen kívül ezt az emailt.</p>
+          <p>Üdv,<br><strong>Mentora csapata</strong></p>
+        </div>
+      `,
+      text: `Jelszó visszaállítás\n\nKattints ide: ${resetLink}\n\nA link 30 percig érvényes.`,
+    });
+
+    res.json({ success: true, message: "Ha létezik a fiók, elküldtük a levelet." });
+  } catch (err) {
+    console.error("Forgot password hiba:", err);
+    res.status(500).json({ success: false, message: "Szerver hiba" });
+  }
+});
+
+// 2. Token ellenőrzés
+app.get("/api/reset-token-check", (req, res) => {
+  const { token } = req.query;
+  const data = resetTokens.get(token);
+  if (!data || Date.now() > data.expires) {
+    return res.json({ valid: false });
+  }
+  res.json({ valid: true, role: data.role });
+});
+
+// 3. Új jelszó mentése token alapján
+app.post("/api/reset-password", async (req, res) => {
+  const { token, jelszo } = req.body;
+  if (!token || !jelszo) return res.status(400).json({ success: false, message: "Hiányzó adatok" });
+
+  const data = resetTokens.get(token);
+  if (!data || Date.now() > data.expires) {
+    return res.status(400).json({ success: false, message: "Érvénytelen vagy lejárt link." });
+  }
+
+  try {
+    const hash = await bcrypt.hash(jelszo, 10);
+    const tabla = data.role === "teacher" ? "user_ado" : "user_vevo";
+    const col = data.role === "teacher" ? "ua_id" : "uv_id";
+
+    await db.promise().query(`UPDATE ${tabla} SET jelszo = ? WHERE ${col} = ?`, [hash, data.userId]);
+    resetTokens.delete(token);
+
+    res.json({ success: true, message: "Jelszó sikeresen megváltoztatva!" });
+  } catch (err) {
+    console.error("Reset password hiba:", err);
+    res.status(500).json({ success: false, message: "Szerver hiba" });
+  }
+});
 
 // ===== 404 =====
 app.use((req, res) => {
