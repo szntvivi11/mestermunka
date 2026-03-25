@@ -39,10 +39,11 @@
                         <td><span class="badge badge-teacher">${t.felhasznalonev}</span></td>
                         <td>${t.gmail}</td>
                         <td>${t.vegzettseg || 'Nincs megadva'}</td>
+                        <td><button class="btn delete-btn" onclick="deleteTeacher(${t.ua_id})">Törlés</button></td>
                     </tr>`).join('')
-                : '<tr><td colspan="4" style="text-align:center;color:#aaa;padding:20px;">Nincs tanár.</td></tr>';
+                : '<tr><td colspan="5" style="text-align:center;color:#aaa;padding:20px;">Nincs tanár.</td></tr>';
         } catch (err) {
-            document.getElementById('tanar-lista').innerHTML = `<tr><td colspan="4" class="error-msg">${err.message}</td></tr>`;
+            document.getElementById('tanar-lista').innerHTML = `<tr><td colspan="5" class="error-msg">${err.message}</td></tr>`;
         }
 
         // 3. Diákok betöltése
@@ -54,10 +55,11 @@
                         <td>${d.uv_id}</td>
                         <td>${d.nev}</td>
                         <td>${d.email}</td>
+                        <td><button class="btn delete-btn" onclick="deleteStudent(${d.uv_id})">Törlés</button></td>
                     </tr>`).join('')
-                : '<tr><td colspan="3" style="text-align:center;color:#aaa;padding:20px;">Nincs diák.</td></tr>';
+                : '<tr><td colspan="4" style="text-align:center;color:#aaa;padding:20px;">Nincs diák.</td></tr>';
         } catch (err) {
-            document.getElementById('diak-lista').innerHTML = `<tr><td colspan="3" class="error-msg">${err.message}</td></tr>`;
+            document.getElementById('diak-lista').innerHTML = `<tr><td colspan="4" class="error-msg">${err.message}</td></tr>`;
         }
 
         // 4. Jelentkezések betöltése
@@ -80,6 +82,30 @@
         if (!confirm("Biztosan törölni akarod ezt a tanfolyamot?")) return;
         try {
             const res = await fetch(`/api/admin/kepzesek/${id}`, { method: 'DELETE' });
+            if (res.ok) loadData();
+            else alert("Hiba történt a törlés során!");
+        } catch (err) {
+            alert("Szerverhiba: " + err.message);
+        }
+    }
+
+    // Tanár törlése
+    async function deleteTeacher(id) {
+        if (!confirm("Biztosan törölni akarod ezt a tanárt?")) return;
+        try {
+            const res = await fetch(`/api/admin/tanarok/${id}`, { method: 'DELETE' });
+            if (res.ok) loadData();
+            else alert("Hiba történt a törlés során!");
+        } catch (err) {
+            alert("Szerverhiba: " + err.message);
+        }
+    }
+
+    // Diák törlése
+    async function deleteStudent(id) {
+        if (!confirm("Biztosan törölni akarod ezt a diákot?")) return;
+        try {
+            const res = await fetch(`/api/admin/diakok/${id}`, { method: 'DELETE' });
             if (res.ok) loadData();
             else alert("Hiba történt a törlés során!");
         } catch (err) {

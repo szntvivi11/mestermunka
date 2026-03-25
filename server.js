@@ -674,6 +674,34 @@ app.delete("/api/admin/kepzesek/:id", async (req, res) => {
     } catch (err) { res.status(500).json({ success: false }); }
 });
 
+// Tanár törlése
+app.delete("/api/admin/tanarok/:id", async (req, res) => {
+    try {
+        // Először töröljük a tanár tanfolyamait
+        await db.promise().query("DELETE FROM kepzesek WHERE ua_ID = ?", [req.params.id]);
+        // Majd töröljük magát a tanárt
+        await db.promise().query("DELETE FROM user_ado WHERE ua_id = ?", [req.params.id]);
+        res.json({ success: true });
+    } catch (err) {
+        console.error("Tanár törlési hiba:", err);
+        res.status(500).json({ success: false });
+    }
+});
+
+// Diák törlése
+app.delete("/api/admin/diakok/:id", async (req, res) => {
+    try {
+        // Először töröljük a diák jelentkezéseit
+        await db.promise().query("DELETE FROM jelentkezesek WHERE user_id = ?", [req.params.id]);
+        // Majd töröljük magát a diákot
+        await db.promise().query("DELETE FROM user_vevo WHERE uv_id = ?", [req.params.id]);
+        res.json({ success: true });
+    } catch (err) {
+        console.error("Diák törlési hiba:", err);
+        res.status(500).json({ success: false });
+    }
+});
+
 // Összes diák lekérése
 app.get("/api/admin/osszes-diak", async (req, res) => {
     try {
