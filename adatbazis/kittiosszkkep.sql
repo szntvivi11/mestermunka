@@ -214,6 +214,19 @@ CREATE TABLE `vegzettseg` (
   `uv_idegenID` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
+-- Creating the `admin` table to store admin users
+CREATE TABLE `admin` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
+
+-- Adding the admin user to the `admin` table
+INSERT INTO `admin` (`id`, `username`, `password`) VALUES
+(NULL, 'ADMIN1234', '$2b$10$VKgpy11cZE3TiwA0SebqGecQKEx3hyyd37SpPmsf1YO9GE/1XgnfK');
+
+
 --
 -- Indexek a kiírt táblákhoz
 --

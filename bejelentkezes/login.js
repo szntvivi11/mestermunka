@@ -243,6 +243,7 @@ function mergeUserWithLocal(loginUser) {
   }
 }
 
+// Updating admin login logic to authenticate from the `admin` table
 loginForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
@@ -261,91 +262,37 @@ loginForm.addEventListener('submit', async (e) => {
     return;
   }
 
+  const selectedRole = document.querySelector('input[name="role"]:checked');
+  if (!selectedRole) {
+    const msg = document.createElement('div');
+    msg.className = 'login-message login-error';
+    msg.textContent = 'Kérlek, válassz szerepkört!';
+    container.appendChild(msg);
+    return;
+  }
+
+  const role = selectedRole.value;
+
   try {
-    // Admin bejelentkezésnél kihagyjuk a szerepkörválasztást
-    const isAdminLogin = email === 'ADMIN1234' && jelszo === 'admin4321';
-    if (isAdminLogin) {
-        const res = await fetch('/api/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, jelszo, role: 'admin' })
-        });
-
-        const data = await res.json();
-        const msg = document.createElement('div');
-        msg.className = `login-message ${data.success ? 'login-success' : 'login-error'}`;
-        msg.textContent = data.message || (data.success ? 'Sikeres bejelentkezés' : 'Hiba');
-        container.appendChild(msg);
-
-        if (data.success) {
-          const mergedUser = mergeUserWithLocal(data.user);
-          localStorage.setItem('user', JSON.stringify(mergedUser));
-            setTimeout(() => window.location.href = '/profil', 800);
-        }
-        return;
-    }
-
-    // A kiválasztott szerepkört is elküldjük a bejelentkezési kérésben
-    const selectedRole = document.querySelector('input[name="role"]:checked');
-    if (!selectedRole) {
-        const msg = document.createElement('div');
-        msg.className = 'login-message login-error';
-      msg.textContent = 'Kérlek, válassz szerepkört!';
-        container.appendChild(msg);
-        return;
-    }
-
-    let effectiveRole = selectedRole.value;
-    let res = await fetch('/api/login', {
+    const res = await fetch('/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, jelszo, role: effectiveRole })
+      body: JSON.stringify({ email, jelszo, role })
     });
 
-    let data = await res.json();
-
-    // Ha rossz szerepkör lett kiválasztva, próbáljuk meg automatikusan a másikat.
-    if (!data.success && res.status === 401 && (effectiveRole === 'student' || effectiveRole === 'teacher')) {
-      const fallbackRole = effectiveRole === 'student' ? 'teacher' : 'student';
-      const retryRes = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, jelszo, role: fallbackRole })
-      });
-      const retryData = await retryRes.json();
-
-      if (retryData.success) {
-        res = retryRes;
-        data = retryData;
-        effectiveRole = fallbackRole;
-      }
-    }
-
+    const data = await res.json();
     const msg = document.createElement('div');
     msg.className = `login-message ${data.success ? 'login-success' : 'login-error'}`;
     msg.textContent = data.message || (data.success ? 'Sikeres bejelentkezés' : 'Hiba');
-
     container.appendChild(msg);
 
     if (data.success) {
-      data.user.role = data.role || effectiveRole;
-
-      // Felhasználói adatok mentése localStorage-ba a helyi profil testreszabások megőrzésével.
       const mergedUser = mergeUserWithLocal(data.user);
       localStorage.setItem('user', JSON.stringify(mergedUser));
-
-      // A 'Bejelentkezés' és a 'Regisztráció' elemek elrejtése a navigációból
-      const loginNav = document.querySelector('#nav-bejelentkezes');
-      const registerNav = document.querySelector('#nav-regisztracio');
-      if (loginNav) loginNav.style.display = 'none';
-      if (registerNav) registerNav.style.display = 'none';
-
-      // Átirányítás szerepkör alapján
       setTimeout(() => {
         window.location.href = '/profil';
       }, 800);
     }
-
   } catch (err) {
     const msg = document.createElement('div');
     msg.className = 'login-message login-error';

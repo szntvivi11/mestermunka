@@ -292,20 +292,21 @@ app.post("/api/login", async (req, res) => {
           user: { id: teacher.ua_id, nev: teacher.felhasznalonev, email: teacher.gmail, role: "teacher" }
         });
       }
-    } else if (!role || role === "admin") {
-      const adminUsername = "ADMIN1234";
-      const adminPassword = "admin4321";
+    } else if (role === "admin") {
+      const [admins] = await db.promise().query(
+        "SELECT id, username, password FROM admin WHERE username = ?",
+        [email]
+      );
 
-      if (email === adminUsername && jelszo === adminPassword) {
+      if (admins.length) {
+        const admin = admins[0];
+        const ok = await isPasswordValid(jelszo, admin.password);
+        if (!ok) return res.status(401).json({ success: false, message: "Hibás jelszó" });
+
         return res.json({
           success: true,
           role: "admin",
-          user: { 
-            id: 0, 
-            nev: "Adminisztrátor", 
-            email: adminUsername,
-            role: "admin"
-          }
+          user: { id: admin.id, nev: admin.username, email: admin.username, role: "admin" }
         });
       } else {
         return res.status(401).json({ success: false, message: "Hibás admin felhasználónév vagy jelszó" });
