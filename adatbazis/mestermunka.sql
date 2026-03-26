@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1:3307
--- Létrehozás ideje: 2026. Már 04. 12:06
+-- Létrehozás ideje: 2026. Már 26. 13:10
 -- Kiszolgáló verziója: 10.4.28-MariaDB
 -- PHP verzió: 8.2.4
 
@@ -24,14 +24,21 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `ajanlo`
+-- Tábla szerkezet ehhez a táblához `admin`
 --
 
-CREATE TABLE `ajanlo` (
-  `ajanlo_id` int(11) NOT NULL,
-  `kerdesek_valaszai_ID` int(11) NOT NULL,
-  `ajanlott_kepzes(kepzes id-ja))` int(11) NOT NULL
+CREATE TABLE `admin` (
+  `id` int(11) NOT NULL,
+  `username` varchar(45) NOT NULL,
+  `password` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
+
+--
+-- A tábla adatainak kiíratása `admin`
+--
+
+INSERT INTO `admin` (`id`, `username`, `password`) VALUES
+(1, 'ADMIN1234', '$2b$10$VKgpy11cZE3TiwA0SebqGecQKEx3hyyd37SpPmsf1YO9GE/1XgnfK');
 
 -- --------------------------------------------------------
 
@@ -96,7 +103,6 @@ INSERT INTO `kepzesek` (`id`, `kep`, `nev`, `leiras`, `helyileg`, `email`, `o_ne
 (40, 'haladoszemoldok.jpg', 'Szemöldök Laminálás Haladó', 'Haladó szemöldök laminálás és formázás. Időtartam: 2 hét, heti 2 alkalom. Tananyag: haladó formázási technikák, festés, arcelemzés, vendégkezelés. Tanúsítvány biztosított.', 'Budapest', 'info@szepseg.hu', 'Kovács Dóra', 18, NULL, NULL, 45000),
 (41, 'gellakhalado.jpg', 'Géllakk Haladó Tanfolyam', 'Komplex minták és díszítések géllakkal. Időtartam: 3 hét, heti 2 alkalom. Tananyag: haladó díszítések, megerősítés, trend technikák, anyagismeret. Gyakorlati oktatás.', 'Budapest', 'info@szepseg.hu', 'Nagy Eszter', 18, NULL, NULL, 55000),
 (42, 'barber.jpg', 'Barber / Férfi Fodrász Tanfolyam', 'Borotválás, férfi hajvágás és styling. Időtartam: 6 hét, heti 2 alkalom. Tananyag: klasszikus és modern férfi frizurák, szakállápolás, borotválási technikák, higiénia. Záróvizsga.', 'Budapest', 'info@szepseg.hu', 'Kovács Péter', 18, NULL, NULL, 135000),
-(43, 'busniess.jpg', 'Szalonindítás Alapok', 'Szépségipari vállalkozás indítása online képzés. Időtartam: 3 hét, heti 2 élő online óra. Tananyag: üzleti terv, marketing, árképzés, jogi alapok, vendégszerzés.', 'Online', 'info@szepseg.hu', 'Vincze Péter', 18, NULL, NULL, 30000),
 (44, 'asztalossjpg.jpg', 'Asztalos Mesterkurzus', 'Alap- és haladó asztalos technikák. Időtartam: 10 hét, heti 2 gyakorlati nap. Tananyag: faanyagok, kézi és gépi megmunkálás, kötéselemek, felületkezelés. Tanúsítvány.', 'Budapest, Barkács utca 4.', 'info@asztalos.hu', 'Kovács László', 18, NULL, NULL, 250000),
 (45, 'autoszzerelo.jpg', 'Autószerelő Alapok', 'Gépjárművek karbantartása és javítása. Időtartam: 12 hét, heti 2 alkalom. Tananyag: motor alapok, fékrendszer, diagnosztika, biztonságos munkavégzés. Gyakorlati vizsga.', 'Győr, Szerviz út 12.', 'info@autoszerelo.hu', 'Nagy István', 17, NULL, NULL, 320000),
 (46, 'cukrasz.jpg', 'Cukrász Tanfolyam', 'Torták, sütemények és desszertek készítése online. Időtartam: 8 hét, heti 2 élő óra. Tananyag: alaptechnikák, krémek, díszítés, tálalás, higiénia.', 'Online', 'info@cukrasz.hu', 'Tóth Anna', 16, NULL, NULL, 180000),
@@ -115,16 +121,14 @@ INSERT INTO `kepzesek` (`id`, `kep`, `nev`, `leiras`, `helyileg`, `email`, `o_ne
 (103, 'rajz_halado.jpg', 'Haladó Rajz Tanfolyam', 'Haladó rajz technikák. Időtartam: 6 hét, heti 2–3 alkalom. Tananyag: portré, emberi test, kompozíció, árnyékolás és perspektíva haladó szinten. Gyakorlat modelleken.', 'Budapest', 'info@tanfolyam.hu', 'Tanfolyam.hu', 18, NULL, NULL, 85000),
 (104, 'barkacs_alap.jpg', 'Barkács Alap Tanfolyam', 'Barkács alapok. Időtartam: 3 hét, heti 2 alkalom. Tananyag: kézi szerszámok használata, alapanyagok, egyszerű fa- és fémprojektek. Kezdés: 2026.02.28.', 'Budapest', 'info@tanfolyam.hu', 'Tanfolyam.hu', 16, NULL, NULL, 40000),
 (105, 'barkacs_halado.jpg', 'Haladó Barkács Tanfolyam', 'Haladó barkács képzés fa- és fémprojektekhez. Időtartam: 5 hét, heti 3 alkalom. Tananyag: precíziós vágás, csiszolás, festés, szerelés, saját projekt készítése.', 'Budapest', 'info@tanfolyam.hu', 'Tanfolyam.hu', 18, NULL, NULL, 75000),
-(108, 'kozmetika_alap.jpg', 'Kozmetikai Alap Tanfolyam', 'Alap kozmetikai tanfolyam: arcpakolás, bőrápolás, alap smink, higiénia. Időtartam: 4 hét, heti 2 alkalom.', 'Budapest', 'info@tanfolyam.hu', 'Tanfolyam.hu', 16, NULL, NULL, 55000),
-(109, 'kozmetika_halado.jpg', 'Kozmetikai Haladó Tanfolyam', 'Haladó kozmetikai képzés modelleken. Időtartam: 6 hét, heti 3 alkalom. Tananyag: profi smink, szemöldök laminálás, pillalifting, kezelési protokoll.', 'Budapest', 'info@tanfolyam.hu', 'Tanfolyam.hu', 18, NULL, NULL, 110000),
-(113, 'masszor_halado.jpg', 'Masszőr Haladó', 'Haladó masszázstechnika: thai, sport, relax. Időtartam: 6 hét, heti 3 alkalom.', 'Budapest', 'info@tanfolyam.hu', 'Tanfolyam.hu', 18, NULL, NULL, 125000),
-(115, 'programozo_halado.jpg', 'Programozó Haladó', 'Haladó programozás, adatbázis-kezelés, webfejlesztés. Időtartam: 8 hét, heti 3 alkalom.', 'Online', 'info@tanfolyam.hu', 'Tanfolyam.hu', 18, NULL, NULL, 650000),
-(116, 'ingatlankozvetito.jpg', 'Ingatlanvagyon Értékelő és Közvetítő', 'Államilag elismert szakképesítés. Időtartam: 4 hónap, heti 2–3 alkalom online. Tananyag: ingatlanpiac, értékelés, riportkészítés, jogi alapismeretek. Tanúsítvány a végén.', 'Online', 'info@tanfolyam.hu', 'Tanfolyam.hu', 18, NULL, NULL, 139000),
-(117, 'ingatlankezelo.jpg', 'Ingatlankezelő Szakképesítés', 'Ingatlankezelő képzés online vagy kontakt formában. Időtartam: 3 hónap, heti 2 alkalom. Tananyag: ingatlan adminisztráció, társasházkezelés, jogi alapok. Tanúsítvány a végén.', 'Több város', 'info@tanfolyam.hu', 'Tanfolyam.hu', 18, NULL, NULL, 79000),
-(118, 'dajka.jpg', 'Dajka Szakképesítés', 'Dajka (gyermekgondozó) képzés. Időtartam: 8–10 hét, heti online és kontakt órák. Tananyag: gyermekpszichológia, higiénia, elsősegély, gondozás. Tanúsítvány a végén.', 'Több város', 'info@tanfolyam.hu', 'Tanfolyam.hu', 16, NULL, NULL, 65000),
-(123, 'villanyszerelo_alap.jpg', 'Villanyszerelő Alap', 'Elektromos rendszerek telepítése és karbantartás alapok. Időtartam: 4 hét, heti 2 alkalom.', 'Szeged', 'info@tanfolyam.hu', 'Tanfolyam.hu', 18, NULL, NULL, 240000),
-(126, 'szaloninditas.jpg', 'Szalonindítás Alapok', 'Szépségipari vállalkozás indítása. Időtartam: 2 hét, online vagy kontakt. Tananyag: marketing, ügyfélkezelés, pénzügy.', 'Online', 'info@tanfolyam.hu', 'Tanfolyam.hu', 18, NULL, NULL, 30000),
-(127, 'asztalos_mesterkurzus.jpg', 'Asztalos Mesterkurzus', 'Alap- és haladó asztalos technikák. Időtartam: 6 hét, gyakorlati órák. Tananyag: fa- és fémmegmunkálás, bútor készítés.', 'Budapest', 'info@tanfolyam.hu', 'Tanfolyam.hu', 18, NULL, NULL, 250000);
+(108, 'kozmetika.png', 'Kozmetikai Alap Tanfolyam', 'Alap kozmetikai tanfolyam: arcpakolás, bőrápolás, alap smink, higiénia. Időtartam: 4 hét, heti 2 alkalom.', 'Budapest', 'info@tanfolyam.hu', 'Tanfolyam.hu', 16, NULL, NULL, 55000),
+(109, 'kozmetika_halado.png', 'Kozmetikai Haladó Tanfolyam', 'Haladó kozmetikai képzés modelleken. Időtartam: 6 hét, heti 3 alkalom. Tananyag: profi smink, szemöldök laminálás, pillalifting, kezelési protokoll.', 'Budapest', 'info@tanfolyam.hu', 'Tanfolyam.hu', 18, NULL, NULL, 110000),
+(113, 'masszor.png\r\n', 'Masszőr Haladó', 'Haladó masszázstechnika: thai, sport, relax. Időtartam: 6 hét, heti 3 alkalom.', 'Budapest', 'info@tanfolyam.hu', 'Tanfolyam.hu', 18, NULL, NULL, 125000),
+(115, 'programozo.png', 'Programozó Haladó', 'Haladó programozás, adatbázis-kezelés, webfejlesztés. Időtartam: 8 hét, heti 3 alkalom.', 'Online', 'info@tanfolyam.hu', 'Tanfolyam.hu', 18, NULL, NULL, 650000),
+(116, 'ingatlanos.png', 'Ingatlanvagyon Értékelő és Közvetítő', 'Államilag elismert szakképesítés. Időtartam: 4 hónap, heti 2–3 alkalom online. Tananyag: ingatlanpiac, értékelés, riportkészítés, jogi alapismeretek. Tanúsítvány a végén.', 'Online', 'info@tanfolyam.hu', 'Tanfolyam.hu', 18, NULL, NULL, 139000),
+(117, 'Ingatlankezelő.png\r\n', 'Ingatlankezelő Szakképesítés', 'Ingatlankezelő képzés online vagy kontakt formában. Időtartam: 3 hónap, heti 2 alkalom. Tananyag: ingatlan adminisztráció, társasházkezelés, jogi alapok. Tanúsítvány a végén.', 'Több város', 'info@tanfolyam.hu', 'Tanfolyam.hu', 18, NULL, NULL, 79000),
+(118, 'dajka.png', 'Dajka Szakképesítés', 'Dajka (gyermekgondozó) képzés. Időtartam: 8–10 hét, heti online és kontakt órák. Tananyag: gyermekpszichológia, higiénia, elsősegély, gondozás. Tanúsítvány a végén.', 'Több város', 'info@tanfolyam.hu', 'Tanfolyam.hu', 16, NULL, NULL, 65000),
+(126, 'szaloninditas.png\r\n', 'Szalonindítás Alapok', 'Szépségipari vállalkozás indítása. Időtartam: 2 hét, online vagy kontakt. Tananyag: marketing, ügyfélkezelés, pénzügy.', 'Online', 'info@tanfolyam.hu', 'Tanfolyam.hu', 18, NULL, NULL, 30000);
 
 -- --------------------------------------------------------
 
@@ -139,19 +143,21 @@ CREATE TABLE `user_ado` (
   `gmail` varchar(45) DEFAULT NULL,
   `vegzettseg` varchar(45) DEFAULT NULL,
   `profilkep` varchar(255) NOT NULL,
-  `bemutatkozas` text NOT NULL
+  `bemutatkozas` text NOT NULL,
+  `regisztracio_datum` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
 -- A tábla adatainak kiíratása `user_ado`
 --
 
-INSERT INTO `user_ado` (`ua_id`, `felhasznalonev`, `jelszo`, `gmail`, `vegzettseg`, `profilkep`, `bemutatkozas`) VALUES
-(13, 'doha', '$2b$10$4ISzgLhidxgGb8OJv75xUOyqmXSITfee0cJZil2oSnxXiXmHgdERu', 'doha@gmail.com', 'egyetemista', '', ''),
-(14, 'ujfelhasznalo', '$2b$10$hltgQEW1QH8nKQnz.I0t..ig4oAlivDwK46HryGD/.2HSsjhI1HDW', 'ujfelhasznalo@gmail.com', 'egyetemista', '1771873702485-received_451344334448871.jpeg', ''),
-(15, 'anyus', '$2b$10$to1AKWEbRQxdZCzASq2I9OefjrVxCotKaWYh0acKV14qHzsgb5y.e', 'anyus@gmail.com', 'bsc', '', ''),
-(16, 'panna', '$2b$10$/IVs6YUueil0AmzyWgFEourfnbZbwNmVnAq4qJmSW9nj/c1bzSEaa', 'panna@gmail.com', 'erettsegi', '1772036100421-OIP.webp', 'olkhzgt76'),
-(17, 'ditte', '$2b$10$iXBpFOuz9fJu7CHFJPdBWOJedgDER5/DpcLgzDxKhwzC4zmU8BlH2', 'ditte@gmail.com', 'egyeb', '', '');
+INSERT INTO `user_ado` (`ua_id`, `felhasznalonev`, `jelszo`, `gmail`, `vegzettseg`, `profilkep`, `bemutatkozas`, `regisztracio_datum`) VALUES
+(13, 'doha', '$2b$10$4ISzgLhidxgGb8OJv75xUOyqmXSITfee0cJZil2oSnxXiXmHgdERu', 'doha@gmail.com', 'egyetemista', '', '', '2026-03-26 11:10:23'),
+(14, 'ujfelhasznalo', '$2b$10$hltgQEW1QH8nKQnz.I0t..ig4oAlivDwK46HryGD/.2HSsjhI1HDW', 'ujfelhasznalo@gmail.com', 'egyetemista', '1771873702485-received_451344334448871.jpeg', '', '2026-03-26 11:10:23'),
+(15, 'anyus', '$2b$10$to1AKWEbRQxdZCzASq2I9OefjrVxCotKaWYh0acKV14qHzsgb5y.e', 'anyus@gmail.com', 'bsc', '', '', '2026-03-26 11:10:23'),
+(16, 'panna', '$2b$10$/IVs6YUueil0AmzyWgFEourfnbZbwNmVnAq4qJmSW9nj/c1bzSEaa', 'panna@gmail.com', 'erettsegi', '1772036100421-OIP.webp', 'olkhzgt76', '2026-03-26 11:10:23'),
+(17, 'ditte', '$2b$10$iXBpFOuz9fJu7CHFJPdBWOJedgDER5/DpcLgzDxKhwzC4zmU8BlH2', 'ditte@gmail.com', 'egyeb', '', '', '2026-03-26 11:10:23'),
+(18, 'kitti', '$2b$10$BrY.Cj2m8Q7AjAqpaw48E.8kcrv2qbXYerV6MmuxoezHqwBKKIJ7K', 'kitti@gmail.com', 'msc', '', '', '2026-03-26 11:11:27');
 
 -- --------------------------------------------------------
 
@@ -221,12 +227,10 @@ CREATE TABLE `vegzettseg` (
 --
 
 --
--- A tábla indexei `ajanlo`
+-- A tábla indexei `admin`
 --
-ALTER TABLE `ajanlo`
-  ADD PRIMARY KEY (`ajanlo_id`),
-  ADD KEY `kerdesek_valaszai_ID` (`kerdesek_valaszai_ID`,`ajanlott_kepzes(kepzes id-ja))`),
-  ADD KEY `ajanlott_kepzes(kepzes id-ja))` (`ajanlott_kepzes(kepzes id-ja))`);
+ALTER TABLE `admin`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- A tábla indexei `jelentkezesek`
@@ -274,10 +278,10 @@ ALTER TABLE `vegzettseg`
 --
 
 --
--- AUTO_INCREMENT a táblához `ajanlo`
+-- AUTO_INCREMENT a táblához `admin`
 --
-ALTER TABLE `ajanlo`
-  MODIFY `ajanlo_id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `admin`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT a táblához `jelentkezesek`
@@ -295,7 +299,7 @@ ALTER TABLE `kepzesek`
 -- AUTO_INCREMENT a táblához `user_ado`
 --
 ALTER TABLE `user_ado`
-  MODIFY `ua_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `ua_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT a táblához `user_vevo`
@@ -318,12 +322,6 @@ ALTER TABLE `vegzettseg`
 --
 -- Megkötések a kiírt táblákhoz
 --
-
---
--- Megkötések a táblához `ajanlo`
---
-ALTER TABLE `ajanlo`
-  ADD CONSTRAINT `ajanlo_ibfk_2` FOREIGN KEY (`ajanlott_kepzes(kepzes id-ja))`) REFERENCES `kepzesek` (`id`);
 
 --
 -- Megkötések a táblához `jelentkezesek`
