@@ -2,53 +2,59 @@
    KÉK–FEHÉR TEMA ALAP VÁLTOZÓK
    ========================================== */
 :root {
-    --bg: #0f111a;               /* háttér szín, sötétkék */
-    --surface: #1a1f2b;          /* dobozok, kártyák háttere */
-    --muted: #252a3b;            /* halvány háttér pl. inputokhoz */
-    --text: #ffffff;             /* összes szöveg fehér */
-    --primary: #3399ff;          /* fő kék szín */
-    --primary-600: #0066cc;      /* sötétebb kék, hoverhez/aktivhoz */
-    --accent-shadow: rgba(51, 153, 255, 0.15); /* kék árnyékok */
-    --nav-bg: rgba(51, 153, 255, 0.3); /* nav háttér átlátszó kék */
-    --nav-text: #ffffff;         /* nav szöveg fehér */
+    --bg: #0f111a;              
+    --surface: #1a1f2b;          
+    --muted: #252a3b;           
+    --text: #ffffff;             
+    --primary: #3399ff;          
+    --primary-600: #0066cc;      
+    --accent-shadow: rgba(51, 153, 255, 0.15); 
+    --nav-bg: rgba(51, 153, 255, 0.3); 
+    --nav-text: #ffffff;        
 }
 
-/* ha dark modba megy, picit erősebb kontraszt */
+/*-----------------------------------------
+   SÖTÉT TEMA VÁLTOZÓI
+   ---------------------------------------- */
 [data-theme="dark"] {
-    --bg: #0a0e1a;               /* még sötétebb háttér */
-    --surface: #11172a;          /* sötét kártya */
-    --muted: #1d2536;            /* halvány háttér */
-    --text: #ffffff;             /* összes szöveg fehér */
-    --primary: #66b3ff;          /* világosabb kék */
-    --primary-600: #005bb5;      /* mélyebb kék */
-    --accent-shadow: rgba(102, 179, 255, 0.2); /* kék árnyék */
-    --nav-bg: rgba(102, 179, 255, 0.15); /* átlátszó nav */
-    --nav-text: #ffffff;         /* nav szöveg fehér marad */
+    --bg: #0a0e1a;              
+    --surface: #11172a;         
+    --muted: #1d2536;            
+    --text: #ffffff;             
+    --primary: #66b3ff;          
+    --primary-600: #005bb5;      
+    --accent-shadow: rgba(102, 179, 255, 0.2); 
+    --nav-bg: rgba(102, 179, 255, 0.15); 
+    --nav-text: #ffffff;         
 }
-/*LOGOOO*/
-/* Logó konténer elhelyezése */
+/* ==========================================
+   FEJLÉC ÉS NAVIGÁCIÓ
+   ========================================== */
+
+/*================== LOGÓ ================= */
+/* Logó pozicionálása a fejlécen belül */
 .logo-container {
     position: absolute;
-    top: -2px;   /* Távolság a tetejétől */
-    left: 20px;  /* Távolság a bal szélétől */
-    z-index: 100; /* Hogy a hullám felett legyen */
+    top: -2px;   
+    left: 20px;  
+    z-index: 100; 
 }
 
 /* Logó méretezése */
 .header-logo {
-    height: 130px; /* Ezt állítsd be a logód arányaihoz */
+    height: 130px; 
     width: auto;
     transition: transform 0.3s ease;
     display: block;
-    filter: drop-shadow(0 4px 12px rgba(51,153,255,0.5)); /* Kék árnyék a logón */
-    transition: transform 0.3s ease, filter 0.3s ease; /* Simább átmenet a hover effektushoz */
+    filter: drop-shadow(0 4px 12px rgba(51,153,255,0.5)); 
+    transition: transform 0.3s ease, filter 0.3s ease; 
 }
-
+/* Logó hover effektje */
 .header-logo:hover {
-    transform: scale(1.05); /* Kicsi nagyítás, ha rásimítasz */
+    transform: scale(1.05);
 }
 
-/* Mobilon érdemes visszavenni a méretből, hogy ne takarja el a menüt */
+/* Mobil optimalizálás: kisebb logó és kevesebb hely a fejlécen */
 @media (max-width: 768px) {
     .header-logo {
         height: 60px;
@@ -56,13 +62,15 @@
 }
 
 
-/* ================= profil ikon ================= */
+/*================== 
+======MINI PROFIL LINK (FEJLÉCEN)=========
+ ================= */
 .mini-profil-link {
     position: absolute;
     top: 20px;
     right: 30px;
     z-index: 1000;
-    display: none; /* alapból rejtve, JS mutatja meg */
+    display: none; 
 }
 
 .mini-profil-link img {
@@ -105,7 +113,9 @@
     }
 }
 
-/* ================= FEJLÉC ÉS HULLÁM ================= */
+/* =============================
+      FEJLÉC ÉS HULLÁM 
+================================= */
 #fejlec {
     position: relative;
     width: 100%;
@@ -115,7 +125,7 @@
 .header-wave-container {
     position: relative;
     width: 100%;
-    height: 220px; /* Megnövelt magasság a vastagabb érzetért */
+    height: 220px; 
 }
 
 .wave-svg {
@@ -129,14 +139,14 @@
 
 /* ================= LEKEREKÍTETT KÖZÉPRE ZÁRT NAVIGÁCIÓ ================= */
 #navigacio {
-    position: absolute; /* Hogy pontosan a hullám fölé ússzon */
-    top: 30px;          /* Beállítja a magasságot a hullámon belül */
+    position: absolute; 
+    top: 30px;         
     left: 0;
     right: 0;
     display: flex;
-    justify-content: center; /* Vízszintesen középre teszi a gombokat */
+    justify-content: center; 
     align-items: center;
-    gap: 15px;          /* Távolság a gombok között */
+    gap: 15px;         
     z-index: 20;
     width: 100%;
 }
@@ -147,42 +157,31 @@
     font-weight: 700;
     font-size: 0.95rem;
     padding: 12px 28px;
-    
-    /* TELJES LEKEREKÍTÉS (Kapszula forma) */
     border-radius: 50px; 
-    
-    /* Sötétített üveg alap */
     background: rgba(10, 15, 30, 0.7); 
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px); /* Safari támogatás */
-    
-    /* Vékony, elegáns kék keret */
     border: 1.5px solid rgba(51, 153, 255, 0.4);
-    
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    
-    /* Simább átmenet */
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-    white-space: nowrap; /* Ne törje el a szöveget két sorba */
+    white-space: nowrap; 
 }
 
-/* HOVER - Ragyogó effekt */
+
 #navigacio a:hover {
-    background: var(--primary); /* A kéked */
+    background: var(--primary); 
     color: #ffffff;
     border-color: #ffffff;
     transform: translateY(-3px) scale(1.05);
-    
-    /* Erős kék fényudvar */
     box-shadow: 0 0 25px rgba(51, 153, 255, 0.7);
 }
 
-/* Mobilra optimalizálás - ha túl sok a gomb, ne lógjon ki */
+
 @media (max-width: 768px) {
     #navigacio {
-        flex-wrap: wrap; /* Több sorba tördeli, ha nem fér el */
+        flex-wrap: wrap; 
         top: 20px;
         padding: 0 10px;
     }
@@ -192,10 +191,8 @@
     }
 }
 
-
-/* HERO IGAZÍTÁS - Hogy ne legyen rés */
 .hero {
-    margin-top: -80px; /* Még jobban felhúzzuk a tartalom alá */
+    margin-top: -80px; 
     padding-top: 100px;
 }
 
@@ -216,12 +213,11 @@ h1 {
     margin-top: 32px;            
     color: var(--primary);       
 }
+
+
 /* ==========================================
    ÜDVÖZLŐ RÉSZ (főoldal)
    ========================================== */
-
-
-
 #udvozlop {
     font-size: 1.15em;           
     color: var(--text);              
@@ -236,6 +232,7 @@ h1 {
     width: 100%;
     max-width: 600px;
 }
+
 
 /* ==========================================
    GOMBOK
@@ -296,7 +293,7 @@ button:not(.hamburger):active,
 .auth-form {
     display: flex;               
     flex-direction: column;      
-    gap: 10px !important; /* Kisebb köz az elemek között */
+    gap: 10px !important;
     padding-top: 0 !important;                  
     max-width: 340px;            
     margin: 0 auto;
@@ -370,10 +367,10 @@ button:not(.hamburger):active,
     filter: brightness(0) invert(1);
 }
 
+
 /* ==========================================
    PROFIL TELJES OLDAL
    ========================================== */
-
 .profil-container {
     max-width: 700px;
     margin: 40px auto;
@@ -444,11 +441,12 @@ hr {
 .veszely-gomb:hover {
     background: linear-gradient(180deg, #4b1a1a 0%, #ff4d4d 100%);
 }
+
+
 /* ==========================================
    PROFIL FEJLÉC KÁRTYA (KÉP + NÉV)
    ========================================== */
-
-   .profil-fejlec-kartya {
+.profil-fejlec-kartya {
     display: flex;
     align-items: center;
     gap: 20px;
@@ -492,24 +490,17 @@ hr {
 
 
 /* ==========================================
-   ALAP OLDALAK (pl. kapcsolat)
+   ALAP OLDALAK 
    ========================================== */
-/* ==========================================
-   KAPCSOLAT OLDAL (KÖZÉPSŐ RÉSZ) FINOMÍTÁSA
-   ========================================== */
-
-/* A tartály, ami a Kapcsolat űrlapot fogja közre */
-/* Oldal szintű igazítás */
 .auth-page {
     position: relative;
     z-index: 3;
-    margin-top: -40px; /* Felhúzzuk a hullám alá */
+    margin-top: -40px; 
     display: flex;
     justify-content: center;
     padding: 20px;
 }
 
-/* A központi kártya modernizálása */
 .aloldal-container {
     background: var(--surface) !important;
     border: 1px solid rgba(51, 153, 255, 0.2);
@@ -523,7 +514,7 @@ hr {
     margin-right: auto !important;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Ez rakja középre a benne lévő dolgokat */
+    align-items: center; 
     text-align: center;
 }
 .aloldal-container h1 {
@@ -538,7 +529,6 @@ hr {
     font-size: 0.95rem;
 }
 
-/* Input csoportok */
 .input-group {
     display: flex;
     flex-direction: column;
@@ -554,8 +544,8 @@ hr {
 }
 
 .auth-form input {
-    background: rgba(255, 255, 255, 0.05) !important; /* Sötét maradjon */
-    color: white !important; /* A szöveg legyen fehér! */
+    background: rgba(255, 255, 255, 0.05) !important; 
+    color: white !important; 
     border: 1.5px solid rgba(51, 153, 255, 0.3) !important;
     padding: 10px 15px !important;
     border-radius: 12px !important;
@@ -566,7 +556,7 @@ hr {
 }
 
 .auth-footer-text {
-    margin-top: 15px !important; /* 25px helyett kevesebb */
+    margin-top: 15px !important; 
 }
 
 .auth-form input:focus {
@@ -575,7 +565,7 @@ hr {
     box-shadow: 0 0 15px rgba(51, 153, 255, 0.2);
 }
 
-/* Szerepkör választó (Radio gombok) */
+
 .role-selection {
     margin-bottom: 25px;
 }
@@ -599,7 +589,7 @@ hr {
 }
 
 .radio-label input {
-    display: none; /* Elrejtjük a gyári kört */
+    display: none; 
 }
 
 .custom-radio {
@@ -620,7 +610,6 @@ hr {
     box-shadow: 0 0 15px rgba(51, 153, 255, 0.4);
 }
 
-/* Beküldő gomb */
 .submit-btn {
     width: 100% !important;
     height: 55px !important;
@@ -648,34 +637,31 @@ hr {
 /* ==========================================
    BEJELENTKEZÉS ÉS ŰRLAPOK VÉGLEGES JAVÍTÁSA
    ========================================== */
-
-/* Az összes beviteli mező egységesítése */
 .auth-form input, 
 .auth-form textarea, 
 .auth-form select,
 #courseSearch {
-    background-color: rgba(15, 17, 26, 0.95) !important; /* Sötétkék alap */
-    color: #ffffff !important;                         /* Fehér írás */
-    border: 2px solid rgba(51, 153, 255, 0.4) !important; /* Halvány kék keret */
+    background-color: rgba(15, 17, 26, 0.95) !important; 
+    color: #ffffff !important;                         
+    border: 2px solid rgba(51, 153, 255, 0.4) !important; 
     padding: 12px 15px !important;
     border-radius: 12px !important;
     transition: all 0.3s ease !important;
 }
 
-/* Amikor rákattintasz (fókuszba kerül) */
 .auth-form input:focus, 
 .auth-form textarea:focus, 
 .auth-form select:focus {
-    background-color: #1a1f2b !important;              /* Kicsit világosabb sötétkék */
-    border-color: var(--primary) !important;           /* Erős kék keret */
+    background-color: #1a1f2b !important;         
+    border-color: var(--primary) !important;
     box-shadow: 0 0 15px rgba(51, 153, 255, 0.4) !important;
     outline: none !important;
 }
 .auth-form select option {
-    background-color: #1a1f2b;            /* Sötét háttér a listának */
-    color: #ffffff;                       /* Fehér szöveg a listában */
+    background-color: #1a1f2b;         
+    color: #ffffff;                       
 }
-/* Feliratok (E-mail, Jelszó) javítása */
+
 .auth-form label {
     color: var(--primary) !important;
     font-weight: bold !important;
@@ -684,15 +670,13 @@ hr {
     font-size: 0.85rem;
     margin-bottom: 5px !important;
     display: block !important;
-    text-shadow: none !important; /* Tiszta megjelenés */
+    text-shadow: none !important; 
 }
 
-/* Placeholder (minta szöveg) színe */
 .auth-form input::placeholder {
     color: rgba(255, 255, 255, 0.4) !important;
 }
 
-/* Regisztrációs link az alján */
 .auth-footer-text a {
     color: var(--primary);
     text-decoration: none;
@@ -705,9 +689,8 @@ hr {
     opacity: 0.8;
 }
 
-/* A küldés gomb egyedivé tétele */
 #submitBtn {
-    width: 100%; /* Teljes szélességű gomb */
+    width: 100%; 
     margin-top: 10px;
     height: 55px;
     text-transform: uppercase;
@@ -715,15 +698,15 @@ hr {
     letter-spacing: 1px;
 }
 
-/* Alsó elérhetőségi szöveg */
 .aloldal-container p[style*="color:#b185f5"] {
-    color: var(--primary) !important; /* Lila helyett a téma kékje */
+    color: var(--primary) !important; 
     margin-top: 25px;
     font-size: 0.9em;
     opacity: 0.7;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     padding-top: 20px;
 }
+
 
 /* ==========================================
    MOBIL NÉZET (ha szűk a képernyő)
@@ -736,22 +719,15 @@ hr {
     .aloldal-container {
         padding: 18px 4vw;       
     }
-}
-
-/* ==========================================
-   VÉGSŐ JAVASLATOK
-   ========================================== */			
+}			
 a {
 	text-decoration: none;       
 	color: var(--primary);       
 	transition: color 0.2s;      
 }
 
-/* ==========================================
-   VÉGSŐ JAVASLATOK
-   ========================================== */
-   #footer {
-    background: rgba(15, 17, 26, 0.85); /* sötét, átlátszó */
+#footer {
+    background: rgba(15, 17, 26, 0.85); 
     color: #ffffff;
     padding: 24px 16px;
     text-align: center;
@@ -778,11 +754,9 @@ a {
     color: var(--primary-600);
     text-decoration: underline;
 }
-
-/*///////////////////////////////////////////////////*/
-
-/*///////////////////////KITTI////////////////////////////*/
-
+/* ==========================================
+   BEJELENTKEZÉS VISSZAJELZÉSEK
+   ========================================== */
 .login-message {
     padding: 12px 20px;
     border-radius: 6px;
@@ -874,11 +848,11 @@ a {
 }
 
 #tanfolyamokmain {
-    /* Negatív margóval felhúzzuk a hullám alá/fölé */
+
     margin-top: -60px; 
     text-align: center;
     position: relative;
-    z-index: 10; /* Hogy a hullám felett maradjon a szöveg */
+    z-index: 10; 
 }
 /* ==========================================
    MODAL
@@ -890,8 +864,7 @@ a {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.85); /* sötét, majdnem fekete háttér */
-    z-index: 1000;
+    background: rgba(0,0,0,0.85); 
     justify-content: center;
     align-items: center;
     padding: 16px;
@@ -1002,23 +975,22 @@ a {
             box-shadow: 0 0 10px rgba(123, 47, 242, 0.5);
         }
 
-       /* Itt javítjuk ki az írás színét és a hátteret */
         .auth-form input, 
         .auth-form textarea {
-            color: #58ccea !important; /* Kényszerítjük a fekete szöveget */
-            background-color: #2f2b2b !important; /* Világosszürke háttér a mezőknek */
+            color: #58ccea !important; 
+            background-color: #2f2b2b !important; 
             border: 2px solid #b185f5;
             padding: 12px;
             font-size: 16px;
             width: 100%;
-            box-sizing: border-box; /* Hogy ne lógjon ki a széleken */
+            box-sizing: border-box; 
             margin-bottom: 15px;
         }
 
 
-/*Profil*/        
-
-/* PROFIL KÁRTYA */
+/* ==========================================
+   PROFIL KÁRTYA
+   ========================================== */
 .profil-card {
     background: var(--card-bg);
     border-radius: 24px;
@@ -1028,7 +1000,7 @@ a {
     text-align: center;
     box-shadow: 0 12px 40px rgba(51,153,255,0.4);
     position: relative;
-    top: -80px; /* hullám fölé emeljük */
+    top: -80px; 
     margin: 0 auto;
 }
 
@@ -1068,7 +1040,9 @@ a {
 .profil-vissza { display:block; margin-top:20px; color: var(--primary); text-decoration: none; font-weight: bold; font-size: 1.05em; }
 .profil-vissza:hover { text-decoration: underline; }
 
-/* MODAL */
+/* ==========================================
+    PROFIL MODAL
+   ========================================== */
 .modal {
     display: none;
     position: fixed;
@@ -1121,8 +1095,6 @@ a {
 /* ==========================================
    DIÁK JELENTKEZÉSEK ÉS TANÁR TANFOLYAMOK
    ========================================== */
-
-/* Diák jelentkezések kártya */
 .application-card {
     background: rgba(36, 36, 64, 0.6);
     border: 1px solid rgba(51, 153, 255, 0.3);
@@ -1170,7 +1142,6 @@ a {
     font-style: italic;
 }
 
-/* Tanár tanfolyam kártya */
 .teacher-course-card {
     background: rgba(36, 36, 64, 0.6);
     border: 1px solid rgba(123, 47, 242, 0.3);
@@ -1257,8 +1228,6 @@ a {
     color: rgba(255, 255, 255, 0.5);
 }
 
-/*//////////////////////Kitti vege/////////////////////////*/
-
 /* ==========================================
    RESPONSIVE
    ========================================== */
@@ -1281,7 +1250,9 @@ a {
     }
 }
 
-/* Profil ikon - jobb oldal */
+/* ==========================================
+   MOBIL NÉZET (ha szűk a képernyő)
+   ========================================== */
 .mobile-jobb {
     width: 42px;
     height: 42px;
@@ -1307,7 +1278,6 @@ a {
     object-fit: cover !important;
 }
 
-/* Ha nincs profil, helyfoglaló a szimmetriáért */
 .mobile-profil-placeholder {
     width: 42px;
     height: 42px;
@@ -1318,11 +1288,9 @@ a {
   /* ==========================================
    INDEX KÁRTYÁK
    ========================================== */
-   
-   /* ================= Slider Container ================= */
 .tanfolyam-slider {
     position: relative;
-    max-width: 650px;          /* kisebb, kompakt méret */
+    max-width: 650px;
     margin: 50px auto;
     border-radius: 20px;
     overflow: hidden;
@@ -1330,18 +1298,16 @@ a {
     background: var(--surface, #fff);
 }
 
-/* ================= Slides ================= */
 .slide {
-    display: none;              /* alapból rejtve */
+    display: none;             
     position: relative;
     border-radius: 20px;
     overflow: hidden;
 }
 
-/* ================= Slide Images ================= */
 .slide img {
     width: 100%;
-    height: 400px;             /* fix, de arányos magasság */
+    height: 400px;            
     object-fit: cover;
     border-radius: 20px;
     display: block;
@@ -1356,7 +1322,6 @@ a {
     filter: brightness(1.1);
 }
 
-/* ================= Slide Caption ================= */
 .slide-caption {
     position: absolute;
     bottom: 0;
@@ -1385,7 +1350,6 @@ a {
     opacity: 1;
 }
 
-/* ================= Navigation Arrows ================= */
 .prev, .next {
     cursor: pointer;
     position: absolute;
@@ -1410,7 +1374,6 @@ a {
 .prev { left: 12px; }
 .next { right: 12px; }
 
-/* ================= Slider Dots ================= */
 .slider-dots {
     text-align: center;
     margin-top: 14px;
@@ -1431,7 +1394,6 @@ a {
     background-color: var(--primary, #3399ff);
 }
 
-/* ================= Fade Animation ================= */
 .fade {
     animation-name: fade;
     animation-duration: 1s;
@@ -1442,7 +1404,7 @@ a {
     to { opacity: 1; }
 }
 
-/* ================= Responsive ================= */
+/* Reszponzív stílusok */
 @media (max-width: 768px) {
     .tanfolyam-slider {
         max-width: 90%;
@@ -1476,11 +1438,11 @@ a {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 40px 10% 80px 10%; /* fent kisebb padding */
-    min-height: auto; /* NE legyen 85vh */
+    padding: 40px 10% 80px 10%; 
+    min-height: auto; 
     background: var(--bg);
     color: var(--text);
-    margin-top: -60px; /* felhúzza a hero részt a hullámhoz */
+    margin-top: -60px; 
 }
 
 .hero-content {
@@ -1520,11 +1482,10 @@ a {
     box-shadow: 0 15px 40px rgba(51,153,255,0.5);
 }
 
-/* ===== KÉP RÉSZ ===== */
+/* ===== KÉP ÉS KÖR ===== */
 
 .hero-image {
     position: relative;
-    /* Növeld meg itt a méretet (pl. 400px vagy 450px) */
     width: 450px;  
     height: 450px; 
     margin: 0 auto;
@@ -1557,7 +1518,6 @@ a {
 }
 
 /* ===== Reszponzív ===== */
-
 @media (max-width: 1000px) {
     .hero {
         flex-direction: column;
@@ -1674,7 +1634,6 @@ a {
    MOBIL FEJLÉC + HAMBURGER MENÜ
    ========================================== */
 
-/* Desktop: mobil elemek rejtve */
 .mobile-header {
     display: none;
 }
@@ -1682,7 +1641,6 @@ a {
     display: none;
 }
 
-/* Desktop wave látható */
 .desktop-wave {
     display: block;
 }
@@ -1690,12 +1648,10 @@ a {
 /* ---- MOBIL NÉZET (max 768px) ---- */
 @media (max-width: 768px) {
 
-    /* Desktop hullám elrejtése */
     .desktop-wave {
         display: none !important;
     }
 
-    /* Mobil gradient csík */
     .mobile-header {
         display: flex;
         align-items: center;
@@ -1708,7 +1664,6 @@ a {
         box-shadow: 0 4px 18px rgba(51,153,255,0.35);
     }
 
-    /* Hamburger gomb - bal oldal */
     .hamburger {
         display: flex;
         flex-direction: column;
@@ -1735,7 +1690,6 @@ a {
         border-radius: 3px;
         transition: all 0.32s cubic-bezier(0.4,0,0.2,1);
     }
-    /* X animáció */
     .hamburger.open span:nth-child(1) {
         transform: translateY(8px) rotate(45deg);
     }
@@ -1746,8 +1700,6 @@ a {
     .hamburger.open span:nth-child(3) {
         transform: translateY(-8px) rotate(-45deg);
     }
-
-    /* Logo - abszolút középre */
     .mobile-logo {
         position: absolute;
         left: 50%;
@@ -1760,7 +1712,6 @@ a {
         filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
     }
 
-    /* Profil ikon - jobb oldal */
     .mobile-profil {
         position: static !important;
         flex-shrink: 0;
@@ -1778,14 +1729,12 @@ a {
         object-fit: cover !important;
     }
 
-    /* Ha nincs profil, helyfoglaló a szimmetriáért */
     .mobile-profil-placeholder {
         width: 42px;
         height: 42px;
         flex-shrink: 0;
     }
 
-    /* Lenyíló navigáció */
     .mobile-nav-drawer {
         display: flex;
         flex-direction: column;
@@ -1825,18 +1774,15 @@ a {
         color: #3399ff;
     }
 
-    /* Fejléc pozíció fix */
     #fejlec {
         position: relative;
         z-index: 200;
     }
 
-    /* Desktop profil ikon elrejtése mobilon */
     .mini-profil-link:not(.mobile-profil) {
         display: none !important;
     }
 
-    /* Hero mobilon */
     .hero {
         flex-direction: column;
         text-align: center;
@@ -1852,7 +1798,6 @@ a {
         font-size: 1em;
     }
 
-    /* Hero kör - ne legyen ovális, fix méret */
     .hero-image {
         width: 240px !important;
         height: 240px !important;
@@ -1871,7 +1816,6 @@ a {
         left: -7.5% !important;
     }
 
-    /* Latest courses - 1 oszlop */
     .latest-grid {
         grid-template-columns: 1fr !important;
         gap: 24px;
@@ -1883,24 +1827,18 @@ a {
         height: 220px;
     }
 }
-
-/* Tablet (769-1000px): desktop nézet, mobil elemek rejtve */
+/* ---- DESKTOP NÉZET (min 769px) ---- */
 @media (min-width: 769px) {
     .mobile-header { display: none !important; }
     .mobile-nav-drawer { display: none !important; }
 }
 
-/* ==========================================
-   MOBIL JAVÍTÁSOK - TARTALOM NE CSÚSSZON HEADER ALÁ
-   ========================================== */
+/* ---- MINDEN MOBIL: max 768px ---- */
 @media (max-width: 768px) {
-
-    /* Minden main elem kapjon padding-top-ot a 64px-es mobil header miatt */
     main {
         padding-top: 80px !important;
     }
 
-    /* auth-page (bejelentkezés, regisztráció, kapcsolat) */
     .auth-page {
         margin-top: 0 !important;
         padding-top: 30px !important;
@@ -1909,7 +1847,6 @@ a {
         justify-content: center;
     }
 
-    /* aloldal-container mindig középre */
     .aloldal-container {
         margin: 0 auto !important;
         width: calc(100% - 32px) !important;
@@ -1917,25 +1854,21 @@ a {
         box-sizing: border-box !important;
     }
 
-    /* tanfolyamok main */
     #tanfolyamokmain {
         margin-top: 0 !important;
         padding-top: 20px !important;
     }
 
-    /* rolunk container */
     main.rolunk-container {
         margin-top: 0 !important;
         padding-top: 15px !important;
     }
 
-    /* hero ne csússzon a hullám alá mobilon */
     .hero {
         margin-top: 0 !important;
         padding-top: 30px !important;
     }
 
-    /* Modal - teljesen középre fixálva */
     #modal {
         display: none;
         position: fixed !important;
@@ -1961,8 +1894,9 @@ a {
         transform: none !important;
     }
 }
-
-/* Modal desktop fix is - biztosan középen legyen */
+/* ==========================================
+   MODAL
+   ========================================== */
 #modal {
     display: none;
     position: fixed;
@@ -2016,29 +1950,19 @@ a {
 
 /* ==========================================
    TABLET RESZPONZIVITÁS
-   iPad Air (820px), Asus ZenBook Fold (853px),
-   Surface Pro 7 (912px), iPad Pro (1024px),
-   Nest Hub (1024px), Nest Hub Max (1280px)
    ========================================== */
-
-/* --- MINDEN TABLET: 769px – 1280px --- */
 @media (min-width: 769px) and (max-width: 1280px) {
 
-    /* Mobil fejléc elrejtve, desktop hullám látható */
     .mobile-header { display: none !important; }
     .mobile-nav-drawer { display: none !important; }
     .desktop-wave { display: block !important; }
-
-    /* Hullám magassága kisebb */
     .header-wave-container {
         height: 170px;
     }
 
-    /* Navigáció: kisebb gombok, kevesebb gap, középen */
     #navigacio {
         top: 18px;
         gap: 5px;
-        /* Helyet hagy a logónak bal oldalt és profil ikonnak jobb oldalt */
         padding-left: 150px;
         padding-right: 80px;
         flex-wrap: wrap;
@@ -2052,12 +1976,10 @@ a {
         border-radius: 40px;
     }
 
-    /* Logó kisebb */
     .header-logo {
         height: 90px;
     }
 
-    /* Profil ikon pozíció */
     .mini-profil-link {
         top: 14px;
         right: 16px;
@@ -2067,7 +1989,6 @@ a {
         height: 42px;
     }
 
-    /* Hero: sor => oszlop, kisebb méret */
     .hero {
         flex-direction: column !important;
         text-align: center !important;
@@ -2109,8 +2030,7 @@ a {
         top: -7.5% !important;
         left: -7.5% !important;
     }
-
-    /* Legújabb tanfolyamok: 2 oszlop */
+/* Legújabb tanfolyamok */
     .latest-courses {
         padding: 50px 5%;
     }
@@ -2149,7 +2069,6 @@ a {
         font-size: 0.9em;
     }
 
-    /* Tanfolyam kártyák */
     .tanfolyamkartya {
         width: 200px;
         height: 380px;
@@ -2159,13 +2078,11 @@ a {
         height: 280px;
     }
 
-    /* #tanfolyamokmain: ne csússzon a hullám alá */
     #tanfolyamokmain {
         margin-top: 0 !important;
         padding-top: 20px !important;
     }
 
-    /* Slider */
     .tanfolyam-slider {
         max-width: 80%;
     }
@@ -2174,26 +2091,24 @@ a {
         height: 300px;
     }
 
-    /* auth-page */
     .auth-page {
         margin-top: 0 !important;
         padding-top: 30px !important;
     }
 
-    /* Profil konténer */
     .profil-container {
         max-width: 600px;
     }
 
-    /* rolunk */
     main.rolunk-container {
         padding-top: 20px !important;
     }
 }
 
-/* --- NAGYOBB TABLETEK: 901px – 1280px ---
-   (Surface Pro 7, iPad Pro, Nest Hub, Nest Hub Max)
-   Ezeken 3 oszlop is elfér egymás mellett
+/* ==========================================
+   TABLET NÉZET (min 901px, max 1280px)
+   ==========================================
+   
 */
 @media (min-width: 901px) and (max-width: 1280px) {
 
@@ -2212,7 +2127,6 @@ a {
         height: 105px;
     }
 
-    /* Hero: elég hely van sorban maradni */
     .hero {
         flex-direction: row !important;
         text-align: left !important;
@@ -2234,7 +2148,6 @@ a {
         flex-shrink: 0;
     }
 
-    /* 3 oszlop */
     .latest-grid {
         grid-template-columns: repeat(3, 1fr) !important;
         gap: 18px;
