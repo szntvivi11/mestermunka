@@ -166,18 +166,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     // --- DINAMIKUS GOMBOK ---
     const card = document.querySelector(".profil-card");
     const logoutBtn = document.getElementById("logout");
+    const addCourseBtn = document.getElementById("addCourseBtn");
 
-    // HA TANÁR: Tanfolyam hozzáadása gomb
+    // A HTML-ben lévő tanfolyam gomb csak tanárnak legyen látható.
     if (user.role === "teacher") {
-        const btn = document.createElement("button");
-        btn.className = "profil-gomb";
-        btn.textContent = "Tanfolyam hozzáadása";
-        btn.onclick = () => document.getElementById("addCourseModal").style.display = "flex";
-        card.insertBefore(btn, logoutBtn);
+        addCourseBtn.style.display = "inline-block";
+        addCourseBtn.onclick = () => document.getElementById("addCourseModal").style.display = "flex";
+    } else {
+        addCourseBtn.style.display = "none";
     }
 
     // HA ADMIN: Adminisztrációs vezérlő panel
     if (user.role === "admin") {
+        // Az admin táblában nincs profilkép/bemutatkozás mező.
+        document.getElementById("editBioBtn").style.display = "none";
+        document.getElementById("uploadPicBtn").style.display = "none";
+
         const adminBox = document.createElement("div");
         adminBox.style.marginTop = "20px";
         adminBox.style.padding = "15px";
@@ -211,6 +215,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // 3. MENTÉSI FUNKCIÓ (Bemutatkozás és kép frissítése)
     const handleProfileUpdate = async (fileInput = null) => {
+        if (user.role === "admin") {
+            alert("Admin fióknál a bemutatkozás és profilkép mentése nem támogatott.");
+            return;
+        }
+
         const userId = user.ua_id || user.uv_id || user.id; 
         const bioText = document.getElementById("bio-input").value;
 

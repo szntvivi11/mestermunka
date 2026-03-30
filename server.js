@@ -349,6 +349,9 @@ app.get("/api/profile", async (req, res) => {
         } else if (role === 'student') {
             sql = "SELECT uv_id as id, nev, email, profilkep, bemutatkozas FROM user_vevo WHERE uv_id = ?";
             params = [id];
+        } else if (role === 'admin') {
+          sql = "SELECT id, username FROM admin WHERE id = ?";
+          params = [id];
         } else {
             return res.status(400).json({ success: false, message: "Érvénytelen szerepkör" });
         }
@@ -360,8 +363,22 @@ app.get("/api/profile", async (req, res) => {
         }
     
         const user = rows[0];
+
+        if (role === 'admin') {
+          return res.json({
+            success: true,
+            user: {
+              id: user.id,
+              nev: user.username,
+              email: user.username,
+              profilkep: null,
+              bemutatkozas: ""
+            }
+          });
+        }
+
         if (user.profilkep) {
-            user.profilkep = `/Tanfolyamok/kepek/${user.profilkep}`;
+          user.profilkep = `/Tanfolyamok/kepek/${user.profilkep}`;
         }
     
         res.json({ success: true, user: user });
@@ -383,8 +400,25 @@ app.post("/api/update-profile", upload.single('profilePicture'), async (req, res
             return res.status(400).json({ error: "Hiányzó ID vagy szerepkör!" });
         }
 
-        const tabla = (role === 'teacher') ? 'user_ado' : 'user_vevo';
-        const azonositoOszlop = (role === 'teacher') ? 'ua_id' : 'uv_id';
+        if (role === 'admin') {
+          return res.status(400).json({
+            success: false,
+            error: "Admin profil bemutatkozás és profilkép mentés nem támogatott."
+          });
+        }
+
+        let tabla;
+        let azonositoOszlop;
+
+        if (role === 'teacher') {
+          tabla = 'user_ado';
+          azonositoOszlop = 'ua_id';
+        } else if (role === 'student') {
+          tabla = 'user_vevo';
+          azonositoOszlop = 'uv_id';
+        } else {
+          return res.status(400).json({ error: "Érvénytelen szerepkör" });
+        }
 
         let sql = `UPDATE ${tabla} SET bemutatkozas = ?`;
         let params = [bemutatkozas || ''];
@@ -810,10 +844,27 @@ app.post("/api/update-password", async (req, res) => {
         if (!id || !role || !jelszo) return res.status(400).json({ error: "Hiányzó adatok" });
 
         const hash = await bcrypt.hash(jelszo, 10);
-        const tabla = (role === 'teacher') ? 'user_ado' : 'user_vevo';
-        const azonositoOszlop = (role === 'teacher') ? 'ua_id' : 'uv_id';
+    let tabla;
+    let azonositoOszlop;
+    let jelszoOszlop;
 
-        const sql = `UPDATE ${tabla} SET jelszo = ? WHERE ${azonositoOszlop} = ?`;
+    if (role === 'teacher') {
+      tabla = 'user_ado';
+      azonositoOszlop = 'ua_id';
+      jelszoOszlop = 'jelszo';
+    } else if (role === 'student') {
+      tabla = 'user_vevo';
+      azonositoOszlop = 'uv_id';
+      jelszoOszlop = 'jelszo';
+    } else if (role === 'admin') {
+      tabla = 'admin';
+      azonositoOszlop = 'id';
+      jelszoOszlop = 'password';
+    } else {
+      return res.status(400).json({ error: "Érvénytelen szerepkör" });
+    }
+
+    const sql = `UPDATE ${tabla} SET ${jelszoOszlop} = ? WHERE ${azonositoOszlop} = ?`;
         await db.promise().query(sql, [hash, id]);
 
         res.json({ success: true, message: "Jelszó sikeresen frissítve!" });
