@@ -19,7 +19,6 @@
 
                 table.innerHTML = data.map(u => {
                     const datum = new Date(u.datum).toLocaleString('hu-HU');
-                    // Idézőjel escape-elés onclick-ben
                     const emailEsc = u.email.replace(/'/g, "\\'");
                     const nevEsc = u.nev.replace(/'/g, "\\'");
                     return `
@@ -95,7 +94,6 @@
             }
         }
 
-        // Modál bezárása háttérre kattintva
         document.getElementById('replyModal').addEventListener('click', function(e) {
             if (e.target === this) this.style.display = 'none';
         });

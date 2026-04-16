@@ -1,4 +1,3 @@
-    // Hamburger menü
     const hamburgerBtn = document.getElementById('hamburgerBtn');
     const mobileNavDrawer = document.getElementById('mobileNavDrawer');
     hamburgerBtn.addEventListener('click', () => {

@@ -74,8 +74,7 @@ async function updateHeaderProfile() {
       };
     }
     if (placeholder) placeholder.style.display = 'none';
-
-    // Csak valid szerver válasz után rejtjük az auth linkeket.
+    
     setAuthNavVisible(false);
   } catch (err) {
     console.error(err);

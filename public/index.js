@@ -9,10 +9,10 @@ async function updateHeaderProfile() {
                     if (data.success) {
                         const user = data.user;
 
-                        // Asztali profil
+
                         const miniProfilLink = document.getElementById('miniProfilLink');
                         const headerImg = document.getElementById('headerProfileImage');
-                        // Mobilos profil
+
                         const miniProfilLinkMobile = document.getElementById('miniProfilLinkMobile');
                         const headerImgMobile = document.getElementById('headerProfileImageMobile');
                         const placeholder = document.getElementById('mobileProfilPlaceholder');
@@ -43,8 +43,7 @@ async function updateHeaderProfile() {
                             };
                         }
                         if (placeholder) placeholder.style.display = 'none';
-        
-                        // Navigációs gombok elrejtése
+
                         ['nav-bejelentkezes', 'nav-regisztracio'].forEach(id => {
                             const el = document.getElementById(id);
                             if (el) el.style.display = 'none';
@@ -74,7 +73,6 @@ async function updateHeaderProfile() {
             mobileNavDrawer.classList.toggle('open');
         });
 
-        // Kattintásra zárd be a menüt
         mobileNavDrawer.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 hamburgerBtn.classList.remove('open');
@@ -90,7 +88,6 @@ async function loadLegujabbTanfolyamok() {
         const res = await fetch('/api/kepzesek');
         const kepzesek = await res.json();
 
-        // Az utolsó 3 tanfolyam (legújabbak: legnagyobb id-k)
         const legujabb = kepzesek
             .sort((a, b) => b.id - a.id)
             .slice(0, 3);

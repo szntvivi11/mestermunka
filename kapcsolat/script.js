@@ -1,7 +1,3 @@
-
-
-
-
 window.onload = function() {
     const main = document.getElementById('main-content');
     const pages = {
@@ -39,7 +35,6 @@ window.onload = function() {
     });
 };
 
-// Felhasználói állapot kezelése
         const user = JSON.parse(localStorage.getItem('user')) || null;
         if (!user) {
             const navProfil = document.getElementById('nav-profil');
@@ -51,7 +46,6 @@ window.onload = function() {
             if (registerNav) registerNav.style.display = 'none';
         }
 
-        // Űrlap beküldése a szervernek
         document.getElementById('contactForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const nev = document.getElementById('kapcsolat-nev').value;

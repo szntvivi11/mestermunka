@@ -1,5 +1,4 @@
-// Jogosultság ellenőrzés
-    const user = JSON.parse(localStorage.getItem("user"));
+const user = JSON.parse(localStorage.getItem("user"));
     if (!user || user.role !== 'admin') {
         alert("Nincs jogosultságod!");
         location.href = "/bejelentkezes";
@@ -12,7 +11,7 @@
     }
 
     async function loadData() {
-        // 1. Tanfolyamok betöltése
+        // Tanfolyamok betöltése
         try {
             const kepzesek = await safeFetch('/api/kepzesek');
             document.getElementById('tanfolyam-lista').innerHTML = kepzesek.length
@@ -29,7 +28,7 @@
             document.getElementById('tanfolyam-lista').innerHTML = `<tr><td colspan="5" class="error-msg">${err.message}</td></tr>`;
         }
 
-        // 2. Tanárok betöltése
+        // Tanárok betöltése
         try {
             const tanarok = await safeFetch('/api/admin/osszes-tanar');
             document.getElementById('tanar-lista').innerHTML = tanarok.length
@@ -46,7 +45,7 @@
             document.getElementById('tanar-lista').innerHTML = `<tr><td colspan="5" class="error-msg">${err.message}</td></tr>`;
         }
 
-        // 3. Diákok betöltése
+        // Diákok betöltése
         try {
             const diakok = await safeFetch('/api/admin/osszes-diak');
             document.getElementById('diak-lista').innerHTML = diakok.length
@@ -62,7 +61,7 @@
             document.getElementById('diak-lista').innerHTML = `<tr><td colspan="4" class="error-msg">${err.message}</td></tr>`;
         }
 
-        // 4. Jelentkezések betöltése
+        // Jelentkezések betöltése
         try {
             const jelentkezesek = await safeFetch('/api/admin/osszes-jelentkezes');
             document.getElementById('jelentkezes-lista').innerHTML = jelentkezesek.length

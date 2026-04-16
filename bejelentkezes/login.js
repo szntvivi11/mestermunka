@@ -1,4 +1,3 @@
-// Tiszta bejelentkezéskezelő adatbázis-alapú bejelentkezéshez
 const loginForm = document.getElementById('login-form');
 
 function getStoredUserSafe() {
@@ -152,7 +151,7 @@ function initForgotPassword() {
 
     document.body.appendChild(overlay);
 
-    // Szerepkör váltó vizuális visszajelzés
+    // Szerepkör váltó
     overlay.querySelectorAll('input[name="forgot-role"]').forEach(radio => {
       radio.addEventListener('change', () => {
         const studentSpan = document.getElementById('forgot-role-student');
@@ -243,7 +242,6 @@ function mergeUserWithLocal(loginUser) {
   }
 }
 
-// Updating admin login logic to authenticate from the `admin` table
 loginForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 

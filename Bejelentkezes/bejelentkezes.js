@@ -1,4 +1,3 @@
-    // Hamburger menü
     const hamburgerBtn = document.getElementById('hamburgerBtn');
     const mobileNavDrawer = document.getElementById('mobileNavDrawer');
     hamburgerBtn.addEventListener('click', () => {
@@ -12,7 +11,6 @@
         });
     });
 
-    // Profil + nav kezelés
     async function updateHeaderProfile() {
         const storedUser = JSON.parse(localStorage.getItem('user'));
         if (storedUser && storedUser.id) {

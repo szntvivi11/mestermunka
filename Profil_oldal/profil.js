@@ -7,7 +7,7 @@ if (!user) {
     alert("Nincs bejelentkezve!");
     location.href = "/bejelentkezes";
 }
-
+//  FEJLÉC PROFIL KÉP FRISSÍTÉSE
 async function updateHeaderProfile() {
     const storedUser = JSON.parse(localStorage.getItem('user'));
     if (!storedUser || !storedUser.id) return;
@@ -55,7 +55,7 @@ async function updateHeaderProfile() {
         console.error("Hiba a header profil frissítésekor:", err);
     }
 }
-
+//  PROFIL BETÖLTÉSE
 document.addEventListener("DOMContentLoaded", async () => {
 
     await updateHeaderProfile();
@@ -67,7 +67,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     function setProfileImage(pic) {
 
         if (!pic) {
-            // Alapértelmezett avatar: egyedileg generált avatar minden felhasználónak
             const userId = user.ua_id || user.uv_id || user.id || 'default';
             const userName = user.nev || user.felhasznalonev || 'User';
             profileImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&size=180&background=242440&color=3399ff&bold=true&font-size=0.4`;
@@ -84,7 +83,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         profileImg.onerror = () => {
             console.error("Kép betöltési hiba:", url);
-            // Ha a kép betöltése sikertelen, visszaállítjuk az alapértelmezett avatarra
             const userName = user.nev || user.felhasznalonev || 'User';
             profileImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&size=180&background=242440&color=3399ff&bold=true&font-size=0.4`;
         };
@@ -149,7 +147,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         renderProfileFromLocal();
 
     }
-    // 2. MODÁL NYITÁS LOGIKA
     document.getElementById("editBioBtn").onclick = () => {
         document.getElementById("bio-input").value = user.bemutatkozas || "";
         document.getElementById("bioModal").style.display = "flex";
@@ -162,13 +159,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("changePasswordBtn").onclick = () => {
         document.getElementById("passwordModal").style.display = "flex";
     };
-
-    // --- DINAMIKUS GOMBOK ---
+//  ADMINISZTRÁCIÓS GOMBOK MEGJELENÍTÉSE
     const card = document.querySelector(".profil-card");
     const logoutBtn = document.getElementById("logout");
     const addCourseBtn = document.getElementById("addCourseBtn");
 
-    // A HTML-ben lévő tanfolyam gomb csak tanárnak legyen látható.
     if (user.role === "teacher") {
         addCourseBtn.style.display = "inline-block";
         addCourseBtn.onclick = () => document.getElementById("addCourseModal").style.display = "flex";
@@ -176,9 +171,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         addCourseBtn.style.display = "none";
     }
 
-    // HA ADMIN: Adminisztrációs vezérlő panel
     if (user.role === "admin") {
-        // Az admin táblában nincs profilkép/bemutatkozás mező.
         document.getElementById("editBioBtn").style.display = "none";
         document.getElementById("uploadPicBtn").style.display = "none";
 
@@ -206,14 +199,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("adminFullBtn").onclick = () => { location.href = "/admin_full.html"; };
     }
 
-    // Modálok lezárása (Mégse gombok)
+
     document.querySelectorAll(".closeModal").forEach(btn => {
         btn.onclick = () => {
             btn.closest('.modal').style.display = "none";
         };
     });
 
-    // 3. MENTÉSI FUNKCIÓ (Bemutatkozás és kép frissítése)
+//  PROFIL MENTÉSE BEMUTATKOZÁS ÉS KÉP 
     const handleProfileUpdate = async (fileInput = null) => {
         if (user.role === "admin") {
             alert("Admin fióknál a bemutatkozás és profilkép mentése nem támogatott.");
@@ -268,14 +261,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         handleProfileUpdate(fileInput);
     };
 
-// --- 4. TANFOLYAM MENTÉS JAVÍTVA ---
+//  TANFOLYAM MENTÉS 
 const saveCourseBtn = document.getElementById("saveCourseBtn");
 if (saveCourseBtn) {
     saveCourseBtn.onclick = async () => {
-        const userId = user.ua_id || user.uv_id || user.id; // Megkeressük a tanár ID-ját
+        const userId = user.ua_id || user.uv_id || user.id; 
         const formData = new FormData();
         
-        // Fontos: Olyan neveket használunk, amiket a szerver vár!
         formData.append("nev", document.getElementById("courseName").value);
         formData.append("leiras", document.getElementById("courseDescription").value);
         formData.append("helyileg", document.getElementById("courseLocation").value);
@@ -283,17 +275,16 @@ if (saveCourseBtn) {
         formData.append("ar", document.getElementById("coursePrice").value);
         formData.append("o_nev", document.getElementById("courseOwner").value);
         formData.append("heves_kortol", document.getElementById("courseAgeLimit").value);
-        formData.append("ua_ID", userId); // Ez kell a szervernek!
+        formData.append("ua_ID", userId); 
 
         const fileInput = document.getElementById("courseImageFile");
         if (fileInput.files[0]) {
-            formData.append("kep", fileInput.files[0]); // A szerver 'kep' néven várja a fájlt!
+            formData.append("kep", fileInput.files[0]);
         } else {
             return alert("Kép feltöltése kötelező!");
         }
 
         try {
-            // A szervereden az útvonal: /api/courses
             const res = await fetch("/api/courses", {
                 method: "POST",
                 body: formData
@@ -302,7 +293,7 @@ if (saveCourseBtn) {
             
             if (data.success) {
                 alert("Tanfolyam sikeresen hozzáadva!");
-                location.reload(); // Frissítjük az oldalt
+                location.reload();
             } else {
                 alert("Hiba: " + data.message);
             }
@@ -313,7 +304,7 @@ if (saveCourseBtn) {
     };
 }
 
-    // 5. JELSZÓ MENTÉS
+    //  JELSZÓ MENTÉS
     const savePasswordBtn = document.getElementById("savePasswordBtn");
     if (savePasswordBtn) {
         savePasswordBtn.onclick = async () => {
@@ -340,13 +331,13 @@ if (saveCourseBtn) {
         };
     }
 
-    // 6. KIJELENTKEZÉS
+    //  KIJELENTKEZÉS
     document.getElementById("logout").onclick = () => {
         localStorage.removeItem("user");
         location.href = "/";
     };
 
-    // 7. DIÁK JELENTKEZÉSEINEK BETÖLTÉSE
+    //  DIÁK JELENTKEZÉSEINEK BETÖLTÉSE
     if (user.role === "student") {
         const userId = user.uv_id || user.id;
         const studentSection = document.getElementById("studentApplicationsSection");
@@ -387,7 +378,7 @@ if (saveCourseBtn) {
         }
     }
 
-    // 8. TANÁR TANFOLYAMAINAK ÉS JELENTKEZŐINEK BETÖLTÉSE
+    // TANÁR TANFOLYAMAINAK ÉS JELENTKEZŐINEK BETÖLTÉSE
     if (user.role === "teacher") {
         const teacherId = user.ua_id || user.id;
         const teacherSection = document.getElementById("teacherCoursesSection");

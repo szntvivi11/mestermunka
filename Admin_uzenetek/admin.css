@@ -88,7 +88,7 @@ tr:hover {
 .loading { text-align: center; padding: 40px; color: #b185f5; font-size: 1.2em; }
 .error-msg { text-align: center; padding: 40px; color: #ff4d4d; }
 
-/* --- RESZPONZIV JAVITASOK --- */
+/* --- RESZPONZIV --- */
 @media (max-width: 768px) {
     .admin-container { padding: 15px; }
     .nav-buttons { justify-content: center; flex-wrap: wrap; }
