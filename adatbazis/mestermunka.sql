@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Gép: 127.0.0.1:3307
--- Létrehozás ideje: 2026. Már 26. 13:10
--- Kiszolgáló verziója: 10.4.28-MariaDB
--- PHP verzió: 8.2.4
+-- Gép: 127.0.0.1
+-- Létrehozás ideje: 2026. Ápr 17. 16:34
+-- Kiszolgáló verziója: 10.4.32-MariaDB
+-- PHP verzió: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -59,10 +59,8 @@ CREATE TABLE `jelentkezesek` (
 --
 
 INSERT INTO `jelentkezesek` (`id`, `user_id`, `kepzes_id`, `jelentkezes_datum`) VALUES
-(6, 14, 29, '2026-01-22 11:03:09'),
-(7, 14, 30, '2026-01-22 11:07:07'),
-(9, 14, 29, '2026-02-24 17:00:18'),
-(11, 26, 55, '2026-02-25 17:46:44');
+(13, 27, 129, '2026-04-17 14:11:41'),
+(14, 28, 129, '2026-04-17 14:21:25');
 
 -- --------------------------------------------------------
 
@@ -129,7 +127,8 @@ INSERT INTO `kepzesek` (`id`, `kep`, `nev`, `leiras`, `helyileg`, `email`, `o_ne
 (116, 'ingatlanos.png', 'Ingatlanvagyon Értékelő és Közvetítő', 'Államilag elismert szakképesítés. Időtartam: 4 hónap, heti 2–3 alkalom online. Tananyag: ingatlanpiac, értékelés, riportkészítés, jogi alapismeretek. Tanúsítvány a végén.', 'Online', 'info@tanfolyam.hu', 'Tanfolyam.hu', 18, NULL, NULL, 139000),
 (117, 'Ingatlankezelő.png\r\n', 'Ingatlankezelő Szakképesítés', 'Ingatlankezelő képzés online vagy kontakt formában. Időtartam: 3 hónap, heti 2 alkalom. Tananyag: ingatlan adminisztráció, társasházkezelés, jogi alapok. Tanúsítvány a végén.', 'Több város', 'info@tanfolyam.hu', 'Tanfolyam.hu', 18, NULL, NULL, 79000),
 (118, 'dajka.png', 'Dajka Szakképesítés', 'Dajka (gyermekgondozó) képzés. Időtartam: 8–10 hét, heti online és kontakt órák. Tananyag: gyermekpszichológia, higiénia, elsősegély, gondozás. Tanúsítvány a végén.', 'Több város', 'info@tanfolyam.hu', 'Tanfolyam.hu', 16, NULL, NULL, 65000),
-(126, 'szaloninditas.png\r\n', 'Szalonindítás Alapok', 'Szépségipari vállalkozás indítása. Időtartam: 2 hét, online vagy kontakt. Tananyag: marketing, ügyfélkezelés, pénzügy.', 'Online', 'info@tanfolyam.hu', 'Tanfolyam.hu', 18, NULL, NULL, 30000);
+(126, 'szaloninditas.png\r\n', 'Szalonindítás Alapok', 'Szépségipari vállalkozás indítása. Időtartam: 2 hét, online vagy kontakt. Tananyag: marketing, ügyfélkezelés, pénzügy.', 'Online', 'info@tanfolyam.hu', 'Tanfolyam.hu', 18, NULL, NULL, 30000),
+(129, '1776434375071-Alapok-weboldal.webp', 'Weboldal készítés alapok', 'Mindenkit várok sok szeretettel akit érdekel a weboldalak felépítése. 4 hetes tanfolyam. 2026.07.06-2026.07.31 minden nap 10-14-ig. ', 'Gyál', 'joseffikitti@gmail.com', 'Joseffi Kitti', 14, NULL, 19, 80000);
 
 -- --------------------------------------------------------
 
@@ -153,12 +152,7 @@ CREATE TABLE `user_ado` (
 --
 
 INSERT INTO `user_ado` (`ua_id`, `felhasznalonev`, `jelszo`, `gmail`, `vegzettseg`, `profilkep`, `bemutatkozas`, `regisztracio_datum`) VALUES
-(13, 'doha', '$2b$10$4ISzgLhidxgGb8OJv75xUOyqmXSITfee0cJZil2oSnxXiXmHgdERu', 'doha@gmail.com', 'egyetemista', '', '', '2026-03-26 11:10:23'),
-(14, 'ujfelhasznalo', '$2b$10$hltgQEW1QH8nKQnz.I0t..ig4oAlivDwK46HryGD/.2HSsjhI1HDW', 'ujfelhasznalo@gmail.com', 'egyetemista', '1771873702485-received_451344334448871.jpeg', '', '2026-03-26 11:10:23'),
-(15, 'anyus', '$2b$10$to1AKWEbRQxdZCzASq2I9OefjrVxCotKaWYh0acKV14qHzsgb5y.e', 'anyus@gmail.com', 'bsc', '', '', '2026-03-26 11:10:23'),
-(16, 'panna', '$2b$10$/IVs6YUueil0AmzyWgFEourfnbZbwNmVnAq4qJmSW9nj/c1bzSEaa', 'panna@gmail.com', 'erettsegi', '1772036100421-OIP.webp', 'olkhzgt76', '2026-03-26 11:10:23'),
-(17, 'ditte', '$2b$10$iXBpFOuz9fJu7CHFJPdBWOJedgDER5/DpcLgzDxKhwzC4zmU8BlH2', 'ditte@gmail.com', 'egyeb', '', '', '2026-03-26 11:10:23'),
-(18, 'kitti', '$2b$10$BrY.Cj2m8Q7AjAqpaw48E.8kcrv2qbXYerV6MmuxoezHqwBKKIJ7K', 'kitti@gmail.com', 'msc', '', '', '2026-03-26 11:11:27');
+(19, 'Joseffi Kitti', '$2b$10$OeERsGtbNIhCalntX59iZOJzytip.JNz8qW8pIRX6A4H.gZjdOUnm', 'joseffikitti@gmail.com', 'msc', '1776434447501-received_451344334448871.jpeg', 'Egy informatikát tanuló diák vagyok aki most fog végezni és szeretnék segíteni azoknak akik el szeretnék kezdeni', '2026-04-17 14:00:47');
 
 -- --------------------------------------------------------
 
@@ -182,11 +176,8 @@ CREATE TABLE `user_vevo` (
 --
 
 INSERT INTO `user_vevo` (`uv_id`, `nev`, `email`, `felhasznalonev`, `jelszo`, `regisztracio_datum`, `profilkep`, `bemutatkozas`) VALUES
-(14, 'anyuka', 'anyuka@gmail.com', 'anyuka', '$2b$10$CoSm3hQo9vkDN8jiwpS./e5slO10CuPbi3zBoykCNZQC7izfWCYtW', '2026-01-22 10:56:34', '1771956124744-OIP.webp', 'ki76uj5hzgt'),
-(23, 'katy', 'katy@gmail.com', 'katy', '$2b$10$Zij6k0qX3SRpc0fXr.k6jeB9HYna3zCW5JMq61HE38OOMwUV6x0hK', '2026-01-29 12:01:55', '', ''),
-(24, 'vivi', 'vivi@gmai.com', 'vivi', '$2b$10$AMcRTAoTeZRb.1XFhhbm0u90BAvrhTAQXZfKHKbaH4b3aLFOLtsBW', '2026-01-29 12:14:00', '', ''),
-(25, 'kerlek', 'kerlek@gmail.com', 'kerlek', '$2b$10$mCwE0rmvVufcvR/zcSA.H.g4ogx15CWEhAcfpldRWsgIkxNKNSaCS', '2026-02-15 15:10:53', '', ''),
-(26, 'gabor', 'gabor@gmail.com', 'gabor', '$2b$10$Q7KwJ2ktq/5N97mCMUB9qOIhudBn0rp/3vAQMHaZVjaTymHQu.fH2', '2026-02-25 17:46:01', '1772041837938-OIP.webp', 'gabor vagyok egy diak es szeretnek kepzesekre jelentkezni');
+(27, 'Kiszler Bence', 'bence.kiszler@gmail.com', 'Kiszler Bence', '$2b$10$77xP9c7EUKjldypOO9jw7OCTNjqwK2SjBo99IjDCS8szfrKKQY2RS', '2026-04-17 14:10:08', '', 'Végzős infós diák vagyok és szeretnék tovább képesíteni magam'),
+(28, 'Szántó Vivien', 'szantoviviien@gmail.com', 'Szántó Vivien', '$2b$10$z.vkzAbb7FAKRyjcyMSDwun4.rQwtTXFG1Mrm69XjPeVYHCcGUvxu', '2026-04-17 14:17:29', '', '');
 
 -- --------------------------------------------------------
 
@@ -207,9 +198,7 @@ CREATE TABLE `uzenetek` (
 --
 
 INSERT INTO `uzenetek` (`id`, `nev`, `email`, `uzenet`, `datum`) VALUES
-(1, 'laednf', 'joskit208@hengersor.hu', 'gvjdf', '2026-02-15 11:59:31'),
-(2, 'kitti', 'joseffikitti@gmail.com', 'csak kivancsi vagyok hogy mikodik e ez a kapcsolatok kuldese adatbazisba', '2026-02-24 17:01:23'),
-(3, 'gabor', 'gabor@gmail.com', 'uhcsbvdrj', '2026-02-25 17:49:56');
+(4, 'Joseffi Kitti', 'joseffikitti@gmail.com', 'Elfelejtettem a jelszavam hogy tudok így belépni?', '2026-04-17 14:23:38');
 
 -- --------------------------------------------------------
 
@@ -288,31 +277,31 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT a táblához `jelentkezesek`
 --
 ALTER TABLE `jelentkezesek`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT a táblához `kepzesek`
 --
 ALTER TABLE `kepzesek`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=128;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=130;
 
 --
 -- AUTO_INCREMENT a táblához `user_ado`
 --
 ALTER TABLE `user_ado`
-  MODIFY `ua_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `ua_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT a táblához `user_vevo`
 --
 ALTER TABLE `user_vevo`
-  MODIFY `uv_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `uv_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT a táblához `uzenetek`
 --
 ALTER TABLE `uzenetek`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT a táblához `vegzettseg`
