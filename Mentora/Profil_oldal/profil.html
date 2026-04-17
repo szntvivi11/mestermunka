@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <title>Profil</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/profil.css">
+
+</head>
+<body>
+
+<header>
+    <div class="header-wave-container">
+        <svg class="wave-svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
+            <defs>
+                <linearGradient id="wave-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:#1a2a4b; stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#3399ff; stop-opacity:1" />
+                </linearGradient>
+            </defs>
+            <path fill="rgba(51, 153, 255, 0.15)" d="M0,160L48,176C96,192,192,224,288,213.3C384,203,480,149,576,149.3C672,149,768,203,864,218.7C960,235,1056,213,1152,186.7C1248,160,1344,128,1392,112L1440,96L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
+            <path fill="url(#wave-grad)" d="M0,128L48,138.7C96,149,192,171,288,165.3C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
+        </svg>
+    </div>
+</header>
+
+<a href="/" class="profil-vissza">Főoldal</a>
+
+<img src="./Tanfolyamok/kepek/logooo.png" class="bg-logo-animation" onerror="this.style.display='none';">
+
+<div class="profil-card">
+    <div class="profil-avatar">
+        <img id="profileImage" src="https://ui-avatars.com/api/?name=User&size=180&background=242440&color=3399ff&bold=true&font-size=0.4" alt="Profilkép">
+    </div>
+    <div class="profil-adatok">
+        <h2 id="nev-megjelenit">Betöltés...</h2>
+        <p id="szerep-megjelenit" class="profil-szerep"></p>
+        <p id="bioDisplay" class="profil-bio"></p>
+    </div>
+
+    <button class="profil-gomb" id="editBioBtn">Bemutatkozás szerkesztése</button>
+    <button class="profil-gomb" id="uploadPicBtn">Profilkép feltöltése</button>
+    <button class="profil-gomb" id="addCourseBtn">Új tanfolyam hirdetése</button>
+    <button class="profil-gomb" id="changePasswordBtn">Jelszó módosítása</button>
+    <button class="profil-gomb veszely-gomb" id="logout">Kijelentkezés</button>
+
+    <div id="studentApplicationsSection" style="display:none; width: 100%; margin-top: 30px;">
+        <h3 style="color: var(--primary); margin-bottom: 15px; font-size: 1.3em;">Jelentkezéseim</h3>
+        <div id="applicationsContainer" style="display: flex; flex-direction: column; gap: 12px;">
+
+        </div>
+    </div>
+
+    <div id="teacherCoursesSection" style="display:none; width: 100%; margin-top: 30px;">
+        <h3 style="color: var(--primary); margin-bottom: 15px; font-size: 1.3em;">Tanfolyamaim és jelentkezők</h3>
+        <div id="teacherCoursesContainer" style="display: flex; flex-direction: column; gap: 20px;">
+           
+        </div>
+    </div>
+</div>
+
+<div id="bioModal" class="modal">
+    <div class="modal-content">
+        <h2>Bemutatkozás szerkesztése</h2>
+        <textarea id="bio-input" rows="5" placeholder="Mesélj magadról pár mondatban..."></textarea>
+        <button id="saveBioBtn" class="profil-gomb" style="background: var(--primary); color: white;">Mentés</button>
+        <button class="closeModal close-link">Mégse</button>
+    </div>
+</div>
+
+<div id="uploadModal" class="modal">
+    <div class="modal-content">
+        <h2>Profilkép feltöltése</h2>
+        <input type="file" id="profileFile" accept="image/*" style="display:none;">
+        <label for="profileFile" style="cursor:pointer; display:block; padding:30px; border:2px dashed var(--primary); margin-bottom:20px; border-radius:16px; background: rgba(51,153,255,0.05);">
+            <span style="font-size: 2em; display: block; margin-bottom: 10px;">Kép</span>
+            Kattints ide a kép kiválasztásához
+        </label>
+        <button id="savePicBtn" class="profil-gomb" style="background: var(--primary); color: white;">Feltöltés mentése</button>
+        <button class="closeModal close-link">Mégse</button>
+    </div>
+</div>
+
+<div id="passwordModal" class="modal">
+    <div class="modal-content">
+        <h2>Jelszó módosítása</h2>
+        <input type="password" id="newPassword" placeholder="Adja meg az új jelszót">
+        <button id="savePasswordBtn" class="profil-gomb" style="background: var(--primary); color: white;">Jelszó frissítése</button>
+        <button class="closeModal close-link">Mégse</button>
+    </div>
+</div>
+
+<div id="addCourseModal" class="modal">
+    <div class="modal-content">
+        <h2>Új tanfolyam közzététele</h2>
+        <div style="text-align: left; display: flex; flex-direction: column;">
+            <input type="text" id="courseName" placeholder="Tanfolyam neve (pl. Haladó Java)">
+            <textarea id="courseDescription" rows="3" placeholder="Rövid leírás a képzésről..."></textarea>
+            
+            <div class="input-row">
+                <input type="text" id="courseLocation" placeholder="Helyszín vagy Online">
+                <input type="text" id="courseOwner" placeholder="Oktató / Szervező">
+            </div>
+            
+            <div class="input-row">
+                <input type="number" id="coursePrice" placeholder="Ár (Ft)">
+                <input type="number" id="courseAgeLimit" placeholder="Korhatár (pl. 18)">
+            </div>
+            
+            <input type="email" id="courseEmail" placeholder="Kapcsolattartó email címe">
+            
+            <label style="font-size: 0.85em; color: var(--primary); margin-bottom: 5px; font-weight: bold;">BORÍTÓ KÉP KIVÁLASZTÁSA:</label>
+            <input type="file" id="courseImageFile" accept="image/*" style="padding: 10px; background: #2c2c3c;">
+        </div>
+        
+        <button id="saveCourseBtn" class="profil-gomb" style="background: linear-gradient(135deg, #3399ff, #1a78d1); color: white; margin-top: 10px;">Tanfolyam hirdetése</button>
+        <button class="closeModal close-link">Mégse, kilépés</button>
+    </div>
+</div>
+
+<script src="./profil.js?v=1"></script>
+</body>
+</html>
